@@ -210,6 +210,8 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Team` | Actor | A collective participant |
 | `InitiativeTemplate`, `ShareLink` | Instrument | |
 | `Communication` | *Relationship, not a kind* | |
+| `Decision` | Instrument while open, Event once decided | From Popolo Motion and VoteEvent |
+| `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
 
 ## Lifecycles
@@ -397,6 +399,29 @@ From a study of project tools and a large volunteer-run event. GitHub Projects s
 
 **Left out on purpose:** size, estimate and iteration fields; required fields beyond a title; custom field builders. They are what made project boards feel like paperwork.
 
+## Decisions and voting
+
+Groups decide some things together: the leads of a fun run vote on the overall design concept from the Design team; a club votes on its next project. A vote is part of the record, and every BIX implementation must count it the same way, so it is defined here and counted by Bayanihan Core.
+
+**Lessons.** From **Popolo** (the civic standard for legislatures, which CEP maps to): a Motion, a VoteEvent and individual Votes. From **Loomio** (open-source group decisions, AGPL): the methods groups actually use, a closing time, and an outcome statement written by a person.
+
+| Element | What it is |
+|---|---|
+| **`Decision`** (new resource, from Popolo Motion + VoteEvent; CAE kind: Instrument while open, Event once decided) | `about` (any resource, e.g. Task LU-7), `question`, `method` (`approve` · `choose-one` · `choose-many` · `ranked` · `consent`), `option[]` {`id`, `label`, `attachment`}, `voters` (a Team, the leads of every Team in an Initiative, a Role, or named Persons), `eligible[]` (the voters, fixed when it opens), `opens`, `closes`, `quorum`, `threshold` (`majority` · `two-thirds` · `unanimous`; for `consent`: no objections), `showResults` (`after-voting` · `after-close`), `status`, `outcome` {`option[]`, `tally`, `decidedAt`}, `statement` (written by a person) |
+| **`Vote`** (new resource, from Popolo Vote; CAE kind: Event) | `decision`, `voter`, `choice[]` (option ids, in order for `ranked`), `objection` (for `consent`), `reason`, `cast`. A voter may change their vote until `closes`; the last one counts. |
+
+**Lifecycle:** `draft → open → closed → decided`, plus `no-quorum` and `cancelled`.
+
+**Rules (conformance):**
+
+- **The outcome is calculated, never set.** Core counts the Votes by the declared `method` and `threshold`. No person and no model sets `outcome`; a person writes the `statement`.
+- **Eligibility is fixed when voting opens,** so changing a Team's members mid-vote changes nothing.
+- **A model never votes,** and never proposes a Vote on anyone's behalf.
+- **Offline votes count only if they reach the server before `closes`.**
+- **A decided Decision can be the approval for a Task:** `Task.reviewer` may be a Decision, so "the leads approved the design concept" is a confirmation like any other, with the tally as its evidence.
+- **Open ballots only in v0.1.** Secret ballots need cryptography to stay countable without revealing voters; they come later, with signatures.
+- **Visibility follows `sharing`.** By default a vote is visible to the people who may vote.
+
 ## Concurrency and conflicts
 
 Many people act on the same open work, sometimes offline. BIX follows the patterns WordPress contribution and FHIR already use:
@@ -571,3 +596,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Renamed `Kit` to `InitiativeTemplate`, never shown as a noun in the app. The app calls committees **teams** and speaks of saving and reusing teams. |
 | 2026-10-27 | From the fun-run walk: `Task.dependsOn[]` across Teams, and Team participants from a co-host Organization. |
 | 2026-10-27 | Working together on a project: `identifier[]` short references, `Communication` (comments and @mentions), `ShareLink` (configurable access through links), `Task.suggestedFor[]`, milestones and outside owners, `Task.reviewer` across Teams, `Team.access`, `Task.checklist[]`, `Task.category[]`, credit by kind. CAE kinds added for Team, InitiativeTemplate, ShareLink, Communication. |
+| 2026-10-27 | Decisions and voting: `Decision` and `Vote` (from Popolo, with methods from Loomio), outcomes calculated by Core, eligibility fixed at opening, no model voting, a decided Decision can approve a Task, open ballots only in v0.1. |
