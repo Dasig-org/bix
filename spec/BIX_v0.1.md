@@ -335,6 +335,44 @@ The second change: it proposes releasing her Saturday `serve` Task, so the slot 
 
 The same structure handles the disaster-response profile. In the Catmon example, an offer of 5 boxes of bottled water at the plaza until 3PM, the template is the same `goods-transfer`, with `collect` and `deliver` steps instead of `receive`.
 
+## Committees, kits and how a group remembers its way of working
+
+> **Priority (2026-10-27).** This is first-hand cultural context: Philippine groups run projects and events through **committees**, each with a **lead**: volunteers, venue, creatives and design, sponsors and partners, finance, and so on. Leads break the work down into tasks for themselves, their members and outside volunteers. A person often sits on several committees. Implement this in BIX, Bayanihan Core and Dasig before generic task features.
+
+**Lessons from FHIR.** `CareTeam` is a team with roles around one plan of care, and a FHIR `Task` may be owned by a team before it is handed to a person. `PlanDefinition` is a reusable plan: its actions, who takes part, and when each action happens relative to the start. BIX takes both.
+
+### New and changed elements
+
+| Element | What it is |
+|---|---|
+| **`Team`** (new resource, from FHIR CareTeam; CAE kind: Actor, a collective participant) | A committee. `name` in the group's own words, `organization`, `initiative` (set for an event's committee, empty for a standing one), `kind` (standing · initiative), `participant[]` {`person`, `role` (lead · member), `period`}, `status`. A person may be in any number of Teams. |
+| **`Task.owner`** may be a Team | Work lands with a committee first; its lead assigns it to a member or opens it up. |
+| **`Task.partOf`** (from FHIR) | Decomposition: "Secure the venue" → "Shortlist 3 venues", "Visit", "Get a quote", "Pay the deposit". |
+| **`Task.audience`** | How far down the funnel it reaches: `team` · `organization` · `open` (to outside volunteers). Only `open` Tasks appear in shared links and public lists. `goodFirstStep: true` marks work suited to newcomers, as WordPress marks "good first issue". |
+| **Team-scoped permissions** | A Team lead holds `task.assign` and `task.confirm` for Tasks owned by their Team, without being an officer of the whole Organization. Money and beneficiary steps still need a confirmer who is not the performer. |
+| **`Kit`** (new resource, from FHIR PlanDefinition; CAE kind: Instrument) | A reusable plan for a kind of initiative. `title` ("Our fun run", "Medical mission"), `organization` (or a federation or a module that publishes it), `team[]` (committee names and their default lead role), `action[]` {`title`, `team`, `taskDefinition`, `audience`, `offset` (e.g. 42 days before the start), `partOf`}, `need[]`, `report[]`, `version`, `status`. |
+
+### What is programmable, and what is not
+
+| Layer | Programmable by the organization | Saved as |
+|---|---|---|
+| Kinds of work (steps, evidence, who confirms) | Yes | `TaskDefinition` |
+| Committees: the standing set, and each event's | Yes: add, rename, remove, set leads | `Team` |
+| How a kind of event is usually run: its committees, starter tasks and their timing | Yes | `Kit` |
+| Recurring programs and their needs | Yes | `Initiative.recurrence`, `Need` |
+| Role names in the group's own words, mapped to BIX permissions | Yes | `Role.code` + `permissions[]` |
+| Reports owed, to whom, how often, which figures | Yes | `Report` recurrence and figure codes |
+| Sharing defaults | Yes | `SharingPolicy` |
+| **Lifecycles, propose-then-commit, provenance, performer ≠ verifier for money and beneficiaries** | **No.** These are BIX's constitution; every group gets the same guarantees. | Core |
+
+### How a group's way of working is remembered
+
+1. **It lives in the group's own records**, as `Team`, `Kit` and `TaskDefinition` resources owned by the Organization. It exports with everything else (rule 18), and survives officer handover.
+2. **Learned from use, not set up in advance.** After an event, the app offers: "Save this as your kit for next time?" The next event starts from it. Groups with five committees and groups with fifteen are both just their own kit.
+3. **Changing one event never silently changes the kit.** Saving back is a choice, recorded with Provenance, and kits are versioned.
+4. **Kits travel.** A national body or district can publish a kit its chapters adopt; a module can ship kits for a sector. An adopted kit is copied and then belongs to the group.
+5. **Starter kits, not rules.** Dasig ships a few (club project, event, recurring program) so a new group isn't facing a blank page.
+
 ## Concurrency and conflicts
 
 Many people act on the same open work, sometimes offline. BIX follows the patterns WordPress contribution and FHIR already use:
@@ -504,3 +542,5 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Walked the likely pilot audiences: Rotaract/Interact, JCI and animal welfare. Added `Initiative.partner[]`, `Task.note[]` (thanks), `priority` on Need and Task, `Task.focus` widened to any resource, conformance rule 18 (public proposals are drafts until a member confirms), two scenario rows, and the first module, animal welfare, with an `Animal` resource. |
 | 2026-10-27 | Added "Concurrency and conflicts": server-decided exclusive changes with FHIR-style version checks, GlotPress-style proposals side by side, append-only notes and outputs, offline changes as pending requests, "I'm in" claims any open slot, backups as Offers of time. New rule 16 (version checks); rules 16–18 renumbered to 17–19. `Person.name` may be a nickname alone. Animal welfare module deferred until after v0. |
 | 2026-10-27 | Media fields for what the screens show: `Person.photo` (set only by the person), `Organization.image`, `Initiative.image`, `Report.attachment[]`. Rule: a photo is shared no more widely than its record, and public previews never use Task photos. |
+
+| 2026-10-27 | Committees as a priority: new `Team` (from FHIR CareTeam) and `Kit` (from FHIR PlanDefinition) resources; `Task.owner` may be a Team; `Task.partOf`; `Task.audience` with `goodFirstStep`; team-scoped permissions; the list of what organizations can program and what is fixed; how a group's way of working is remembered and reused. |
