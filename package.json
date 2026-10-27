@@ -1,0 +1,10 @@
+{
+  "name": "@bayanihan/bix",
+  "version": "0.1.0",
+  "description": "BIX, the Bayanihan Information Exchange: JSON Schemas for everyday civic work.",
+  "type": "module",
+  "files": ["schemas", "spec"],
+  "exports": { "./schemas/*": "./schemas/*" },
+  "license": "UNLICENSED",
+  "private": true
+}
