@@ -381,6 +381,20 @@ The same structure handles the disaster-response profile. In the Catmon example,
 4. **Saved teams travel.** A national body or district can publish a set of teams its chapters adopt; a module can ship them for a sector. An adopted set is copied and then belongs to the group.
 5. **Starting points, not rules.** Dasig ships a few sets of teams (club project, event, recurring program) so a new group isn't facing a blank page.
 
+## Volunteers belong to the structure
+
+Outside helpers are part of the teams and the organization, not records kept beside them. WordPress shows how: anyone who contributes is a contributor, named in every release's credits, and can grow from a first patch to a team rep.
+
+| Element | What it is |
+|---|---|
+| **`Team.participant.role`** adds `volunteer` | A helper is on the team's roster, alongside its lead and members, and sees the team's open work and updates. Joining a team through an invite or by finishing one of its Tasks makes them a `volunteer` participant, with their consent. |
+| **A path, never a gate** | `volunteer → member → lead`, for a team and for the organization (`Role.code` volunteer-episodic → volunteer-regular → member). Core suggests a step up by declared rule, e.g. "Liza has helped Communications 5 times. Invite her to join the team?" A person always decides; nobody is promoted automatically. |
+| **Credits** | Every Initiative has a credits list, derived from confirmed work and reviews, like a WordPress release's credits: everyone who helped, grouped by team, lead and volunteer alike. |
+| **`Person.credit`** | How a person wants to be named in credits and on public pages: `nickname` · `full` · `anonymous`. Set by the person; `nickname` by default. Credits never show more than this. |
+| **Asked back** | A team's past volunteers can be asked first when new open work appears (`Task.suggestedFor` from past participants), so a one-time helper becomes a regular without anyone keeping a list. |
+
+**Honouring, in the record:** credit by kind (performed, reviewed, verified, proposed, commented), thanks attached to confirmations, the person's own story across every group, the project's credits, and later, signed credentials they can show anyone.
+
 ## Organization structure: positions and terms
 
 Teams belong to a project (`Team.initiative`); a group may also keep a few standing teams (no `initiative`). The **organization's own structure** is separate: its board and officers, who hold them, and for how long.
@@ -624,3 +638,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Decisions and voting: `Decision` and `Vote` (from Popolo, with methods from Loomio), outcomes calculated by Core, eligibility fixed at opening, no model voting, a decided Decision can approve a Task, open ballots only in v0.1. |
 | 2026-10-27 | From the onboarding walk (`docs/architecture/ONBOARDING_FLOW.md`): `Team.participant.status` (asked to lead or join is `requested` until accepted); `Organization.kind` adds `community` and `event-team`. |
 | 2026-10-27 | Organization structure: `Position` (from Popolo Post), `Role.position` with terms, elections as Decisions, saved structures, and common starting structures by kind of group (not legal advice). Teams confirmed as per project, with optional standing teams. |
+| 2026-10-27 | Volunteers belong to the structure: `volunteer` as a Team participant role, a suggested path volunteer → member → lead (never automatic), derived project credits, `Person.credit` naming preference, past volunteers asked back first. |
