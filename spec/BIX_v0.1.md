@@ -393,6 +393,29 @@ Outside helpers are part of the teams and the organization, not records kept bes
 | **`Person.credit`** | How a person wants to be named in credits and on public pages: `nickname` · `full` · `anonymous`. Set by the person; `nickname` by default. Credits never show more than this. |
 | **Asked back** | A team's past volunteers can be asked first when new open work appears (`Task.suggestedFor` from past participants), so a one-time helper becomes a regular without anyone keeping a list. |
 
+### How volunteers take part in the work
+
+Credit follows participation; participation comes first. Everything below applies equally to members and volunteers on a team.
+
+| Element | What it is |
+|---|---|
+| **`Task.participant[]`** | People working on a Task together: {`person`, `role` (`owner` · `helper`), `status` (requested · active · ended)}. The `owner` is accountable; `helpers` join with "I'll help". Everyone active on a confirmed Task is credited as having performed it. `Task.owner` remains the single accountable person or Team. |
+| **Joining a team creates a Role** | Joining a Team as a volunteer, with consent, creates a `Role` (`volunteer-episodic`) in the Organization (or keeps the Role they hold in a partner Organization). No one is on a team without a relationship to the group. |
+| **Anyone on a team may propose work** | Any active Team participant may propose Tasks, Needs and Offers for that Team. They are `draft` until the Team lead (or anyone with `task.assign` for the Team) accepts them. Leads see proposals in "Waiting on you". |
+
+**Who may change what on a Task:**
+
+| Action | Owner | Helper | Other team participants | Team lead |
+|---|---|---|---|---|
+| Update checklist, output, attachments, notes | Yes | Yes | Propose | Yes |
+| Add subtasks under it (`partOf`) | Yes | Propose | Propose | Yes |
+| Edit title, due date, audience | Propose | Propose | Propose | Yes |
+| Mark done | Yes | No | No | Yes |
+| Confirm or review | Only if not the performer | Only if not the performer | If `reviewer` | Yes, if not the performer |
+| Invite a helper | Yes | No | No | Yes |
+
+"Propose" means the change is a draft until the owner or lead accepts it, recorded in History.
+
 **Honouring, in the record:** credit by kind (performed, reviewed, verified, proposed, commented), thanks attached to confirmations, the person's own story across every group, the project's credits, and later, signed credentials they can show anyone.
 
 ## Organization structure: positions and terms
@@ -639,3 +662,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | From the onboarding walk (`docs/architecture/ONBOARDING_FLOW.md`): `Team.participant.status` (asked to lead or join is `requested` until accepted); `Organization.kind` adds `community` and `event-team`. |
 | 2026-10-27 | Organization structure: `Position` (from Popolo Post), `Role.position` with terms, elections as Decisions, saved structures, and common starting structures by kind of group (not legal advice). Teams confirmed as per project, with optional standing teams. |
 | 2026-10-27 | Volunteers belong to the structure: `volunteer` as a Team participant role, a suggested path volunteer → member → lead (never automatic), derived project credits, `Person.credit` naming preference, past volunteers asked back first. |
+| 2026-10-27 | How volunteers take part: `Task.participant[]` (owner and helpers working together, all credited), joining a team creates a volunteer Role, any team participant may propose work, and a table of who may change what on a Task. |
