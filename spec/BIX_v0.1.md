@@ -159,7 +159,7 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 
 | Resource | Closest FHIR resource | Purpose | Key elements |
 |---|---|---|---|
-| `Person` | Person / Practitioner | One human, one record across organizations | `name`, `contact` (optional), `managedBy` (the Organization that created the record until the person claims it, then the person) |
+| `Person` | Person / Practitioner | One human, one record across organizations | `name` {`text`, `use`: nickname · full} (a nickname alone is enough), `contact` (optional), `managedBy` (the Organization that created the record until the person claims it, then the person) |
 | `Organization` | Organization | Any group, registered or informal | `name`, `kind` (registered-npo · faith-based · civic-club · sk-council · school-org · cooperative · informal · lgu-unit…), `partOf` (e.g. a chapter's national body, a ministry's parish), `registration[]` |
 | `Role` | PractitionerRole | A Person's relationship to an Organization | `person`, `organization`, `code` (officer · member · core-member · volunteer-regular · volunteer-episodic · service-learning · partner-representative · donor), `status` (requested · active · ended), `period`, `permissions[]` (codes from `bayanihan:permission`; defaults come from `code`), `qualification[]` (codes from `bayanihan:requirement`, e.g. `can-drive`) |
 | `Location` | Location | A place | `name`, `description` (the landmark text), `psgc` (barangay level or above), `position` (optional lat/lon), `partOf` |
@@ -237,9 +237,10 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 13. A figure may count only records the reporting organization is allowed to see under the source organization's `SharingPolicy`.
 14. A resource type added by a module declares its CAE kind, or declares that it is a relationship.
 15. **A module's data is BIX data.** A module stores everything as BIX resources or `extension[]` elements, never in private tables or formats that other implementations can't read.
-16. Only a Task's `owner` can move it to `accepted`. Work can be offered to someone; it can't be accepted on their behalf.
-17. A Person can export every record that names them, and an Organization every record it owns, as BIX Bundles, at any time and without asking anyone.
-18. **Public proposals.** Someone without a Role may propose a `Need`, an `Offer` or a `Person` (such as an applicant) through an organization's public link. It is always `draft` and `private` until a member with the right permission confirms it.
+16. Every change to an existing resource names the `meta.version` it was based on. A server refuses a change based on an older version. Exclusive Task transitions are decided only by the server.
+17. Only a Task's `owner` can move it to `accepted`. Work can be offered to someone; it can't be accepted on their behalf.
+18. A Person can export every record that names them, and an Organization every record it owns, as BIX Bundles, at any time and without asking anyone.
+19. **Public proposals.** Someone without a Role may propose a `Need`, an `Offer` or a `Person` (such as an applicant) through an organization's public link. It is always `draft` and `private` until a member with the right permission confirms it.
 
 ## Everyday scenarios the model must handle
 
@@ -254,7 +255,7 @@ Each scenario below has to be representable with the v0.1 resources, without a s
 | **Scholarship monitoring** | Sixty scholars. Quarterly grade slips, home visits by volunteer mentors. | Recurring `Need` per scholar group, recorded as counts · `upload` and `visit` steps with evidence · mentor confirmation |
 | **Monthly coastal cleanup** | Volunteers sign up, a partner lends sacks and gloves, someone reports the kilos collected to the LGU. | `Offer` from a partner `Organization` · `session-staffing` steps · Task output in `kg` · `report-owed` step |
 | **Rotaract or JCI year** | Officers change each year; meetings with attendance; projects co-hosted with a sponsoring club; monthly reports to the district or national body | `Role.period` for terms, so records stay with the club · `meeting-attendance` template · `Initiative.partner[]` · recurring `Report` |
-| **Animal shelter** | Daily care shifts, named animals with medical steps, public rescue reports, fosters and adoptions | `session-staffing` · the animal welfare module's `Animal` as `Task.focus` · public proposals (rule 18) with `priority: urgent` · `foster` and `adoption` templates |
+| **Animal shelter** | Daily care shifts, named animals with medical steps, public rescue reports, fosters and adoptions | `session-staffing` · the animal welfare module's `Animal` as `Task.focus` · public proposals (rule 19) with `priority: urgent` · `foster` and `adoption` templates |
 | **Disaster response** *(a profile, not the premise)* | An offer of bottled water at the town plaza, available until 3PM, gets matched to an evacuation center. | Same resources. Adds urgent categories and a short `availableUntil`. No new resource types. |
 
 ## Worked example: a volunteer can't come, and offers rice instead
@@ -332,13 +333,29 @@ The second change: it proposes releasing her Saturday `serve` Task, so the slot 
 
 The same structure handles the disaster-response profile. In the Catmon example, an offer of 5 boxes of bottled water at the plaza until 3PM, the template is the same `goods-transfer`, with `collect` and `deliver` steps instead of `receive`.
 
+## Concurrency and conflicts
+
+Many people act on the same open work, sometimes offline. BIX follows the patterns WordPress contribution and FHIR already use:
+
+| Pattern | Where it comes from | In BIX |
+|---|---|---|
+| **Exclusive changes go through the server, first come first served** | FHIR versioned updates: a change carries the version it was based on (`If-Match` on `meta.version`) and is refused if the record changed since | Claiming, asking, accepting, releasing, cancelling and confirming a Task. The server applies the first valid change and refuses the others with the current state. |
+| **Many proposals, one approval** | GlotPress: several suggestions for one string wait side by side until a validator approves one | Model proposals, public proposals and competing matches stay `draft` together. Confirming one closes the others as superseded, with Provenance. |
+| **Show who's working on it** | WordPress post locking: "Ana is currently editing", expiring if they go quiet, with an option to take over | Editing a plan or a report narrative. App-level presence, not part of BIX. Saves still use the version check. |
+| **Additions never conflict** | Comments and translations accumulate | `note[]`, `output[]` and attachments are append-only, so two people adding at once both succeed. |
+| **Calculated values can't conflict** | | Report figures, `partially-met`/`met`, hours and credit are derived, never edited. |
+
+**Offline.** A change made offline is a request until the server accepts it. The app shows it as pending ("We'll confirm your spot when you're back online"). On replay (rule 10), a change whose base version is stale is refused, never merged, and shown to the person with the current state.
+
+**Fewer collisions by design.** Slots for the same session are interchangeable, so "I'm in" claims *any* open slot of that session, not a particular one. When none are left, the person can offer to be a backup, recorded as an `Offer` of time matched to the session's `Need`, so a released slot can go to them first.
+
 ## Open work and credit
 
 BIX is built for contribution the way WordPress contribution works: teams keep lists of open work, and contributors pick up what fits them. Here, an open `Task` is the unit of work, and volunteers matter as much as coordinators.
 
 - **Open work is visible, within sharing rules.** A Person sees `ready` Tasks from every organization they hold a `Role` in, and from any organization that shares them at `network` or `public`.
-- **Claim or be asked.** Anyone with a suitable Role can claim open work. A coordinator can offer work to a specific person, who accepts or declines (conformance rule 16).
-- **Credit, derived.** A Person's contribution record is the set of confirmed Tasks they performed or verified, and Offers they fulfilled, calculated like Report figures and never typed in. It belongs to the Person and leaves with them (rule 17). This is BIX's equivalent of WordPress "props".
+- **Claim or be asked.** Anyone with a suitable Role can claim open work. A coordinator can offer work to a specific person, who accepts or declines (conformance rule 17).
+- **Credit, derived.** A Person's contribution record is the set of confirmed Tasks they performed or verified, and Offers they fulfilled, calculated like Report figures and never typed in. It belongs to the Person and leaves with them (rule 18). This is BIX's equivalent of WordPress "props".
 
 ## Interoperability (lessons from FHIR)
 
@@ -349,7 +366,7 @@ FHIR's data model alone didn't make health data move. What did was a standard AP
 | A standard API | Every BIX server answers the same way: `GET /{type}/{id}`, search with `GET /{type}?param=value`, history with `GET /{type}/{id}/_history`, and `POST /` with a `transaction` Bundle | Required |
 | Global addresses | A record's canonical address is the server's base URL + `/{type}/{id}`. References may point at another server's address. | Required |
 | Servers declare what they support | `GET /metadata` returns the BIX version, resource types, profiles and modules the server supports | Required |
-| Export | `GET /Person/{id}/$export` and `GET /Organization/{id}/$export` return Bundles (rule 17) | Required |
+| Export | `GET /Person/{id}/$export` and `GET /Organization/{id}/$export` return Bundles (rule 18) | Required |
 | Implementation guides | Modules and profiles (see "Contribution, governance and modules") | Mechanism defined |
 | Conformance tests | Published test cases any implementation can run | Before other implementations exist |
 | Identity matching is hard | A Person record created by a coordinator can be claimed by that person when they sign in. Merging two Person records is a confirmed, provenance-recorded action, never automatic. | Required |
@@ -366,7 +383,7 @@ BIX takes the cryptography that blockchains popularized and leaves out the chain
 | Signed confirmations | The device of the person who confirms a step signs the confirmation, so anyone can check who confirmed it without trusting the server | Designed; built after the pilot |
 | Public anchoring | Periodically publish one combined fingerprint (a Merkle root) of confirmed records, so later tampering can be proven. Maps to CEP's `anchorUri`. Never publishes the records themselves. | Designed; built after the pilot |
 | Verifiable credentials | A Person's contribution record can be issued as W3C Verifiable Credentials they hold and anyone can verify | Designed; built after the pilot |
-| Portable personal records | A Person's records can move between BIX servers with them, as Bluesky's AT Protocol does for posts | Export now (rule 17); moving between servers later |
+| Portable personal records | A Person's records can move between BIX servers with them, as Bluesky's AT Protocol does for posts | Export now (rule 18); moving between servers later |
 
 Personal data is never anchored, signed into anything public, or made impossible to delete.
 
@@ -440,7 +457,7 @@ Only completed, confirmed work exports, as `exchangeStatus: COMPLETED`. Timestam
 | Profiles | Constraints for a context, e.g. disaster response | Narrows the core; adds nothing it would reject |
 | Integrations | Adapters that publish to or read from another system | Respects `sharing` and `SharingPolicy` |
 
-**First module: animal welfare** (`bayanihan-animal`), defined in `docs/architecture/SCENARIO_WALKS.md` §7: an `Animal` resource, `intake`, `vet-care`, `foster` and `adoption` templates, and figure codes such as `animals-rescued` and `animals-adopted`. It doubles as the worked example of how modules extend BIX.
+**First module: animal welfare** (`bayanihan-animal`), deferred until after v0 (decided 2026-10-27: these groups deserve dedicated design time). Sketched in `docs/architecture/SCENARIO_WALKS.md` §7: an `Animal` resource, `intake`, `vet-care`, `foster` and `adoption` templates, and figure codes such as `animals-rescued` and `animals-adopted`. It doubles as the worked example of how modules extend BIX.
 
 **Integrations.** Dasig Fundraising (dasig.org) is one of the first: confirmed outcomes can be published to a public campaign page. A CEP adapter is another. Neither is part of the core, and the core depends on neither.
 
@@ -483,3 +500,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Took FHIR's interoperability lessons, not just its data model: a standard API, global record addresses, `/metadata`, Person and Organization export, and careful Person claiming and merging. Took blockchain's cryptographic techniques without a blockchain: hash chains, signed confirmations, public anchoring, verifiable credentials and portable records, all designed now and built after the pilot. Decided RFC 8785 for canonical encoding. Added the "Open work and credit" section (claiming versus being asked, credit derived like report figures) and conformance rules 15–17, including "a module's data is BIX data" so modules can't recreate silos. |
 | 2026-10-27 | Applied the fixes from the scenario walks (`docs/architecture/SCENARIO_WALKS.md`): Initiative `kind`, `status`, `target[]`, `taskDefinition[]` and lifecycle; Role `status`, `qualification[]` and lifecycle; Task `executionPeriod`, `requires[]` codes, `output[]` with attachments, and FHIR's meaning of `requested` for asking a named person; Person `managedBy` until claimed; new Provenance activities; Data types (including `Attachment`) and Value sets sections (permissions, requirements, figure rules, report figures); Report `rule` as a coded rule, `missingParts[]`, `replaces`, `submittedBy`. Proof defined as Task output plus attachments. |
 | 2026-10-27 | Walked the likely pilot audiences: Rotaract/Interact, JCI and animal welfare. Added `Initiative.partner[]`, `Task.note[]` (thanks), `priority` on Need and Task, `Task.focus` widened to any resource, conformance rule 18 (public proposals are drafts until a member confirms), two scenario rows, and the first module, animal welfare, with an `Animal` resource. |
+| 2026-10-27 | Added "Concurrency and conflicts": server-decided exclusive changes with FHIR-style version checks, GlotPress-style proposals side by side, append-only notes and outputs, offline changes as pending requests, "I'm in" claims any open slot, backups as Offers of time. New rule 16 (version checks); rules 16–18 renumbered to 17–19. `Person.name` may be a nickname alone. Animal welfare module deferred until after v0. |
