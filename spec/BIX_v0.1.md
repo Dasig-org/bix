@@ -207,6 +207,9 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Task` | Event, **once completed and confirmed** | Until then it is planned work, which CAE has no kind for. That gap is what BIX exists to fill. |
 | `Role` | *Relationship, not a kind* | A Person's relationship to an Organization |
 | `Provenance` | *Attestation, not a kind* | Who did what and who confirmed it |
+| `Team` | Actor | A collective participant |
+| `InitiativeTemplate`, `ShareLink` | Instrument | |
+| `Communication` | *Relationship, not a kind* | |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
 
 ## Lifecycles
@@ -374,6 +377,25 @@ The same structure handles the disaster-response profile. In the Catmon example,
 3. **Changing one event never silently changes the saved teams.** Saving back is a choice, recorded with Provenance, and templates are versioned.
 4. **Saved teams travel.** A national body or district can publish a set of teams its chapters adopt; a module can ship them for a sector. An adopted set is copied and then belongs to the group.
 5. **Starting points, not rules.** Dasig ships a few sets of teams (club project, event, recurring program) so a new group isn't facing a blank page.
+
+## Working together on a project (lessons from GitHub Projects)
+
+From a study of project tools and a large volunteer-run event. GitHub Projects showed what helps (history, previews, mentions, drafts, views) and what makes it bureaucratic (accounts to take part, many fields, triage on one person). BIX takes the first and leaves out the second.
+
+| Element | What it is | Lesson |
+|---|---|---|
+| **`identifier[]`** on every resource | A short reference people can say and type, scoped to the group: `LU-24`. Allocated by the server. | FHIR `identifier`; GitHub `#8` |
+| **`Communication`** (new resource, from FHIR; *a relationship, not a CAE kind*) | A comment or message about anything: `about` (any resource), `sender`, `recipient[]` (people @mentioned), `payload` {`text`, `attachment[]`}, `sent`. Shared no wider than what it's about. `Task.note[]` stays for short notes and thanks. | FHIR `Communication` |
+| **`ShareLink`** (new resource; *an Instrument*) | A link that grants access: `target`, `grants[]` (`view` · `claim` · `join-team` · `propose` · `comment`), `audience` (`anyone-with-link` · `signed-in` · `members`), `preview` (`full` · `title-only` · `generic`), `expires`, `createdBy`, `status` (`active` · `revoked`). The token is never stored in the record. A link can't grant more than its creator has, nor more than the target's `sharing` allows. | Capability links; FHIR R5 `Permission` |
+| **`Task.suggestedFor[]`** | People anyone has suggested for a Task. A suggestion is a proposal; asking (`requested`) still needs `task.assign`. | Propose-then-commit |
+| **`Task.milestone`** and **`Task.owner`** = an outside Organization | A gate many Tasks `dependsOn`, possibly owned by an outside body ("Central approves the venue"). Shown once, not on every blocked Task. | FHIR `Task.owner`; GitHub milestones |
+| **`Task.reviewer`** | A Team or Person whose approval is the `verification`, across Teams. Approval or "changes requested" is recorded as an attestation. | GlotPress; CEP attestations; review before merge |
+| **`Team.access`** | `own-tasks` (default) · `initiative`: read everything in the Initiative, as a Communications team needs | FHIR `CareTeam` |
+| **`Task.checklist[]`** | Small steps without owners: {`text`, `done`, `doneBy`} | Trello and GitHub task lists |
+| **`Task.category[]`** | Optional tags in the group's namespace | GitHub labels |
+| **Credit by kind** | A person's record counts work they **performed, reviewed, verified, proposed** and **commented on**, each separately | WordPress props credit reviewers and reporters |
+
+**Left out on purpose:** size, estimate and iteration fields; required fields beyond a title; custom field builders. They are what made project boards feel like paperwork.
 
 ## Concurrency and conflicts
 
@@ -548,3 +570,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Committees as a priority: new `Team` (from FHIR CareTeam) and `InitiativeTemplate` (from FHIR PlanDefinition) resources; `Task.owner` may be a Team; `Task.partOf`; `Task.audience` with `goodFirstStep`; team-scoped permissions; the list of what organizations can program and what is fixed; how a group's way of working is remembered and reused. |
 | 2026-10-27 | Renamed `Kit` to `InitiativeTemplate`, never shown as a noun in the app. The app calls committees **teams** and speaks of saving and reusing teams. |
 | 2026-10-27 | From the fun-run walk: `Task.dependsOn[]` across Teams, and Team participants from a co-host Organization. |
+| 2026-10-27 | Working together on a project: `identifier[]` short references, `Communication` (comments and @mentions), `ShareLink` (configurable access through links), `Task.suggestedFor[]`, milestones and outside owners, `Task.reviewer` across Teams, `Team.access`, `Task.checklist[]`, `Task.category[]`, credit by kind. CAE kinds added for Team, InitiativeTemplate, ShareLink, Communication. |
