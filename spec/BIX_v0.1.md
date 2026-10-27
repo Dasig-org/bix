@@ -210,6 +210,7 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Team` | Actor | A collective participant |
 | `InitiativeTemplate`, `ShareLink` | Instrument | |
 | `Communication` | *Relationship, not a kind* | |
+| `Position` | Instrument | From Popolo Post |
 | `Decision` | Instrument while open, Event once decided | From Popolo Motion and VoteEvent |
 | `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
@@ -379,6 +380,30 @@ The same structure handles the disaster-response profile. In the Catmon example,
 3. **Changing one event never silently changes the saved teams.** Saving back is a choice, recorded with Provenance, and templates are versioned.
 4. **Saved teams travel.** A national body or district can publish a set of teams its chapters adopt; a module can ship them for a sector. An adopted set is copied and then belongs to the group.
 5. **Starting points, not rules.** Dasig ships a few sets of teams (club project, event, recurring program) so a new group isn't facing a blank page.
+
+## Organization structure: positions and terms
+
+Teams belong to a project (`Team.initiative`); a group may also keep a few standing teams (no `initiative`). The **organization's own structure** is separate: its board and officers, who hold them, and for how long.
+
+**Lesson from Popolo:** a **Post** is a position in an organization ("President") that people hold through a **Membership** for a period. It keeps the office separate from the person, so the July handover is a new holder of the same Post. BIX takes the same split.
+
+| Element | What it is |
+|---|---|
+| **`Position`** (new resource, from Popolo Post; CAE kind: Instrument) | `organization`, `title` in the group's words, `kind` (`board` · `officer` · `committee-chair` · `other`), `seats` (e.g. 11 trustees), `term` (e.g. 1 year), `permissions[]`, `requiredBy` (a law or a parent body's rules, as text), `status` |
+| **`Role.position`** | The Position a Role holds, with `period` as the term. Several people may hold a Position up to its `seats`. |
+| **Elections** | A `Decision` whose options are candidates for a Position. The winner's Role is created by rule from the outcome. Open ballots only in v0.1 (see "Decisions and voting"). |
+| **Saved structures** | Like saved teams: a group starts from a structure for its kind (below), then changes titles, seats and terms. Stored as `Position` resources it owns. |
+
+**Common starting structures** (for the app to offer; *not legal advice; groups and their advisers confirm their own bylaws*):
+
+| Kind of group | Usual positions | Source of the requirement |
+|---|---|---|
+| SEC-registered non-stock corporation | Board of trustees; president (who must be a trustee), treasurer, corporate secretary, and any others the bylaws set | Revised Corporation Code (RA 11232). As we understand it, the president may not also be secretary or treasurer, the secretary must be a Philippine citizen and resident, and the treasurer a resident. To confirm with an adviser. |
+| Cooperative | Board of directors with chair and vice chair, secretary, treasurer, general manager; audit, election, mediation and conciliation, and ethics committees | Cooperative Code (RA 9520). To confirm. |
+| Rotaract or Interact club | President, president-elect, vice president, secretary, treasurer, sergeant-at-arms, directors of avenues of service, immediate past president | Rotary International's club constitution |
+| JCI local organization | President, executive vice presidents, vice presidents, secretary general, treasurer, general legal counsel | JCI Philippines' constitution |
+| Community or meetup (e.g. a WordPress community) | Organizers and co-organizers | The community's own norms |
+| Informal group | Whatever the group calls its people | — |
 
 ## Working together on a project (lessons from GitHub Projects)
 
@@ -598,3 +623,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Working together on a project: `identifier[]` short references, `Communication` (comments and @mentions), `ShareLink` (configurable access through links), `Task.suggestedFor[]`, milestones and outside owners, `Task.reviewer` across Teams, `Team.access`, `Task.checklist[]`, `Task.category[]`, credit by kind. CAE kinds added for Team, InitiativeTemplate, ShareLink, Communication. |
 | 2026-10-27 | Decisions and voting: `Decision` and `Vote` (from Popolo, with methods from Loomio), outcomes calculated by Core, eligibility fixed at opening, no model voting, a decided Decision can approve a Task, open ballots only in v0.1. |
 | 2026-10-27 | From the onboarding walk (`docs/architecture/ONBOARDING_FLOW.md`): `Team.participant.status` (asked to lead or join is `requested` until accepted); `Organization.kind` adds `community` and `event-team`. |
+| 2026-10-27 | Organization structure: `Position` (from Popolo Post), `Role.position` with terms, elections as Decisions, saved structures, and common starting structures by kind of group (not legal advice). Teams confirmed as per project, with optional standing teams. |
