@@ -347,8 +347,10 @@ The same structure handles the disaster-response profile. In the Catmon example,
 |---|---|
 | **`Team`** (new resource, from FHIR CareTeam; CAE kind: Actor, a collective participant) | A committee, called a **team** in the app. `name` in the group's own words, `organization`, `initiative` (set for an event's committee, empty for a standing one), `kind` (standing · initiative), `participant[]` {`person`, `role` (lead · member), `period`}, `status`. A person may be in any number of Teams. |
 | **`Task.owner`** may be a Team | Work lands with a committee first; its lead assigns it to a member or opens it up. |
+| **`Task.dependsOn[]`** | Tasks that must be `completed` first, across Teams ("print shirts" waits on "confirm sponsor logos"). A Task can't move past `ready` until they are. |
 | **`Task.partOf`** (from FHIR) | Decomposition: "Secure the venue" → "Shortlist 3 venues", "Visit", "Get a quote", "Pay the deposit". |
 | **`Task.audience`** | How far down the funnel it reaches: `team` · `organization` · `open` (to outside volunteers). Only `open` Tasks appear in shared links and public lists. `goodFirstStep: true` marks work suited to newcomers, as WordPress marks "good first issue". |
+| **Co-host participants** | A Team participant may hold their Role in an Organization listed in the Initiative's `partner[]`. They see only that Team's Tasks and the Initiative. |
 | **Team-scoped permissions** | A Team lead holds `task.assign` and `task.confirm` for Tasks owned by their Team, without being an officer of the whole Organization. Money and beneficiary steps still need a confirmer who is not the performer. |
 | **`InitiativeTemplate`** (new resource, from FHIR PlanDefinition; CAE kind: Instrument) | A group's saved way of running a kind of initiative: its Teams and their usual tasks. **Never shown as a noun in the app**, which says "Save these teams for next time" and "Start from last year's teams". `title` ("Our fun run", "Medical mission"), `organization` (or a federation or a module that publishes it), `team[]` (committee names and their default lead role), `action[]` {`title`, `team`, `taskDefinition`, `audience`, `offset` (e.g. 42 days before the start), `partOf`}, `need[]`, `report[]`, `version`, `status`. |
 
@@ -545,3 +547,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 
 | 2026-10-27 | Committees as a priority: new `Team` (from FHIR CareTeam) and `InitiativeTemplate` (from FHIR PlanDefinition) resources; `Task.owner` may be a Team; `Task.partOf`; `Task.audience` with `goodFirstStep`; team-scoped permissions; the list of what organizations can program and what is fixed; how a group's way of working is remembered and reused. |
 | 2026-10-27 | Renamed `Kit` to `InitiativeTemplate`, never shown as a noun in the app. The app calls committees **teams** and speaks of saving and reusing teams. |
+| 2026-10-27 | From the fun-run walk: `Task.dependsOn[]` across Teams, and Team participants from a co-host Organization. |
