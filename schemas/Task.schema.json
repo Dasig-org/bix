@@ -54,6 +54,9 @@
     "partOf": {
       "$ref": "datatypes.schema.json#/$defs/Reference"
     },
+    "team": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
     "dependsOn": {
       "type": "array",
       "items": {

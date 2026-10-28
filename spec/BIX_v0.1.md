@@ -370,6 +370,7 @@ The same structure handles the disaster-response profile. In the Catmon example,
 | Element | What it is |
 |---|---|
 | **`Team`** (new resource, from FHIR CareTeam; CAE kind: Actor, a collective participant) | A committee, called a **team** in the app. `name` in the group's own words, `organization`, `initiative` (set for an event's committee, empty for a standing one), `kind` (standing · initiative), `participant[]` {`person`, `role` (lead · member), `status` (requested · active · ended), `period`}, `status`. A person may be in any number of Teams; being asked to lead or join is `requested` until they accept. |
+| **`Task.team`** | The Team the work belongs to. Stays set when `owner` moves from the Team to a person who claimed or was asked, so the Team's lead keeps their permissions and the Task stays on the Team's page. |
 | **`Task.owner`** may be a Team | Work lands with a committee first; its lead assigns it to a member or opens it up. |
 | **`Task.dependsOn[]`** | Tasks that must be `completed` first, across Teams ("print shirts" waits on "confirm sponsor logos"). A Task can't move past `ready` until they are. |
 | **`Task.partOf`** (from FHIR) | Decomposition: "Secure the venue" → "Shortlist 3 venues", "Visit", "Get a quote", "Pay the deposit". |
@@ -818,3 +819,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Publish as you are: public project summaries, optional tagging, "who's working on what, for whom, where" from Bayanihan Server, self-synchronising without forced links, goal enrollment accepted by the goal's owner, default `bayanihan:cause` and `bayanihan:population` value sets mapped to the SDGs. |
 | 2026-10-28 | Audit fill-ins: `Signature` on Provenance, `Endpoint` and `Organization.homeServer`, person-level `Consent`, `Follow`, wider `Offer.matchedTo` and `Communication.recipient`, `Task.due`, more Organization kinds, `Organization.vocabulary[]`, public summaries for Organizations, saving teams back on wrap-up. |
 | 2026-10-28 | One person, many groups: permissions resolved per owning Organization; personal Initiatives (`person` instead of `organization`); one story across groups with separate signatures. |
+| 2026-10-28 | `Task.team`: the Team a Task belongs to, kept when its owner becomes a person (found while building the app). |

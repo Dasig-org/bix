@@ -46,7 +46,7 @@ RES = {
  "TaskDefinition": ({"title": S, "appliesTo": arr(C), "review": {"type": "boolean", "default": False}, "status": enum("draft", "active", "retired"), "author": R, "ratifiedBy": R,
                      "step": arr({"type": "object", "properties": {"code": S, "dependsOn": arr(S), "requires": arr(C), "evidence": S, "confirmerRole": C, "autoConfirm": {"type": "boolean"}, "involvesMoney": {"type": "boolean"}, "involvesBeneficiaries": {"type": "boolean"}}, "required": ["code"]})}, ["title", "status"]),
  "Task": ({"intent": enum("proposal", "plan", "order"), "status": enum("draft", "ready", "requested", "accepted", "in-progress", "completed", "cancelled", "failed", "on-hold"),
-           "code": C, "title": S, "focus": R, "definition": R, "partOf": R, "dependsOn": arr(R), "milestone": {"type": "boolean"}, "requester": R, "owner": R,
+           "code": C, "title": S, "focus": R, "definition": R, "partOf": R, "team": R, "dependsOn": arr(R), "milestone": {"type": "boolean"}, "requester": R, "owner": R,
            "participant": arr({"type": "object", "properties": {"person": R, "role": enum("owner", "helper"), "status": enum("requested", "active", "ended")}, "required": ["person", "role", "status"], "additionalProperties": False}),
            "suggestedFor": arr(R), "reviewer": R, "audience": enum("team", "organization", "open"), "goodFirstStep": {"type": "boolean"},
            "priority": enum("routine", "urgent"), "due": T, "restriction": {"type": "object", "properties": {"period": P, "location": R}}, "requires": arr(C), "executionPeriod": P,
