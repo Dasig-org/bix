@@ -189,6 +189,19 @@ A `Report` is an obligation first and a document second. It exists as soon as it
 - **Narrative.** Free text. A model may draft it as a proposal from the figures and the period's Provenance; a person edits and submits it.
 - **The work.** The steps (gather, draft, submit) come from the `report-owed` TaskDefinition, like any other kind of work.
 
+## Content every page has
+
+Anything people open as a page carries the same content elements, so people always know what it's about and what to look at. **Page resources:** `Organization`, `Team`, `Initiative`, `Task`, `Need`, `Offer`, `Decision`, `Report`, `Position`.
+
+| Element | What it is |
+|---|---|
+| `description` | Plain text, a few lines. Links and @mentions allowed. |
+| `attachment[]` | **Reference material**: what to read or look at (a brief, last year's call, a deck, a moodboard). Stored by the group's own server, or an outside link labelled as such. |
+| *Outputs stay separate* | On a Task, `output[].attachment[]` is **what the work produced**. A page shows "Files" (reference) and "What came out of it" (outputs) as two groups. |
+| `Decision.option[].attachment[]` | Each option may carry several files (the concept, its PDF, mockups), and the `Decision` itself has `description` and `attachment[]` for the context of the vote. |
+
+Comments (`Communication`) and History (Provenance) attach to any page already.
+
 ## CAE kinds
 
 Every resource type is one of CAE's six kinds. The kind is fixed by the type.
@@ -469,7 +482,7 @@ Groups decide some things together: the leads of a fun run vote on the overall d
 
 | Element | What it is |
 |---|---|
-| **`Decision`** (new resource, from Popolo Motion + VoteEvent; CAE kind: Instrument while open, Event once decided) | `about` (any resource, e.g. Task LU-7), `question`, `method` (`approve` · `choose-one` · `choose-many` · `ranked` · `consent`), `option[]` {`id`, `label`, `attachment`}, `voters` (a Team, the leads of every Team in an Initiative, a Role, or named Persons), `eligible[]` (the voters, fixed when it opens), `opens`, `closes`, `quorum`, `threshold` (`majority` · `two-thirds` · `unanimous`; for `consent`: no objections), `showResults` (`after-voting` · `after-close`), `status`, `outcome` {`option[]`, `tally`, `decidedAt`}, `statement` (written by a person) |
+| **`Decision`** (new resource, from Popolo Motion + VoteEvent; CAE kind: Instrument while open, Event once decided) | `about` (any resource, e.g. Task LU-7), `question`, `method` (`approve` · `choose-one` · `choose-many` · `ranked` · `consent`), `option[]` {`id`, `label`, `description`, `attachment[]`}, `voters` (a Team, the leads of every Team in an Initiative, a Role, or named Persons), `eligible[]` (the voters, fixed when it opens), `opens`, `closes`, `quorum`, `threshold` (`majority` · `two-thirds` · `unanimous`; for `consent`: no objections), `showResults` (`after-voting` · `after-close`), `status`, `outcome` {`option[]`, `tally`, `decidedAt`}, `statement` (written by a person) |
 | **`Vote`** (new resource, from Popolo Vote; CAE kind: Event) | `decision`, `voter`, `choice[]` (option ids, in order for `ranked`), `objection` (for `consent`), `reason`, `cast`. A voter may change their vote until `closes`; the last one counts. |
 
 **Lifecycle:** `draft → open → closed → decided`, plus `no-quorum` and `cancelled`.
@@ -715,3 +728,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Files, home servers and hubs: Attachments stored by the group's own server (S3-compatible, self-hostable); outside links allowed and labelled; one home server per Organization; an organization hub on a dedicated phone or tablet, designed now and built after v0. |
 | 2026-10-28 | Recorded when done: completed work counts immediately; review only for money, beneficiaries, or work a group chooses to review; records signed automatically by the group's server or hub; copied to each participant's device; tamper-evident; published by the person's choice; claiming only through the group. |
 | 2026-10-28 | Privacy and safety in v0.1: account deletion with grace period and unnamed work kept by groups, removing never erases work, blocking, revocable links that can clear their drafts, `Attachment.showsMinors`, opt-in message sharing for Bayani, seeing your data. |
+| 2026-10-28 | Content every page has: `description` and `attachment[]` (reference material) on Organization, Team, Initiative, Task, Need, Offer, Decision, Report and Position; Task outputs kept separate; Decision options carry several attachments. |
