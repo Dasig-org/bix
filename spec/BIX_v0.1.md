@@ -484,6 +484,27 @@ Groups decide some things together: the leads of a fun run vote on the overall d
 - **Open ballots only in v0.1.** Secret ballots need cryptography to stay countable without revealing voters; they come later, with signatures.
 - **Visibility follows `sharing`.** By default a vote is visible to the people who may vote.
 
+## Files, home servers and hubs
+
+**Files (decided 2026-10-28).** An `Attachment` is stored by the group's own Bayanihan Server, in S3-compatible storage that self-hosters can run themselves (e.g. MinIO), so no outside cloud account is required. A link to an outside file (Google Drive and similar) is allowed as an Attachment with `url` only and is shown as "kept outside the group": the group doesn't control its sharing or its future.
+
+**Home server.** Every Organization has exactly one **home server** at a time: the Bayanihan Server that decides exclusive changes (claims, asks, confirmations, votes). Other copies replicate. This keeps "first come, first served" true when copies are apart.
+
+**Hubs (designed now, built after v0).** A group may dedicate a phone or Android tablet as its **hub**: a Bayanihan Server running on the device, reachable over its Wi-Fi hotspot or the local network.
+
+| Question | Design |
+|---|---|
+| Who talks to it | Members' and volunteers' Android apps nearby. They find it on the local network and pair once by scanning a QR code on the hub, which also carries the hub's key so the connection can be verified. NFC is optional (iPhones and browsers can't rely on it). |
+| What it holds | The group's BIX records and files, so photos and documents can be added with no internet at all |
+| Online too | When the hub has internet, it syncs with the group's cloud server as BIX Bundles |
+| Who decides | If the hub is the home server, it decides claims for its group; the cloud copy follows. If the cloud is home, the hub queues exclusive changes as pending. Moving "home" is an explicit, recorded act. |
+| Losing the hub | Its storage is encrypted, and it backs up to the cloud whenever it can |
+| Web users | Use the cloud server. Browsers can't reliably install an app that talks to a local device. |
+
+**Not in v0:** phone-to-phone mesh without a hub (store-and-forward like Briar), which needs signed Bundles first.
+
+**Lessons:** Kolibri (Learning Equality) runs offline on local devices and syncs between them and the cloud; ODK and CommCare collect data offline in the field; Briar relays messages over Wi-Fi and Bluetooth; CouchDB and PouchDB replicate offline-first databases.
+
 ## Concurrency and conflicts
 
 Many people act on the same open work, sometimes offline. BIX follows the patterns WordPress contribution and FHIR already use:
@@ -663,3 +684,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Organization structure: `Position` (from Popolo Post), `Role.position` with terms, elections as Decisions, saved structures, and common starting structures by kind of group (not legal advice). Teams confirmed as per project, with optional standing teams. |
 | 2026-10-27 | Volunteers belong to the structure: `volunteer` as a Team participant role, a suggested path volunteer → member → lead (never automatic), derived project credits, `Person.credit` naming preference, past volunteers asked back first. |
 | 2026-10-27 | How volunteers take part: `Task.participant[]` (owner and helpers working together, all credited), joining a team creates a volunteer Role, any team participant may propose work, and a table of who may change what on a Task. |
+| 2026-10-28 | Files, home servers and hubs: Attachments stored by the group's own server (S3-compatible, self-hostable); outside links allowed and labelled; one home server per Organization; an organization hub on a dedicated phone or tablet, designed now and built after v0. |
