@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Need.schema.json",
+  "title": "BIX v0.1 Need",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Need"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "initiative": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "category": {
+      "$ref": "datatypes.schema.json#/$defs/Coding"
+    },
+    "quantity": {
+      "$ref": "datatypes.schema.json#/$defs/Quantity"
+    },
+    "received": {
+      "$ref": "datatypes.schema.json#/$defs/Quantity"
+    },
+    "neededBy": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "recurrence": {
+      "$ref": "datatypes.schema.json#/$defs/Recurrence"
+    },
+    "location": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "priority": {
+      "enum": [
+        "routine",
+        "urgent"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "open",
+        "partially-met",
+        "met",
+        "cancelled"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "category",
+    "status"
+  ],
+  "additionalProperties": false
+}

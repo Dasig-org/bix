@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Role.schema.json",
+  "title": "BIX v0.1 Role",
+  "x-bix-cae-kind": "relationship",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Role"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "person": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "code": {
+      "$ref": "datatypes.schema.json#/$defs/Coding"
+    },
+    "status": {
+      "enum": [
+        "requested",
+        "active",
+        "ended"
+      ]
+    },
+    "position": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "period": {
+      "$ref": "datatypes.schema.json#/$defs/Period"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "qualification": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "person",
+    "organization",
+    "code",
+    "status"
+  ],
+  "additionalProperties": false
+}

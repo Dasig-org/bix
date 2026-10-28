@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Team.schema.json",
+  "title": "BIX v0.1 Team",
+  "x-bix-cae-kind": "Actor",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Team"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "name": {
+      "type": "string"
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "initiative": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "kind": {
+      "enum": [
+        "standing",
+        "initiative"
+      ]
+    },
+    "access": {
+      "enum": [
+        "own-tasks",
+        "initiative"
+      ]
+    },
+    "participant": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "role": {
+            "enum": [
+              "lead",
+              "member",
+              "volunteer"
+            ]
+          },
+          "status": {
+            "enum": [
+              "requested",
+              "active",
+              "ended"
+            ]
+          },
+          "period": {
+            "$ref": "datatypes.schema.json#/$defs/Period"
+          }
+        },
+        "required": [
+          "person",
+          "role",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "enum": [
+        "active",
+        "ended"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "name",
+    "organization"
+  ],
+  "additionalProperties": false
+}

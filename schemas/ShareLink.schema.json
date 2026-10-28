@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/ShareLink.schema.json",
+  "title": "BIX v0.1 ShareLink",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "ShareLink"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "target": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "grants": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "view",
+          "claim",
+          "join-team",
+          "propose",
+          "comment"
+        ]
+      }
+    },
+    "audience": {
+      "enum": [
+        "anyone-with-link",
+        "signed-in",
+        "members"
+      ]
+    },
+    "preview": {
+      "enum": [
+        "full",
+        "title-only",
+        "generic"
+      ]
+    },
+    "expires": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "createdBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "revoked"
+      ]
+    },
+    "blocked": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "target",
+    "grants",
+    "audience",
+    "createdBy",
+    "status"
+  ],
+  "additionalProperties": false
+}

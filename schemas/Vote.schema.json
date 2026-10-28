@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Vote.schema.json",
+  "title": "BIX v0.1 Vote",
+  "x-bix-cae-kind": "Event",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Vote"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "decision": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "voter": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "choice": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "objection": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "cast": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "decision",
+    "voter",
+    "cast"
+  ],
+  "additionalProperties": false
+}

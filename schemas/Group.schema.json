@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Group.schema.json",
+  "title": "BIX v0.1 Group",
+  "x-bix-cae-kind": "Observable",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Group"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "characteristic": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "location": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "quantity": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "characteristic"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/SharingPolicy.schema.json",
+  "title": "BIX v0.1 SharingPolicy",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "SharingPolicy"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "datatypes.schema.json#/$defs/Coding"
+          },
+          "sharing": {
+            "$ref": "datatypes.schema.json#/$defs/Sharing"
+          }
+        },
+        "required": [
+          "sharing"
+        ]
+      }
+    },
+    "approvedBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "minorsStayInGroup": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "organization"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Endpoint.schema.json",
+  "title": "BIX v0.1 Endpoint",
+  "x-bix-cae-kind": "transport",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Endpoint"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "address": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "cloud",
+        "hub",
+        "self-hosted"
+      ]
+    },
+    "publicKey": {
+      "type": "string"
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "off",
+        "retired"
+      ]
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "address",
+    "kind",
+    "status"
+  ],
+  "additionalProperties": false
+}

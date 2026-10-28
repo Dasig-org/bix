@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Communication.schema.json",
+  "title": "BIX v0.1 Communication",
+  "x-bix-cae-kind": "relationship",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Communication"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "about": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "sender": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "recipient": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "attachment": {
+          "type": "array",
+          "items": {
+            "$ref": "datatypes.schema.json#/$defs/Attachment"
+          }
+        }
+      }
+    },
+    "sent": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "about",
+    "sender",
+    "sent"
+  ],
+  "additionalProperties": false
+}

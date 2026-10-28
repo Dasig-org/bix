@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Offer.schema.json",
+  "title": "BIX v0.1 Offer",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Offer"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "offeredBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "category": {
+      "$ref": "datatypes.schema.json#/$defs/Coding"
+    },
+    "quantity": {
+      "$ref": "datatypes.schema.json#/$defs/Quantity"
+    },
+    "location": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "availableFrom": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "availableUntil": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "recurrence": {
+      "$ref": "datatypes.schema.json#/$defs/Recurrence"
+    },
+    "matchedTo": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "available",
+        "matched",
+        "fulfilled",
+        "expired",
+        "withdrawn"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "offeredBy",
+    "category",
+    "status"
+  ],
+  "additionalProperties": false
+}

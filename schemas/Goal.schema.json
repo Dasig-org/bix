@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Goal.schema.json",
+  "title": "BIX v0.1 Goal",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Goal"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "title": {
+      "type": "string"
+    },
+    "owner": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "cause": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "servesGroup": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "location": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "achieved",
+        "cancelled"
+      ]
+    },
+    "target": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "figure": {
+            "$ref": "datatypes.schema.json#/$defs/Coding"
+          },
+          "value": {
+            "type": "number"
+          },
+          "due": {
+            "$ref": "datatypes.schema.json#/$defs/dateTime"
+          }
+        },
+        "required": [
+          "figure",
+          "value"
+        ]
+      }
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "title",
+    "owner",
+    "status"
+  ],
+  "additionalProperties": false
+}

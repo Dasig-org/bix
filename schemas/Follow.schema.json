@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Follow.schema.json",
+  "title": "BIX v0.1 Follow",
+  "x-bix-cae-kind": "relationship",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Follow"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "follower": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "target": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "since": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "ended"
+      ]
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "follower",
+    "target",
+    "status"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/InitiativeTemplate.schema.json",
+  "title": "BIX v0.1 InitiativeTemplate",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "InitiativeTemplate"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "title": {
+      "type": "string"
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "retired"
+      ]
+    },
+    "team": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "leadRole": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      }
+    },
+    "action": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "team": {
+            "type": "string"
+          },
+          "taskDefinition": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "audience": {
+            "enum": [
+              "team",
+              "organization",
+              "open"
+            ]
+          },
+          "offset": {
+            "type": "string"
+          },
+          "partOf": {
+            "type": "string"
+          },
+          "dependsOn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title"
+        ]
+      }
+    },
+    "need": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Quantity"
+      }
+    },
+    "report": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "title",
+    "organization",
+    "version",
+    "status"
+  ],
+  "additionalProperties": false
+}

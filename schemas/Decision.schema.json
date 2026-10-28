@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Decision.schema.json",
+  "title": "BIX v0.1 Decision",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Decision"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "about": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "question": {
+      "type": "string"
+    },
+    "method": {
+      "enum": [
+        "approve",
+        "choose-one",
+        "choose-many",
+        "ranked",
+        "consent"
+      ]
+    },
+    "option": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "attachment": {
+            "type": "array",
+            "items": {
+              "$ref": "datatypes.schema.json#/$defs/Attachment"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ]
+      }
+    },
+    "voters": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "eligible": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "opens": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "closes": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "quorum": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "threshold": {
+      "enum": [
+        "majority",
+        "two-thirds",
+        "unanimous",
+        "no-objection"
+      ]
+    },
+    "showResults": {
+      "enum": [
+        "after-voting",
+        "after-close"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "open",
+        "closed",
+        "decided",
+        "no-quorum",
+        "cancelled"
+      ]
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "option": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tally": {
+          "type": "object"
+        },
+        "decidedAt": {
+          "$ref": "datatypes.schema.json#/$defs/dateTime"
+        }
+      }
+    },
+    "statement": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "question",
+    "method",
+    "status"
+  ],
+  "additionalProperties": false
+}
