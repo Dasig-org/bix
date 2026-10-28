@@ -557,6 +557,18 @@
   "additionalProperties": false
  },
  {
+  "oneOf": [
+   {
+    "required": [
+     "organization"
+    ]
+   },
+   {
+    "required": [
+     "person"
+    ]
+   }
+  ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bix.bayanihan.dev/v0.1/Initiative.schema.json",
   "title": "BIX v0.1 Initiative",
@@ -598,6 +610,9 @@
     ]
    },
    "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "person": {
     "$ref": "datatypes.schema.json#/$defs/Reference"
    },
    "partOf": {
@@ -712,8 +727,7 @@
    "meta",
    "title",
    "kind",
-   "status",
-   "organization"
+   "status"
   ],
   "additionalProperties": false
  },

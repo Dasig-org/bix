@@ -436,6 +436,13 @@ Credit follows participation; participation comes first. Everything below applie
 
 **Honouring, in the record:** credit by kind (performed, reviewed, verified, proposed, commented), thanks attached to confirmations, the person's own story across every group, the project's credits, and later, signed credentials they can show anyone.
 
+## One person, many groups, and work of your own
+
+- **One `Person`, many `Role`s.** A person can lead one organization and volunteer in others at the same time. Teams and Tasks reference the Person.
+- **Permissions come from the group that owns the record.** Bayanihan Core resolves them from the person's active Role, Positions and Team leadership in *that* Organization only. Leading one group grants nothing in another.
+- **Personal work.** An `Initiative` belongs to an `organization` **or** a `person` (exactly one). Personal projects work like any other; only the person (and people they add) can change them. A personal project can later be moved into a group the person starts, as a recorded change.
+- **One story.** Signed records from every group, and from personal work, are copied to the person's device and shown together. Records from different groups never merge; each keeps its own signature.
+
 ## Organization structure: positions and terms
 
 Teams belong to a project (`Team.initiative`); a group may also keep a few standing teams (no `initiative`). The **organization's own structure** is separate: its board and officers, who hold them, and for how long.
@@ -810,3 +817,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Who it's for and shared goals: `cause[]` with SDG codes, `Group` (from FHIR) for who is served as counts, `Goal` (from FHIR) for shared community targets, `Initiative.contributesTo[]`, calculated goal progress, small-number hiding in public views, sensitive characteristics as counts only. |
 | 2026-10-28 | Publish as you are: public project summaries, optional tagging, "who's working on what, for whom, where" from Bayanihan Server, self-synchronising without forced links, goal enrollment accepted by the goal's owner, default `bayanihan:cause` and `bayanihan:population` value sets mapped to the SDGs. |
 | 2026-10-28 | Audit fill-ins: `Signature` on Provenance, `Endpoint` and `Organization.homeServer`, person-level `Consent`, `Follow`, wider `Offer.matchedTo` and `Communication.recipient`, `Task.due`, more Organization kinds, `Organization.vocabulary[]`, public summaries for Organizations, saving teams back on wrap-up. |
+| 2026-10-28 | One person, many groups: permissions resolved per owning Organization; personal Initiatives (`person` instead of `organization`); one story across groups with separate signatures. |

@@ -28,10 +28,10 @@ RES = {
            "status": enum("active", "ended"), **page}, ["name", "organization"]),
  "Location": ({"name": S, "description": S, "psgc": {"type": "string", "pattern": "^[0-9]{9,10}$"}, "position": {"type": "object", "properties": {"lat": {"type": "number"}, "lon": {"type": "number"}}}, "partOf": R}, ["name"]),
  "Initiative": ({"title": S, "kind": enum("plan", "program", "project", "session"), "status": enum("draft", "planned", "active", "completed", "cancelled"),
-                 "organization": R, "partOf": R, "period": P, "recurrence": ref("Recurrence"), "category": arr(C), "cause": arr(C), "location": arr(R), "image": A,
+                 "organization": R, "person": R, "partOf": R, "period": P, "recurrence": ref("Recurrence"), "category": arr(C), "cause": arr(C), "location": arr(R), "image": A,
                  "target": arr({"type": "object", "properties": {"code": C, "value": {"type": "number"}, "unit": S}, "required": ["code", "value"]}),
                  "taskDefinition": arr(R), "partner": arr(R), "servesGroup": arr(R),
-                 "contributesTo": arr({"type": "object", "properties": {"goal": R, "status": enum("requested", "accepted", "declined")}, "required": ["goal", "status"]}), **page, **summary}, ["title", "kind", "status", "organization"]),
+                 "contributesTo": arr({"type": "object", "properties": {"goal": R, "status": enum("requested", "accepted", "declined")}, "required": ["goal", "status"]}), **page, **summary}, ["title", "kind", "status"]),
  "InitiativeTemplate": ({"title": S, "organization": R, "version": {"type": "integer", "minimum": 1}, "status": enum("draft", "active", "retired"),
                          "team": arr({"type": "object", "properties": {"name": S, "leadRole": S}, "required": ["name"]}),
                          "action": arr({"type": "object", "properties": {"title": S, "team": S, "taskDefinition": R, "audience": enum("team", "organization", "open"), "offset": S, "partOf": S, "dependsOn": arr(S)}, "required": ["title"]}),
@@ -79,8 +79,10 @@ CAE = {"Person": "Actor", "Organization": "Actor", "Team": "Actor", "Location": 
        "SharingPolicy": "Instrument", "Need": "Instrument", "Offer": "Instrument", "Report": "Instrument", "Position": "Instrument", "Goal": "Instrument", "Consent": "Instrument",
        "ShareLink": "Instrument", "Decision": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
        "Role": "relationship", "Communication": "relationship", "Follow": "relationship", "Provenance": "attestation", "Endpoint": "transport"}
+ONE_OF = {"Initiative": [{"required": ["organization"]}, {"required": ["person"]}]}
 def build(name, props, req):
-    return {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": f"{BASE}{name}.schema.json", "title": f"BIX v0.1 {name}",
+    extra = {"oneOf": ONE_OF[name]} if name in ONE_OF else {}
+    return {**extra, "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": f"{BASE}{name}.schema.json", "title": f"BIX v0.1 {name}",
             "x-bix-cae-kind": CAE[name], "type": "object",
             "allOf": [{"$ref": DT + "Resource"}],
             "properties": {"resourceType": {"const": name}, "id": True, "meta": True, "identifier": True, "sharing": True, "language": True, "extension": True, **props},
