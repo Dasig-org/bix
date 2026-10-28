@@ -584,7 +584,7 @@ Groups add their own words in their namespace; a module (e.g. animal welfare) ad
 
 **Home server.** Every Organization has exactly one **home server** at a time: the Bayanihan Server that decides exclusive changes (claims, asks, confirmations, votes). Other copies replicate. This keeps "first come, first served" true when copies are apart.
 
-**Hubs (designed now, built after v0).** A group may dedicate a phone or Android tablet as its **hub**: a Bayanihan Server running on the device, reachable over its Wi-Fi hotspot or the local network.
+**Hubs (in v0, decided 2026-10-29).** A group may dedicate a phone or Android tablet as its **hub**: a Bayanihan Server running on the device, reachable over its Wi-Fi hotspot or the local network.
 
 | Question | Design |
 |---|---|
@@ -594,6 +594,7 @@ Groups add their own words in their namespace; a module (e.g. animal welfare) ad
 | Who decides | If the hub is the home server, it decides claims for its group; the cloud copy follows. If the cloud is home, the hub queues exclusive changes as pending. Moving "home" is an explicit, recorded act. |
 | Losing the hub | Its storage is encrypted, and it backs up to the cloud whenever it can |
 | Web users | Use the cloud server. Browsers can't reliably install an app that talks to a local device. |
+| Standalone | A single phone with no hub and no cloud runs Bayanihan Server inside the app, on its own storage. Same API and rules. (v0, 2026-10-29) |
 
 **Not in v0:** phone-to-phone mesh without a hub (store-and-forward like Briar), which needs signed Bundles first.
 
@@ -820,3 +821,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Audit fill-ins: `Signature` on Provenance, `Endpoint` and `Organization.homeServer`, person-level `Consent`, `Follow`, wider `Offer.matchedTo` and `Communication.recipient`, `Task.due`, more Organization kinds, `Organization.vocabulary[]`, public summaries for Organizations, saving teams back on wrap-up. |
 | 2026-10-28 | One person, many groups: permissions resolved per owning Organization; personal Initiatives (`person` instead of `organization`); one story across groups with separate signatures. |
 | 2026-10-28 | `Task.team`: the Team a Task belongs to, kept when its owner becomes a person (found while building the app). |
+| 2026-10-29 | Standalone phone and phone hub moved into v0: Bayanihan Server runs inside the Dasig app on the phone's own storage; other phones pair by QR over the hub's hotspot. |
