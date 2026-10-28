@@ -139,7 +139,7 @@ These aren't for the first conversation. Use them in later conversations, and on
 | `Quantity` | `value`, `unit` (BIX unit list) | Rule 6 |
 | `Period` | `start`, `end` | ISO 8601 with offset |
 | `Coding` | `system`, `code`, `display` | `system` is `bayanihan:{value-set}` or a module's namespace |
-| `Attachment` | `contentType`, `url`, `hash` (SHA-256), `size`, `title`, `capturedAt` | As FHIR. Photos, receipts and attendance sheets. The file lives in the implementation's storage; the record holds its address and fingerprint. |
+| `Attachment` | `contentType`, `url`, `hash` (SHA-256), `size`, `title`, `capturedAt`, `showsMinors` | As FHIR. Photos, receipts and attendance sheets. The file lives in the implementation's storage; the record holds its address and fingerprint. |
 
 **Media.** Images are Attachments on `Person.photo`, `Organization.image`, `Initiative.image`, `Task.output[].attachment[]` and `Report.attachment[]`. A photo is shared no more widely than the record that holds it. Link previews and public pages may show only an `Initiative.image` or `Organization.image` whose record is `public`, never a Task's photos, because those often show beneficiaries, including children.
 
@@ -518,6 +518,21 @@ This replaces the earlier rule that credit counts only after confirmation. Confo
 
 **Lessons:** Kolibri (Learning Equality) runs offline on local devices and syncs between them and the cloud; ODK and CommCare collect data offline in the field; Briar relays messages over Wi-Fi and Bluetooth; CouchDB and PouchDB replicate offline-first databases.
 
+## Privacy and safety in v0.1 (decided 2026-10-28)
+
+Trust is in v0, and hardened in later versions. Not legal advice; the Data Privacy Act wording is to be checked by an adviser.
+
+| Rule | What it means |
+|---|---|
+| **Deleting an account** | The person's profile, contact, photo and the photos they added are removed after a 14-day grace period. Groups keep the work they recorded, with the person shown as "a former volunteer", so histories and report figures still add up. |
+| **Removing someone** | Ending a Team participation or a Role never erases past work; it stays in the group's history and in the person's own story. |
+| **Blocking** | A group may stop a person joining through its links (`ShareLink` refuses them). Separate from removing, and deliberate. |
+| **Links are revocable** | Every `ShareLink` can be revoked at once. Revoking a link can also clear every draft that arrived through it. |
+| **Spam can't reach anyone** | Anything proposed through a public link is `draft` and `private` until a member accepts it (rule 19). |
+| **Photos with children** | An `Attachment` may be marked `showsMinors`. A group setting, on by default, keeps such photos from ever leaving the group: no previews, no public pages, no profiles. |
+| **Messages for Bayani** | Raw messages stay on the phone (rule 11). Sharing a message to improve Bayani is opt-in, per message, with names removed first, and can be withdrawn at any time. |
+| **Seeing your data** | A person can see counts of what is kept about them, download all of it as BIX (rule 18), choose what their profile shows, and delete their account. |
+
 ## Concurrency and conflicts
 
 Many people act on the same open work, sometimes offline. BIX follows the patterns WordPress contribution and FHIR already use:
@@ -699,3 +714,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | How volunteers take part: `Task.participant[]` (owner and helpers working together, all credited), joining a team creates a volunteer Role, any team participant may propose work, and a table of who may change what on a Task. |
 | 2026-10-28 | Files, home servers and hubs: Attachments stored by the group's own server (S3-compatible, self-hostable); outside links allowed and labelled; one home server per Organization; an organization hub on a dedicated phone or tablet, designed now and built after v0. |
 | 2026-10-28 | Recorded when done: completed work counts immediately; review only for money, beneficiaries, or work a group chooses to review; records signed automatically by the group's server or hub; copied to each participant's device; tamper-evident; published by the person's choice; claiming only through the group. |
+| 2026-10-28 | Privacy and safety in v0.1: account deletion with grace period and unnamed work kept by groups, removing never erases work, blocking, revocable links that can clear their drafts, `Attachment.showsMinors`, opt-in message sharing for Bayani, seeing your data. |
