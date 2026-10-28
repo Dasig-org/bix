@@ -97,3 +97,4 @@ bundle = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": f"{B
 allfiles = sorted(OUT.glob("*.schema.json"))
 (OUT / "all.json").write_text(json.dumps([json.loads(f.read_text()) for f in allfiles], indent=1) + "\n")
 print(len(RES) + 1, "schemas written, plus all.json")
+import subprocess; subprocess.run(["node", str(pathlib.Path(__file__).parent / "build_validators.mjs")], check=True)
