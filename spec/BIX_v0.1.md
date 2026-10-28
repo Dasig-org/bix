@@ -524,8 +524,39 @@ Bayanihan's larger proposition: organizations, governments and communities worki
 | **`Group`** (new resource, from FHIR Group; CAE kind: Observable) | **Who is served**, without naming anyone: `characteristic[]` (e.g. `bayanihan:population` codes: children, youth, students, senior citizens, PWDs, fisherfolk, Indigenous peoples, women, households), `location` (PSGC), `quantity` (estimated size). Referenced by `Initiative.servesGroup[]`. |
 | **Reach** | How many were actually served is a Report figure (`households-served`, `learners-served`, …), counted from completed work as before. Never a list of names. |
 | **`Goal`** (new resource, from FHIR Goal; CAE kind: Instrument) | **A shared target for a community**: `title` ("Every child in Barangay Pajo reads at grade level by 2028"), `owner` (an LGU, a coalition or any Organization), `cause[]`, `servesGroup[]`, `location`, `target[]` {`figure` code, `value`, `due`}, `sharing` (usually `public`). |
-| **`Initiative.contributesTo[]`** | The Goals a project or program works toward. Any group may link its own work to any public Goal. |
-| **Goal progress** | Calculated, never typed: the sum of matching figures from contributing Initiatives' submitted Reports that are shared with the Goal's owner (`network` or `public`). Groups that contribute are listed; groups that haven't reported are listed, not estimated. |
+| **`Initiative.contributesTo[]`** | {`goal`, `status`}: the Goals a project is enrolled in. Any group may ask to enroll; the Goal's owner accepts (see below). |
+| **Goal progress** | Calculated, never typed: the sum of matching figures from **accepted** contributing Initiatives' submitted Reports that are shared with the Goal's owner (`network` or `public`). Groups that contribute are listed; groups that haven't reported are listed, not estimated. |
+
+### Publish as you are, find each other, join a goal if you want (decided 2026-10-28)
+
+Bottom-up first. Nobody is made to work with anyone.
+
+1. **Publish as you are.** A group publishes a project the way it already runs it. Publishing shows a **public summary** only: title, group, place (barangay or above, never an address), causes, who it's for (as a description), status and dates. Tasks, people, files and figures stay as shared as they were. Offered when a project is created, one tap, and can be turned off.
+2. **Tag when ready.** `cause[]` and `servesGroup[]` are optional at first. The app suggests them from the project's words; the group confirms.
+3. **Find who's already working here.** Bayanihan Server answers **"who's working on what, for whom, where"** from published summaries: by place (PSGC), by cause, by who's served. When a group creates a project, it sees *"3 groups also work on learning in Barangay Pajo"*, as information, never a requirement.
+4. **Self-synchronise.** From a published project, others can follow it, offer help, message the group, or invite it as a partner (`Initiative.partner[]`). Groups decide; nothing links automatically.
+5. **Join a larger effort.** When a foundation, a city or a national agency sets a **Goal**, any group can **enroll** a project in it. Enrollment is `Initiative.contributesTo[]` {`goal`, `status`: `requested → accepted`, or `declined`}; the Goal's owner accepts, so a goal's list of contributors can be trusted. Only accepted enrollments count toward the Goal's progress.
+
+**Default categories.** BIX ships two value sets so groups don't start from a blank list, each mapped to the SDGs with SKOS-style mappings:
+
+| `bayanihan:cause` | Maps to | | `bayanihan:population` |
+|---|---|---|---|
+| Education and learning | SDG 4 | | Children |
+| Health | SDG 3 | | Youth |
+| Food and nutrition | SDG 2 | | Students |
+| Environment and coasts | SDG 13, 14, 15 | | Senior citizens |
+| Disaster readiness | SDG 11, 13 | | Persons with disability |
+| Livelihood and work | SDG 1, 8 | | Women |
+| Water and sanitation | SDG 6 | | Indigenous peoples |
+| Housing and communities | SDG 11 | | Fisherfolk and farmers |
+| Youth leadership | SDG 4, 16 | | Families and households |
+| Civic participation | SDG 16 | | Out-of-school youth |
+| Digital skills and tech | SDG 4, 9 | | Patients and caregivers |
+| Arts, culture and heritage | SDG 11 | | Communities (everyone in a place) |
+| Faith and community care | SDG 1, 3 | | |
+| Animal welfare | SDG 15 | | |
+
+Groups add their own words in their namespace; a module (e.g. animal welfare) adds its own codes. Codes are never redefined.
 
 **Privacy rules for beneficiaries:**
 
@@ -755,3 +786,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Privacy and safety in v0.1: account deletion with grace period and unnamed work kept by groups, removing never erases work, blocking, revocable links that can clear their drafts, `Attachment.showsMinors`, opt-in message sharing for Bayani, seeing your data. |
 | 2026-10-28 | Content every page has: `description` and `attachment[]` (reference material) on Organization, Team, Initiative, Task, Need, Offer, Decision, Report and Position; Task outputs kept separate; Decision options carry several attachments. |
 | 2026-10-28 | Who it's for and shared goals: `cause[]` with SDG codes, `Group` (from FHIR) for who is served as counts, `Goal` (from FHIR) for shared community targets, `Initiative.contributesTo[]`, calculated goal progress, small-number hiding in public views, sensitive characteristics as counts only. |
+| 2026-10-28 | Publish as you are: public project summaries, optional tagging, "who's working on what, for whom, where" from Bayanihan Server, self-synchronising without forced links, goal enrollment accepted by the goal's owner, default `bayanihan:cause` and `bayanihan:population` value sets mapped to the SDGs. |
