@@ -224,6 +224,8 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `InitiativeTemplate`, `ShareLink` | Instrument | |
 | `Communication` | *Relationship, not a kind* | |
 | `Position` | Instrument | From Popolo Post |
+| `Group` | Observable | From FHIR Group: who is served, as counts |
+| `Goal` | Instrument | From FHIR Goal: a shared target |
 | `Decision` | Instrument while open, Event once decided | From Popolo Motion and VoteEvent |
 | `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
@@ -510,6 +512,29 @@ No confirmation back-and-forth for ordinary work. **"Done" is the record.**
 
 This replaces the earlier rule that credit counts only after confirmation. Conformance rule 5 (a second person for money and beneficiary steps) is unchanged.
 
+## Who it's for, and the goals groups share
+
+Bayanihan's larger proposition: organizations, governments and communities working toward the **same goals for a community**, each seeing how their work adds up. Three things make that possible: a shared way to say *what cause*, *who is served*, and *which goal* the work serves.
+
+**Lessons.** FHIR **`Group`** describes a population by its characteristics and size without naming anyone; FHIR **`Goal`** is a target with measures and a due date. The **UN Sustainable Development Goals** give causes a shared code that governments, NGOs and funders already use. The collective-impact approach (shared goals, shared measures, separate work) is the model; OCHA's 3W (who does what, where) is the precedent for adding up many groups' work in one place.
+
+| Element | What it is |
+|---|---|
+| **`cause[]`** on Organization and Initiative | What the work is for, as Codings: an SDG code (e.g. `sdg:4` quality education, `sdg:14` life below water) plus the group's own words ("coastal cleanup", "learning for kids") |
+| **`Group`** (new resource, from FHIR Group; CAE kind: Observable) | **Who is served**, without naming anyone: `characteristic[]` (e.g. `bayanihan:population` codes: children, youth, students, senior citizens, PWDs, fisherfolk, Indigenous peoples, women, households), `location` (PSGC), `quantity` (estimated size). Referenced by `Initiative.servesGroup[]`. |
+| **Reach** | How many were actually served is a Report figure (`households-served`, `learners-served`, …), counted from completed work as before. Never a list of names. |
+| **`Goal`** (new resource, from FHIR Goal; CAE kind: Instrument) | **A shared target for a community**: `title` ("Every child in Barangay Pajo reads at grade level by 2028"), `owner` (an LGU, a coalition or any Organization), `cause[]`, `servesGroup[]`, `location`, `target[]` {`figure` code, `value`, `due`}, `sharing` (usually `public`). |
+| **`Initiative.contributesTo[]`** | The Goals a project or program works toward. Any group may link its own work to any public Goal. |
+| **Goal progress** | Calculated, never typed: the sum of matching figures from contributing Initiatives' submitted Reports that are shared with the Goal's owner (`network` or `public`). Groups that contribute are listed; groups that haven't reported are listed, not estimated. |
+
+**Privacy rules for beneficiaries:**
+
+- People served are **counts and descriptions**, never named records, unless a module with its own consent design says otherwise (e.g. scholarship monitoring, later).
+- **Small numbers are hidden in public views.** Any public figure below 5 for one place and group shows as "fewer than 5", so nobody can be identified.
+- Health, disability and similar characteristics are sensitive under the Data Privacy Act; groups record them only as counts, and only when the work needs it.
+
+**Where shared goals live.** A Goal is an ordinary BIX record with a global address, so it can live on any Bayanihan Server (an LGU's, a federation's) and be linked from anywhere. In practice, finding goals and adding up many groups' work needs a server that many groups use. For v0 that is the **Dasig-hosted Bayanihan Server**, which also publishes public Goal pages. Later, servers can federate and a Goal's owner can host it themselves.
+
 ## Files, home servers and hubs
 
 **Files (decided 2026-10-28).** An `Attachment` is stored by the group's own Bayanihan Server, in S3-compatible storage that self-hosters can run themselves (e.g. MinIO), so no outside cloud account is required. A link to an outside file (Google Drive and similar) is allowed as an Attachment with `url` only and is shown as "kept outside the group": the group doesn't control its sharing or its future.
@@ -729,3 +754,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Recorded when done: completed work counts immediately; review only for money, beneficiaries, or work a group chooses to review; records signed automatically by the group's server or hub; copied to each participant's device; tamper-evident; published by the person's choice; claiming only through the group. |
 | 2026-10-28 | Privacy and safety in v0.1: account deletion with grace period and unnamed work kept by groups, removing never erases work, blocking, revocable links that can clear their drafts, `Attachment.showsMinors`, opt-in message sharing for Bayani, seeing your data. |
 | 2026-10-28 | Content every page has: `description` and `attachment[]` (reference material) on Organization, Team, Initiative, Task, Need, Offer, Decision, Report and Position; Task outputs kept separate; Decision options carry several attachments. |
+| 2026-10-28 | Who it's for and shared goals: `cause[]` with SDG codes, `Group` (from FHIR) for who is served as counts, `Goal` (from FHIR) for shared community targets, `Initiative.contributesTo[]`, calculated goal progress, small-number hiding in public views, sensitive characteristics as counts only. |
