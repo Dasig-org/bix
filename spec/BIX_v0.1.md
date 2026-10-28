@@ -484,6 +484,19 @@ Groups decide some things together: the leads of a fun run vote on the overall d
 - **Open ballots only in v0.1.** Secret ballots need cryptography to stay countable without revealing voters; they come later, with signatures.
 - **Visibility follows `sharing`.** By default a vote is visible to the people who may vote.
 
+## Recorded when done, kept by each person (decided 2026-10-28)
+
+No confirmation back-and-forth for ordinary work. **"Done" is the record.**
+
+1. **Done counts immediately.** When a Task is marked `completed`, its participants are credited at once. `verification` is needed only where it matters: steps involving money or beneficiaries (always a second person), and kinds of work a group chooses to review (`TaskDefinition.review: true`, or `Task.reviewer` set). Review is off by default.
+2. **Signed on completion.** The group's home server or hub signs the completed record at that moment with the group's key, over its RFC 8785 canonical form, offline too. The signature is the group's stamp; no person has to approve it.
+3. **A copy for each person.** The signed record is copied to the device of every participant the next time their app syncs with the hub or the cloud.
+4. **Tamper-evident, not tamper-proof.** A device's owner can always edit what's on their device, but any change to a signed record breaks its signature, and every BIX app and profile that checks it shows it as altered.
+5. **Published by choice.** When a person goes online, their Dasig profile shows only the signed records they choose to show, named the way they choose (`Person.credit`).
+6. **Claiming.** Records a group made for a nickname join someone's profile only through that group's invite link or from the group's own server, never by name matching.
+
+This replaces the earlier rule that credit counts only after confirmation. Conformance rule 5 (a second person for money and beneficiary steps) is unchanged.
+
 ## Files, home servers and hubs
 
 **Files (decided 2026-10-28).** An `Attachment` is stored by the group's own Bayanihan Server, in S3-compatible storage that self-hosters can run themselves (e.g. MinIO), so no outside cloud account is required. A link to an outside file (Google Drive and similar) is allowed as an Attachment with `url` only and is shown as "kept outside the group": the group doesn't control its sharing or its future.
@@ -552,7 +565,7 @@ BIX takes the cryptography that blockchains popularized and leaves out the chain
 | Technique | In BIX | When |
 |---|---|---|
 | Hash-chained revisions | `meta.previousHash`, over the RFC 8785 canonical form | Designed; built after the pilot |
-| Signed confirmations | The device of the person who confirms a step signs the confirmation, so anyone can check who confirmed it without trusting the server | Designed; built after the pilot |
+| Signed records | The group's home server or hub signs each completed record automatically (see "Recorded when done"), so anyone can check it without trusting any server | **v0 for the cloud server; the hub after v0** |
 | Public anchoring | Periodically publish one combined fingerprint (a Merkle root) of confirmed records, so later tampering can be proven. Maps to CEP's `anchorUri`. Never publishes the records themselves. | Designed; built after the pilot |
 | Verifiable credentials | A Person's contribution record can be issued as W3C Verifiable Credentials they hold and anyone can verify | Designed; built after the pilot |
 | Portable personal records | A Person's records can move between BIX servers with them, as Bluesky's AT Protocol does for posts | Export now (rule 18); moving between servers later |
@@ -685,3 +698,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-27 | Volunteers belong to the structure: `volunteer` as a Team participant role, a suggested path volunteer → member → lead (never automatic), derived project credits, `Person.credit` naming preference, past volunteers asked back first. |
 | 2026-10-27 | How volunteers take part: `Task.participant[]` (owner and helpers working together, all credited), joining a team creates a volunteer Role, any team participant may propose work, and a table of who may change what on a Task. |
 | 2026-10-28 | Files, home servers and hubs: Attachments stored by the group's own server (S3-compatible, self-hostable); outside links allowed and labelled; one home server per Organization; an organization hub on a dedicated phone or tablet, designed now and built after v0. |
+| 2026-10-28 | Recorded when done: completed work counts immediately; review only for money, beneficiaries, or work a group chooses to review; records signed automatically by the group's server or hub; copied to each participant's device; tamper-evident; published by the person's choice; claiming only through the group. |
