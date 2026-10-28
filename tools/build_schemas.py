@@ -92,4 +92,6 @@ bundle = {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": f"{B
                          "entry": arr({"type": "object", "properties": {"fullUrl": S, "resource": {"type": "object", "required": ["resourceType"]}}, "required": ["fullUrl", "resource"]})},
           "required": ["resourceType", "id", "type", "entry"], "additionalProperties": False}
 (OUT / "Bundle.schema.json").write_text(json.dumps(bundle, indent=2) + "\n")
-print(len(RES) + 1, "schemas written")
+allfiles = sorted(OUT.glob("*.schema.json"))
+(OUT / "all.json").write_text(json.dumps([json.loads(f.read_text()) for f in allfiles], indent=1) + "\n")
+print(len(RES) + 1, "schemas written, plus all.json")

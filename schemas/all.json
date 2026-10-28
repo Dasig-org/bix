@@ -1,0 +1,2605 @@
+[
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Bundle.schema.json",
+  "title": "BIX v0.1 Bundle",
+  "x-bix-cae-kind": "transport",
+  "type": "object",
+  "properties": {
+   "resourceType": {
+    "const": "Bundle"
+   },
+   "id": {
+    "$ref": "datatypes.schema.json#/$defs/id"
+   },
+   "type": {
+    "enum": [
+     "sync",
+     "transaction",
+     "export"
+    ]
+   },
+   "timestamp": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "entry": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "fullUrl": {
+       "type": "string"
+      },
+      "resource": {
+       "type": "object",
+       "required": [
+        "resourceType"
+       ]
+      }
+     },
+     "required": [
+      "fullUrl",
+      "resource"
+     ]
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "type",
+   "entry"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Communication.schema.json",
+  "title": "BIX v0.1 Communication",
+  "x-bix-cae-kind": "relationship",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Communication"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "about": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "sender": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "recipient": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "payload": {
+    "type": "object",
+    "properties": {
+     "text": {
+      "type": "string"
+     },
+     "attachment": {
+      "type": "array",
+      "items": {
+       "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+     }
+    }
+   },
+   "sent": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "about",
+   "sender",
+   "sent"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Consent.schema.json",
+  "title": "BIX v0.1 Consent",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Consent"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "person": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "scope": {
+    "enum": [
+     "share-messages-for-bayani",
+     "appear-in-credits",
+     "photo-of-me",
+     "contact-by-group"
+    ]
+   },
+   "status": {
+    "enum": [
+     "active",
+     "withdrawn"
+    ]
+   },
+   "dateTime": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "person",
+   "scope",
+   "status",
+   "dateTime"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Decision.schema.json",
+  "title": "BIX v0.1 Decision",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Decision"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "about": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "question": {
+    "type": "string"
+   },
+   "method": {
+    "enum": [
+     "approve",
+     "choose-one",
+     "choose-many",
+     "ranked",
+     "consent"
+    ]
+   },
+   "option": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "label": {
+       "type": "string"
+      },
+      "description": {
+       "type": "string"
+      },
+      "attachment": {
+       "type": "array",
+       "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+       }
+      }
+     },
+     "required": [
+      "id",
+      "label"
+     ]
+    }
+   },
+   "voters": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "eligible": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "opens": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "closes": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "quorum": {
+    "type": "integer",
+    "minimum": 0
+   },
+   "threshold": {
+    "enum": [
+     "majority",
+     "two-thirds",
+     "unanimous",
+     "no-objection"
+    ]
+   },
+   "showResults": {
+    "enum": [
+     "after-voting",
+     "after-close"
+    ]
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "open",
+     "closed",
+     "decided",
+     "no-quorum",
+     "cancelled"
+    ]
+   },
+   "outcome": {
+    "type": "object",
+    "properties": {
+     "option": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "tally": {
+      "type": "object"
+     },
+     "decidedAt": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+     }
+    }
+   },
+   "statement": {
+    "type": "string"
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "question",
+   "method",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Endpoint.schema.json",
+  "title": "BIX v0.1 Endpoint",
+  "x-bix-cae-kind": "transport",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Endpoint"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "address": {
+    "type": "string"
+   },
+   "kind": {
+    "enum": [
+     "cloud",
+     "hub",
+     "self-hosted"
+    ]
+   },
+   "publicKey": {
+    "type": "string"
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "status": {
+    "enum": [
+     "active",
+     "off",
+     "retired"
+    ]
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "address",
+   "kind",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Follow.schema.json",
+  "title": "BIX v0.1 Follow",
+  "x-bix-cae-kind": "relationship",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Follow"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "follower": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "target": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "since": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "status": {
+    "enum": [
+     "active",
+     "ended"
+    ]
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "follower",
+   "target",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Goal.schema.json",
+  "title": "BIX v0.1 Goal",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Goal"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "title": {
+    "type": "string"
+   },
+   "owner": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "cause": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "servesGroup": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "location": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "active",
+     "achieved",
+     "cancelled"
+    ]
+   },
+   "target": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "figure": {
+       "$ref": "datatypes.schema.json#/$defs/Coding"
+      },
+      "value": {
+       "type": "number"
+      },
+      "due": {
+       "$ref": "datatypes.schema.json#/$defs/dateTime"
+      }
+     },
+     "required": [
+      "figure",
+      "value"
+     ]
+    }
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "title",
+   "owner",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Group.schema.json",
+  "title": "BIX v0.1 Group",
+  "x-bix-cae-kind": "Observable",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Group"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "characteristic": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "location": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "quantity": {
+    "type": "integer",
+    "minimum": 0
+   },
+   "description": {
+    "type": "string"
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "characteristic"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Initiative.schema.json",
+  "title": "BIX v0.1 Initiative",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Initiative"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "title": {
+    "type": "string"
+   },
+   "kind": {
+    "enum": [
+     "plan",
+     "program",
+     "project",
+     "session"
+    ]
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "planned",
+     "active",
+     "completed",
+     "cancelled"
+    ]
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "period": {
+    "$ref": "datatypes.schema.json#/$defs/Period"
+   },
+   "recurrence": {
+    "$ref": "datatypes.schema.json#/$defs/Recurrence"
+   },
+   "category": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "cause": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "location": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "image": {
+    "$ref": "datatypes.schema.json#/$defs/Attachment"
+   },
+   "target": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "code": {
+       "$ref": "datatypes.schema.json#/$defs/Coding"
+      },
+      "value": {
+       "type": "number"
+      },
+      "unit": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "code",
+      "value"
+     ]
+    }
+   },
+   "taskDefinition": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "partner": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "servesGroup": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "contributesTo": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "goal": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "status": {
+       "enum": [
+        "requested",
+        "accepted",
+        "declined"
+       ]
+      }
+     },
+     "required": [
+      "goal",
+      "status"
+     ]
+    }
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   },
+   "publicSummary": {
+    "type": "boolean",
+    "default": true
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "title",
+   "kind",
+   "status",
+   "organization"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/InitiativeTemplate.schema.json",
+  "title": "BIX v0.1 InitiativeTemplate",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "InitiativeTemplate"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "title": {
+    "type": "string"
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "version": {
+    "type": "integer",
+    "minimum": 1
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "active",
+     "retired"
+    ]
+   },
+   "team": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "name": {
+       "type": "string"
+      },
+      "leadRole": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "name"
+     ]
+    }
+   },
+   "action": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "title": {
+       "type": "string"
+      },
+      "team": {
+       "type": "string"
+      },
+      "taskDefinition": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "audience": {
+       "enum": [
+        "team",
+        "organization",
+        "open"
+       ]
+      },
+      "offset": {
+       "type": "string"
+      },
+      "partOf": {
+       "type": "string"
+      },
+      "dependsOn": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      }
+     },
+     "required": [
+      "title"
+     ]
+    }
+   },
+   "need": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Quantity"
+    }
+   },
+   "report": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "title",
+   "organization",
+   "version",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Location.schema.json",
+  "title": "BIX v0.1 Location",
+  "x-bix-cae-kind": "Site",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Location"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "name": {
+    "type": "string"
+   },
+   "description": {
+    "type": "string"
+   },
+   "psgc": {
+    "type": "string",
+    "pattern": "^[0-9]{9,10}$"
+   },
+   "position": {
+    "type": "object",
+    "properties": {
+     "lat": {
+      "type": "number"
+     },
+     "lon": {
+      "type": "number"
+     }
+    }
+   },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "name"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Need.schema.json",
+  "title": "BIX v0.1 Need",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Need"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "initiative": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "category": {
+    "$ref": "datatypes.schema.json#/$defs/Coding"
+   },
+   "quantity": {
+    "$ref": "datatypes.schema.json#/$defs/Quantity"
+   },
+   "received": {
+    "$ref": "datatypes.schema.json#/$defs/Quantity"
+   },
+   "neededBy": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "recurrence": {
+    "$ref": "datatypes.schema.json#/$defs/Recurrence"
+   },
+   "location": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "priority": {
+    "enum": [
+     "routine",
+     "urgent"
+    ]
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "open",
+     "partially-met",
+     "met",
+     "cancelled"
+    ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "category",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Offer.schema.json",
+  "title": "BIX v0.1 Offer",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Offer"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "offeredBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "category": {
+    "$ref": "datatypes.schema.json#/$defs/Coding"
+   },
+   "quantity": {
+    "$ref": "datatypes.schema.json#/$defs/Quantity"
+   },
+   "location": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "availableFrom": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "availableUntil": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "recurrence": {
+    "$ref": "datatypes.schema.json#/$defs/Recurrence"
+   },
+   "matchedTo": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "available",
+     "matched",
+     "fulfilled",
+     "expired",
+     "withdrawn"
+    ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "offeredBy",
+   "category",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Organization.schema.json",
+  "title": "BIX v0.1 Organization",
+  "x-bix-cae-kind": "Actor",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Organization"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "name": {
+    "type": "string"
+   },
+   "kind": {
+    "enum": [
+     "registered-npo",
+     "faith-based",
+     "civic-club",
+     "community",
+     "event-team",
+     "sk-council",
+     "school-org",
+     "school",
+     "university",
+     "cooperative",
+     "informal",
+     "lgu-unit",
+     "national-agency",
+     "foundation"
+    ]
+   },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "registration": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "system": {
+       "type": "string"
+      },
+      "value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "value"
+     ]
+    }
+   },
+   "image": {
+    "$ref": "datatypes.schema.json#/$defs/Attachment"
+   },
+   "cause": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "location": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "homeServer": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "vocabulary": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "term": {
+       "type": "string"
+      },
+      "label": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "term",
+      "label"
+     ]
+    }
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   },
+   "publicSummary": {
+    "type": "boolean",
+    "default": true
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "name"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Person.schema.json",
+  "title": "BIX v0.1 Person",
+  "x-bix-cae-kind": "Actor",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Person"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "name": {
+    "type": "object",
+    "properties": {
+     "text": {
+      "type": "string"
+     },
+     "use": {
+      "enum": [
+       "nickname",
+       "full"
+      ]
+     }
+    },
+    "required": [
+     "text"
+    ],
+    "additionalProperties": false
+   },
+   "photo": {
+    "$ref": "datatypes.schema.json#/$defs/Attachment"
+   },
+   "contact": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "system": {
+       "enum": [
+        "phone",
+        "email",
+        "messenger",
+        "other"
+       ]
+      },
+      "value": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "system",
+      "value"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "managedBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "credit": {
+    "enum": [
+     "nickname",
+     "full",
+     "anonymous"
+    ]
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "name"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Position.schema.json",
+  "title": "BIX v0.1 Position",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Position"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "title": {
+    "type": "string"
+   },
+   "kind": {
+    "enum": [
+     "board",
+     "officer",
+     "committee-chair",
+     "other"
+    ]
+   },
+   "seats": {
+    "type": "integer",
+    "minimum": 1
+   },
+   "term": {
+    "type": "string",
+    "description": "ISO 8601 duration, e.g. P1Y"
+   },
+   "permissions": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "requiredBy": {
+    "type": "string"
+   },
+   "status": {
+    "enum": [
+     "active",
+     "retired"
+    ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "organization",
+   "title"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Provenance.schema.json",
+  "title": "BIX v0.1 Provenance",
+  "x-bix-cae-kind": "attestation",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Provenance"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "target": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "activity": {
+    "enum": [
+     "propose",
+     "create",
+     "update",
+     "claim",
+     "assign",
+     "accept",
+     "decline",
+     "release",
+     "complete",
+     "confirm",
+     "dispute",
+     "cancel",
+     "submit",
+     "return",
+     "acknowledge",
+     "claim-identity",
+     "merge",
+     "vote",
+     "publish",
+     "revoke"
+    ]
+   },
+   "agent": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "type": {
+       "enum": [
+        "author",
+        "performer",
+        "verifier",
+        "model",
+        "rule"
+       ]
+      },
+      "who": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "onBehalfOf": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "model": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "version": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "name",
+        "version"
+       ]
+      }
+     },
+     "required": [
+      "type"
+     ]
+    }
+   },
+   "occurredAt": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "recorded": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "offline": {
+    "type": "boolean"
+   },
+   "signature": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Signature"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "target",
+   "activity",
+   "agent",
+   "occurredAt"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Report.schema.json",
+  "title": "BIX v0.1 Report",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Report"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "owedBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "owedTo": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "period": {
+    "$ref": "datatypes.schema.json#/$defs/Period"
+   },
+   "due": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "recurrence": {
+    "$ref": "datatypes.schema.json#/$defs/Recurrence"
+   },
+   "scope": {
+    "type": "object",
+    "properties": {
+     "initiative": {
+      "type": "array",
+      "items": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+     },
+     "includeParts": {
+      "type": "boolean"
+     }
+    }
+   },
+   "figures": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "code": {
+       "$ref": "datatypes.schema.json#/$defs/Coding"
+      },
+      "value": {
+       "type": "number"
+      },
+      "unit": {
+       "type": "string"
+      },
+      "rule": {
+       "type": "object",
+       "properties": {
+        "code": {
+         "type": "string"
+        },
+        "params": {
+         "type": "object"
+        }
+       },
+       "required": [
+        "code"
+       ]
+      },
+      "derivedFrom": {
+       "type": "array",
+       "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+       }
+      },
+      "derivedAt": {
+       "$ref": "datatypes.schema.json#/$defs/dateTime"
+      }
+     },
+     "required": [
+      "code",
+      "rule"
+     ]
+    }
+   },
+   "missingParts": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "narrative": {
+    "type": "string"
+   },
+   "replaces": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "submittedBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "status": {
+    "enum": [
+     "owed",
+     "in-preparation",
+     "submitted",
+     "acknowledged",
+     "returned",
+     "cancelled"
+    ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "owedBy",
+   "owedTo",
+   "period",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Role.schema.json",
+  "title": "BIX v0.1 Role",
+  "x-bix-cae-kind": "relationship",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Role"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "person": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "code": {
+    "$ref": "datatypes.schema.json#/$defs/Coding"
+   },
+   "status": {
+    "enum": [
+     "requested",
+     "active",
+     "ended"
+    ]
+   },
+   "position": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "period": {
+    "$ref": "datatypes.schema.json#/$defs/Period"
+   },
+   "permissions": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "qualification": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "person",
+   "organization",
+   "code",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/ShareLink.schema.json",
+  "title": "BIX v0.1 ShareLink",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "ShareLink"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "target": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "grants": {
+    "type": "array",
+    "items": {
+     "enum": [
+      "view",
+      "claim",
+      "join-team",
+      "propose",
+      "comment"
+     ]
+    }
+   },
+   "audience": {
+    "enum": [
+     "anyone-with-link",
+     "signed-in",
+     "members"
+    ]
+   },
+   "preview": {
+    "enum": [
+     "full",
+     "title-only",
+     "generic"
+    ]
+   },
+   "expires": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "createdBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "status": {
+    "enum": [
+     "active",
+     "revoked"
+    ]
+   },
+   "blocked": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "target",
+   "grants",
+   "audience",
+   "createdBy",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/SharingPolicy.schema.json",
+  "title": "BIX v0.1 SharingPolicy",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "SharingPolicy"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "rules": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "category": {
+       "$ref": "datatypes.schema.json#/$defs/Coding"
+      },
+      "sharing": {
+       "$ref": "datatypes.schema.json#/$defs/Sharing"
+      }
+     },
+     "required": [
+      "sharing"
+     ]
+    }
+   },
+   "approvedBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "minorsStayInGroup": {
+    "type": "boolean",
+    "default": true
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "organization"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Task.schema.json",
+  "title": "BIX v0.1 Task",
+  "x-bix-cae-kind": "Event-when-completed",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Task"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "intent": {
+    "enum": [
+     "proposal",
+     "plan",
+     "order"
+    ]
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "ready",
+     "requested",
+     "accepted",
+     "in-progress",
+     "completed",
+     "cancelled",
+     "failed",
+     "on-hold"
+    ]
+   },
+   "code": {
+    "$ref": "datatypes.schema.json#/$defs/Coding"
+   },
+   "title": {
+    "type": "string"
+   },
+   "focus": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "definition": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "dependsOn": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "milestone": {
+    "type": "boolean"
+   },
+   "requester": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "owner": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "participant": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "person": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "role": {
+       "enum": [
+        "owner",
+        "helper"
+       ]
+      },
+      "status": {
+       "enum": [
+        "requested",
+        "active",
+        "ended"
+       ]
+      }
+     },
+     "required": [
+      "person",
+      "role",
+      "status"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "suggestedFor": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "reviewer": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "audience": {
+    "enum": [
+     "team",
+     "organization",
+     "open"
+    ]
+   },
+   "goodFirstStep": {
+    "type": "boolean"
+   },
+   "priority": {
+    "enum": [
+     "routine",
+     "urgent"
+    ]
+   },
+   "due": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "restriction": {
+    "type": "object",
+    "properties": {
+     "period": {
+      "$ref": "datatypes.schema.json#/$defs/Period"
+     },
+     "location": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+     }
+    }
+   },
+   "requires": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "executionPeriod": {
+    "$ref": "datatypes.schema.json#/$defs/Period"
+   },
+   "checklist": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string"
+      },
+      "done": {
+       "type": "boolean"
+      },
+      "doneBy": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+     },
+     "required": [
+      "text",
+      "done"
+     ]
+    }
+   },
+   "output": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "code": {
+       "$ref": "datatypes.schema.json#/$defs/Coding"
+      },
+      "value": {},
+      "unit": {
+       "type": "string"
+      },
+      "attachment": {
+       "type": "array",
+       "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+       }
+      }
+     }
+    }
+   },
+   "note": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "author": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "time": {
+       "$ref": "datatypes.schema.json#/$defs/dateTime"
+      },
+      "text": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "text"
+     ]
+    }
+   },
+   "category": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "verification": {
+    "enum": [
+     "not-required",
+     "pending",
+     "confirmed",
+     "changes-requested",
+     "disputed"
+    ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "intent",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/TaskDefinition.schema.json",
+  "title": "BIX v0.1 TaskDefinition",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "TaskDefinition"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "title": {
+    "type": "string"
+   },
+   "appliesTo": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "review": {
+    "type": "boolean",
+    "default": false
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "active",
+     "retired"
+    ]
+   },
+   "author": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "ratifiedBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "step": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "code": {
+       "type": "string"
+      },
+      "dependsOn": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "requires": {
+       "type": "array",
+       "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+       }
+      },
+      "evidence": {
+       "type": "string"
+      },
+      "confirmerRole": {
+       "$ref": "datatypes.schema.json#/$defs/Coding"
+      },
+      "autoConfirm": {
+       "type": "boolean"
+      },
+      "involvesMoney": {
+       "type": "boolean"
+      },
+      "involvesBeneficiaries": {
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "code"
+     ]
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "title",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Team.schema.json",
+  "title": "BIX v0.1 Team",
+  "x-bix-cae-kind": "Actor",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Team"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "name": {
+    "type": "string"
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "initiative": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "kind": {
+    "enum": [
+     "standing",
+     "initiative"
+    ]
+   },
+   "access": {
+    "enum": [
+     "own-tasks",
+     "initiative"
+    ]
+   },
+   "participant": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "person": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "role": {
+       "enum": [
+        "lead",
+        "member",
+        "volunteer"
+       ]
+      },
+      "status": {
+       "enum": [
+        "requested",
+        "active",
+        "ended"
+       ]
+      },
+      "period": {
+       "$ref": "datatypes.schema.json#/$defs/Period"
+      }
+     },
+     "required": [
+      "person",
+      "role",
+      "status"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "status": {
+    "enum": [
+     "active",
+     "ended"
+    ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "attachment": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Attachment"
+    }
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "name",
+   "organization"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/Vote.schema.json",
+  "title": "BIX v0.1 Vote",
+  "x-bix-cae-kind": "Event",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Vote"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "decision": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "voter": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "choice": {
+    "type": "array",
+    "items": {
+     "type": "string"
+    }
+   },
+   "objection": {
+    "type": "boolean"
+   },
+   "reason": {
+    "type": "string"
+   },
+   "cast": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "decision",
+   "voter",
+   "cast"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.bayanihan.dev/v0.1/datatypes.schema.json",
+  "title": "BIX v0.1 data types",
+  "description": "Shared data types. Domain in $id is provisional until the BIX site exists.",
+  "$defs": {
+   "id": {
+    "type": "string",
+    "format": "uuid",
+    "description": "Assigned where the record is created, including offline. Never reused."
+   },
+   "dateTime": {
+    "type": "string",
+    "format": "date-time",
+    "description": "ISO 8601 with an offset, e.g. 2026-11-08T09:00:00+08:00."
+   },
+   "Reference": {
+    "type": "object",
+    "properties": {
+     "reference": {
+      "type": "string",
+      "description": "{Type}/{id}, or a full URL on another BIX server."
+     },
+     "display": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "reference"
+    ],
+    "additionalProperties": false
+   },
+   "Coding": {
+    "type": "object",
+    "properties": {
+     "system": {
+      "type": "string",
+      "pattern": "^(bayanihan:[a-z-]+|[a-z0-9.-]+:[a-z-]+|https?://.+)$",
+      "description": "bayanihan:{value-set}, a module namespace, or a URL. Never 'bix'."
+     },
+     "code": {
+      "type": "string",
+      "minLength": 1
+     },
+     "display": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "system",
+     "code"
+    ],
+    "additionalProperties": false
+   },
+   "Quantity": {
+    "type": "object",
+    "properties": {
+     "value": {
+      "type": "number",
+      "minimum": 0
+     },
+     "unit": {
+      "enum": [
+       "box",
+       "pack",
+       "sack",
+       "kg",
+       "L",
+       "piece",
+       "person",
+       "person-hour",
+       "household",
+       "session",
+       "PHP"
+      ]
+     }
+    },
+    "required": [
+     "value",
+     "unit"
+    ],
+    "additionalProperties": false
+   },
+   "Period": {
+    "type": "object",
+    "properties": {
+     "start": {
+      "$ref": "#/$defs/dateTime"
+     },
+     "end": {
+      "$ref": "#/$defs/dateTime"
+     }
+    },
+    "additionalProperties": false
+   },
+   "Attachment": {
+    "type": "object",
+    "properties": {
+     "contentType": {
+      "type": "string",
+      "description": "MIME type."
+     },
+     "url": {
+      "type": "string"
+     },
+     "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the file."
+     },
+     "size": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "title": {
+      "type": "string"
+     },
+     "capturedAt": {
+      "$ref": "#/$defs/dateTime"
+     },
+     "showsMinors": {
+      "type": "boolean",
+      "default": false
+     }
+    },
+    "required": [
+     "contentType",
+     "url"
+    ],
+    "additionalProperties": false
+   },
+   "Identifier": {
+    "type": "object",
+    "description": "A short reference people can say, e.g. LU 2027-24.",
+    "properties": {
+     "system": {
+      "type": "string"
+     },
+     "value": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "required": [
+     "value"
+    ],
+    "additionalProperties": false
+   },
+   "Recurrence": {
+    "type": "object",
+    "properties": {
+     "frequency": {
+      "enum": [
+       "daily",
+       "weekly",
+       "monthly",
+       "yearly"
+      ]
+     },
+     "interval": {
+      "type": "integer",
+      "minimum": 1,
+      "default": 1
+     },
+     "byDay": {
+      "type": "array",
+      "items": {
+       "enum": [
+        "MO",
+        "TU",
+        "WE",
+        "TH",
+        "FR",
+        "SA",
+        "SU"
+       ]
+      }
+     },
+     "until": {
+      "$ref": "#/$defs/dateTime"
+     },
+     "count": {
+      "type": "integer",
+      "minimum": 1
+     }
+    },
+    "required": [
+     "frequency"
+    ],
+    "additionalProperties": false
+   },
+   "Extension": {
+    "type": "object",
+    "description": "A namespaced addition. May never redefine a core element.",
+    "properties": {
+     "url": {
+      "type": "string",
+      "minLength": 1
+     },
+     "value": {}
+    },
+    "required": [
+     "url"
+    ],
+    "additionalProperties": false
+   },
+   "Meta": {
+    "type": "object",
+    "properties": {
+     "version": {
+      "type": "integer",
+      "minimum": 1
+     },
+     "lastUpdated": {
+      "$ref": "#/$defs/dateTime"
+     },
+     "previousHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 of the previous version's RFC 8785 canonical form."
+     },
+     "profile": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "version"
+    ],
+    "additionalProperties": false
+   },
+   "Sharing": {
+    "enum": [
+     "private",
+     "organization",
+     "partners",
+     "network",
+     "public"
+    ]
+   },
+   "Resource": {
+    "type": "object",
+    "description": "Elements every BIX resource has.",
+    "properties": {
+     "resourceType": {
+      "type": "string"
+     },
+     "id": {
+      "$ref": "#/$defs/id"
+     },
+     "meta": {
+      "$ref": "#/$defs/Meta"
+     },
+     "identifier": {
+      "type": "array",
+      "items": {
+       "$ref": "#/$defs/Identifier"
+      }
+     },
+     "sharing": {
+      "$ref": "#/$defs/Sharing"
+     },
+     "language": {
+      "type": "string",
+      "description": "BCP 47, e.g. fil or en. Mixed Filipino-English is fil."
+     },
+     "extension": {
+      "type": "array",
+      "items": {
+       "$ref": "#/$defs/Extension"
+      }
+     }
+    },
+    "required": [
+     "resourceType",
+     "id",
+     "meta"
+    ]
+   },
+   "Signature": {
+    "type": "object",
+    "description": "A group's server or hub signature over a record's RFC 8785 canonical form.",
+    "properties": {
+     "who": {
+      "$ref": "#/$defs/Reference"
+     },
+     "when": {
+      "$ref": "#/$defs/dateTime"
+     },
+     "algorithm": {
+      "enum": [
+       "Ed25519"
+      ]
+     },
+     "keyId": {
+      "type": "string"
+     },
+     "value": {
+      "type": "string",
+      "description": "base64url"
+     }
+    },
+    "required": [
+     "who",
+     "when",
+     "algorithm",
+     "keyId",
+     "value"
+    ],
+    "additionalProperties": false
+   }
+  }
+ }
+]
