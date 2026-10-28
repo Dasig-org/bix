@@ -226,6 +226,9 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Position` | Instrument | From Popolo Post |
 | `Group` | Observable | From FHIR Group: who is served, as counts |
 | `Goal` | Instrument | From FHIR Goal: a shared target |
+| `Consent` | Instrument | From FHIR Consent |
+| `Endpoint` | *Transport, not a kind* | From FHIR Endpoint |
+| `Follow` | *Relationship, not a kind* | |
 | `Decision` | Instrument while open, Event once decided | From Popolo Motion and VoteEvent |
 | `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
@@ -603,6 +606,24 @@ Trust is in v0, and hardened in later versions. Not legal advice; the Data Priva
 | **Messages for Bayani** | Raw messages stay on the phone (rule 11). Sharing a message to improve Bayani is opt-in, per message, with names removed first, and can be withdrawn at any time. |
 | **Seeing your data** | A person can see counts of what is kept about them, download all of it as BIX (rule 18), choose what their profile shows, and delete their account. |
 
+## Filling the gaps found in the 2026-10-28 audit
+
+Everything decided for Dasig that another BIX app would also need belongs in BIX. These close the gaps between what the screens assume and what the language could say.
+
+| Element | What it is | Lesson |
+|---|---|---|
+| **`Signature`** data type, on `Provenance.signature` | {`who` (the group's server or hub), `when`, `algorithm`, `keyId`, `value`} over the record's RFC 8785 canonical form. Required on completed work (see "Recorded when done"). | FHIR `Signature`; W3C Data Integrity |
+| **`Endpoint`** (new resource, from FHIR Endpoint; *transport, not a CAE kind*) | A Bayanihan Server or hub that holds a group's records: `address`, `kind` (`cloud` · `hub` · `self-hosted`), `publicKey`, `status`. **`Organization.homeServer`** references the one Endpoint that decides exclusive changes. | FHIR `Endpoint` |
+| **`Consent`** (new resource, from FHIR Consent; CAE kind: Instrument) | What a **person** agreed to, recorded once and withdrawable: `person`, `scope` (`share-messages-for-bayani` · `appear-in-credits` · `photo-of-me` · `contact-by-group`), `status` (`active` · `withdrawn`), `dateTime`. `SharingPolicy` stays for a group's defaults. | FHIR `Consent` |
+| **`Follow`** (new resource; *a relationship*) | A Person or Organization following a published Initiative, Organization or Goal, to see its updates. Ends at any time. Never grants access beyond the public summary. | ActivityPub `Follow`; FHIR `Subscription` for delivery later |
+| **`Offer.matchedTo`** widened | May reference a `Need`, a `Task` or an `Initiative`, so "offer help" works from any published project | — |
+| **`Communication.recipient`** widened | May be a Person, a Team or an Organization, so "message this group" from a public page and "@Speakers" both fit | FHIR `Communication.recipient` |
+| **`Task.due`** | The date work is due, separate from `restriction.period` (when it may be done) | FHIR `Task.restriction` vs due dates |
+| **`Organization.kind`** adds | `foundation` · `national-agency` · `school` · `university`, the bodies most likely to set Goals | — |
+| **`Organization.vocabulary[]`** | A group's own words for core terms {`term`, `label`}: "exhibitors" for sponsors, "committee" for team. Every BIX app shows them. | Popolo's labels; an event team's editorial styleguide |
+| **Public summary** for Organizations | The same "publish as you are" summary as projects: name, kind, place, causes, logo. On by default. | — |
+| **`InitiativeTemplate` on wrap-up** | Saving a project's teams back records which Tasks and offsets to keep, as a new version | FHIR `PlanDefinition` versions |
+
 ## Concurrency and conflicts
 
 Many people act on the same open work, sometimes offline. BIX follows the patterns WordPress contribution and FHIR already use:
@@ -788,3 +809,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | Content every page has: `description` and `attachment[]` (reference material) on Organization, Team, Initiative, Task, Need, Offer, Decision, Report and Position; Task outputs kept separate; Decision options carry several attachments. |
 | 2026-10-28 | Who it's for and shared goals: `cause[]` with SDG codes, `Group` (from FHIR) for who is served as counts, `Goal` (from FHIR) for shared community targets, `Initiative.contributesTo[]`, calculated goal progress, small-number hiding in public views, sensitive characteristics as counts only. |
 | 2026-10-28 | Publish as you are: public project summaries, optional tagging, "who's working on what, for whom, where" from Bayanihan Server, self-synchronising without forced links, goal enrollment accepted by the goal's owner, default `bayanihan:cause` and `bayanihan:population` value sets mapped to the SDGs. |
+| 2026-10-28 | Audit fill-ins: `Signature` on Provenance, `Endpoint` and `Organization.homeServer`, person-level `Consent`, `Follow`, wider `Offer.matchedTo` and `Communication.recipient`, `Task.due`, more Organization kinds, `Organization.vocabulary[]`, public summaries for Organizations, saving teams back on wrap-up. |
