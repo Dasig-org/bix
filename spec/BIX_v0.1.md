@@ -531,6 +531,7 @@ Bayanihan's larger proposition: organizations, governments and communities worki
 
 Bottom-up first. Nobody is made to work with anyone.
 
+0. **What publishing means.** Sending a project's public summary to the public directory on the Dasig-hosted Bayanihan Server. It is separate from creating a project or running a hub: an offline group creates projects as usual, and its summaries publish when the hub next syncs online. **On by default** (decided 2026-10-28), with a clear note ("Your project's summary is public. Turn off any time"); groups whose served group includes children or patients are asked explicitly instead.
 1. **Publish as you are.** A group publishes a project the way it already runs it. Publishing shows a **public summary** only: title, group, place (barangay or above, never an address), causes, who it's for (as a description), status and dates. Tasks, people, files and figures stay as shared as they were. Offered when a project is created, one tap, and can be turned off.
 2. **Tag when ready.** `cause[]` and `servesGroup[]` are optional at first. The app suggests them from the project's words; the group confirms.
 3. **Find who's already working here.** Bayanihan Server answers **"who's working on what, for whom, where"** from published summaries: by place (PSGC), by cause, by who's served. When a group creates a project, it sees *"3 groups also work on learning in Barangay Pajo"*, as information, never a requirement.
