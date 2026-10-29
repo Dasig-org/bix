@@ -680,12 +680,32 @@ BIX takes the cryptography that blockchains popularized and leaves out the chain
 | Technique | In BIX | When |
 |---|---|---|
 | Hash-chained revisions | `meta.previousHash`, over the RFC 8785 canonical form | Designed; built after the pilot |
-| Signed records | The group's home server or hub signs each completed record automatically (see "Recorded when done"), so anyone can check it without trusting any server | **v0 for the cloud server; the hub after v0** |
+| Signed records | The group's home server or hub signs each completed record automatically (see "Recorded when done"), so anyone can check it without trusting any server | **v0, on the cloud server and on phone hubs** |
 | Public anchoring | Periodically publish one combined fingerprint (a Merkle root) of confirmed records, so later tampering can be proven. Maps to CEP's `anchorUri`. Never publishes the records themselves. | Designed; built after the pilot |
 | Verifiable credentials | A Person's contribution record can be issued as W3C Verifiable Credentials they hold and anyone can verify | Designed; built after the pilot |
 | Portable personal records | A Person's records can move between BIX servers with them, as Bluesky's AT Protocol does for posts | Export now (rule 18); moving between servers later |
 
 Personal data is never anchored, signed into anything public, or made impossible to delete.
+
+### Proposed for v0.2: a person's own key, and statements a host signs (2026-10-29)
+
+Two gaps stand between today's records and contributions that are truly portable. Both are designed now and built after the pilot; v0.1 servers ignore them safely.
+
+**1. A person's own key.** Today a person is an account on one server, so nothing proves that "Mia" on a group's hub and "Mia" on the Dasig Ecosystem are the same person. Groups sign work, but no one signs as the person.
+
+- Each phone creates a key pair for its person the first time Dasig opens. The private key never leaves the phone (or the person's chosen backup).
+- `Person.publicKey[]` lists the person's current keys. A new phone adds a key, signed by an existing one; a lost phone's key is marked revoked.
+- Linking accounts is a `Provenance` with activity `claim-identity`, signed with the person's key, naming both `Person` records. Each server accepts it only from the key holder. Records are never merged; a person's story shows both, each with its group's signature.
+- Verifiable Credentials for contributions are issued **to** this key, so the person can show them anywhere without asking any server.
+
+**2. Statements a host signs.** A group can write anything in `Organization.registration[]`, so the field alone proves nothing. When a host checks something, it signs a statement instead:
+
+- A host attestation is a `Provenance` with activity `confirm`, a `verifier` agent that is the host's `Endpoint`, the target (e.g. `Organization/…/_history/3`, the version checked), what was checked (`bayanihan:attestation` codes: `registration-reviewed`, `contact-confirmed`, `carried-over`), and the host's signature.
+- The group cannot edit or delete it. A host withdraws an attestation with a later `Provenance` of activity `cancel`.
+- Any app shows the badge only when the signature checks against the host's published key, so a badge can't be copied to another server.
+- `carried-over` records that a host accepted another system's check (for the Dasig Ecosystem: verification already done by Dasig Fundraising), naming that system as `onBehalfOf`.
+
+Hosts also **publish each group's public signing key** in their directory, so work a hub signed stays checkable after the hub's phone is lost.
 
 ## Relationship to Civic Interconnect and CEP
 
@@ -824,3 +844,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-29 | Standalone phone and phone hub moved into v0: Bayanihan Server runs inside the Dasig app on the phone's own storage; other phones pair by QR over the hub's hotspot. |
 | 2026-10-29 | `Offer.partOf` and `Decision.partOf` (the project they belong to), so permissions resolve from the owning group. Found while building. |
 | 2026-10-29 | `Person.description`: a line about yourself, set only by the person. |
+| 2026-10-29 | Signing on phone hubs built in v0 (it was listed as after v0). Proposed for v0.2: a person-held key (`Person.publicKey[]`, `claim-identity` signed by the person) and host-signed attestations for verification, with published group keys. |
