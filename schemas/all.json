@@ -193,6 +193,9 @@
    "about": {
     "$ref": "datatypes.schema.json#/$defs/Reference"
    },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
    "question": {
     "type": "string"
    },
@@ -1004,6 +1007,9 @@
    "offeredBy": {
     "$ref": "datatypes.schema.json#/$defs/Reference"
    },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
    "category": {
     "$ref": "datatypes.schema.json#/$defs/Coding"
    },
@@ -1252,6 +1258,10 @@
      "full",
      "anonymous"
     ]
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
    }
   },
   "required": [

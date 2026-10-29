@@ -22,6 +22,9 @@
     "offeredBy": {
       "$ref": "datatypes.schema.json#/$defs/Reference"
     },
+    "partOf": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
     "category": {
       "$ref": "datatypes.schema.json#/$defs/Coding"
     },

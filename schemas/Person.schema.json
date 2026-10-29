@@ -73,6 +73,10 @@
         "full",
         "anonymous"
       ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
     }
   },
   "required": [

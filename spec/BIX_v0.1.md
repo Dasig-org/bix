@@ -822,3 +822,5 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-28 | One person, many groups: permissions resolved per owning Organization; personal Initiatives (`person` instead of `organization`); one story across groups with separate signatures. |
 | 2026-10-28 | `Task.team`: the Team a Task belongs to, kept when its owner becomes a person (found while building the app). |
 | 2026-10-29 | Standalone phone and phone hub moved into v0: Bayanihan Server runs inside the Dasig app on the phone's own storage; other phones pair by QR over the hub's hotspot. |
+| 2026-10-29 | `Offer.partOf` and `Decision.partOf` (the project they belong to), so permissions resolve from the owning group. Found while building. |
+| 2026-10-29 | `Person.description`: a line about yourself, set only by the person. |

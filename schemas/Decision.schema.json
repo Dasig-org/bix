@@ -22,6 +22,9 @@
     "about": {
       "$ref": "datatypes.schema.json#/$defs/Reference"
     },
+    "partOf": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
     "question": {
       "type": "string"
     },
