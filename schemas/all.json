@@ -1708,6 +1708,7 @@
       "view",
       "claim",
       "join-team",
+      "join-org",
       "propose",
       "comment"
      ]

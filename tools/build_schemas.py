@@ -58,7 +58,7 @@ RES = {
                  "agent": arr({"type": "object", "properties": {"type": enum("author", "performer", "verifier", "model", "rule"), "who": R, "onBehalfOf": R, "model": {"type": "object", "properties": {"name": S, "version": S}, "required": ["name", "version"]}}, "required": ["type"]}),
                  "occurredAt": T, "recorded": T, "offline": {"type": "boolean"}, "signature": arr(ref("Signature"))}, ["target", "activity", "agent", "occurredAt"]),
  "Communication": ({"about": R, "sender": R, "recipient": arr(R), "payload": {"type": "object", "properties": {"text": S, "attachment": arr(A)}}, "sent": T}, ["about", "sender", "sent"]),
- "ShareLink": ({"target": R, "grants": arr(enum("view", "claim", "join-team", "propose", "comment")), "audience": enum("anyone-with-link", "signed-in", "members"),
+ "ShareLink": ({"target": R, "grants": arr(enum("view", "claim", "join-team", "join-org", "propose", "comment")), "audience": enum("anyone-with-link", "signed-in", "members"),
                 "preview": enum("full", "title-only", "generic"), "expires": T, "createdBy": R, "status": enum("active", "revoked"), "blocked": arr(R)}, ["target", "grants", "audience", "createdBy", "status"]),
  "Decision": ({"about": R, "partOf": R, "question": S, "method": enum("approve", "choose-one", "choose-many", "ranked", "consent"),
                "option": arr({"type": "object", "properties": {"id": S, "label": S, "description": S, "attachment": arr(A)}, "required": ["id", "label"]}),
