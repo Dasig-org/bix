@@ -15,7 +15,10 @@ summary = {"publicSummary": {"type": "boolean", "default": True}}
 RES = {
  "Person": ({"name": {"type": "object", "properties": {"text": S, "use": enum("nickname", "full")}, "required": ["text"], "additionalProperties": False},
              "photo": A, "contact": arr({"type": "object", "properties": {"system": enum("phone", "email", "messenger", "other"), "value": S}, "required": ["system", "value"], "additionalProperties": False}),
-             "managedBy": R, "credit": enum("nickname", "full", "anonymous"), "description": txt}, ["name"]),
+             "managedBy": R, "credit": enum("nickname", "full", "anonymous"), "description": txt,
+             # The person's own keys (one per phone). Only the person may add or revoke them; a server never holds the private key.
+             "publicKey": arr({"type": "object", "properties": {"kid": S, "alg": enum("Ed25519"), "key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                 "created": {"type": "string"}, "status": enum("active", "revoked")}, "required": ["kid", "alg", "key", "status"], "additionalProperties": False})}, ["name"]),
  "Organization": ({"name": S, "kind": enum("registered-npo", "faith-based", "civic-club", "community", "event-team", "sk-council", "school-org", "school", "university", "cooperative", "informal", "lgu-unit", "national-agency", "foundation"),
                    "partOf": R, "registration": arr({"type": "object", "properties": {"system": S, "value": S}, "required": ["value"]}), "image": A,
                    "cause": arr(C), "location": arr(R), "homeServer": R, "vocabulary": arr({"type": "object", "properties": {"term": S, "label": S}, "required": ["term", "label"]}), **page, **summary}, ["name"]),

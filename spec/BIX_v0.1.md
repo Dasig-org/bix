@@ -687,13 +687,15 @@ BIX takes the cryptography that blockchains popularized and leaves out the chain
 
 Personal data is never anchored, signed into anything public, or made impossible to delete.
 
-### Proposed for v0.2: a person's own key, and statements a host signs (2026-10-29)
+### A person's own key (in v0.1 since 2026-10-30), and statements a host signs (proposed for v0.2)
 
-Two gaps stand between today's records and contributions that are truly portable. Both are designed now and built after the pilot; v0.1 servers ignore them safely.
+Two gaps stood between the records and contributions that are truly portable. **The person's own key moved into v0.1 on 2026-10-30**, so pilot phones have keys from the start and members can join a group's online server later without codes. Host-signed statements stay proposed for v0.2.
 
 **1. A person's own key.** Today a person is an account on one server, so nothing proves that "Mia" on a group's hub and "Mia" on the Dasig Ecosystem are the same person. Groups sign work, but no one signs as the person.
 
 - Each phone creates a key pair for its person the first time Dasig opens. The private key never leaves the phone (or the person's chosen backup).
+- `Person.publicKey[]` entries are {`kid` (first 16 hex of the key's SHA-256), `alg`: `Ed25519`, `key` (hex), `created`, `status`: `active` · `revoked`}. Only the person may add or change them; a server refuses anyone else, officers included.
+- Pairing with a server as a Person that has keys needs proof: the phone signs the server's one-time challenge (for hub pairing, the pairing code), bound to the person and the server, so a signature can't be replayed elsewhere.
 - `Person.publicKey[]` lists the person's current keys. A new phone adds a key, signed by an existing one; a lost phone's key is marked revoked.
 - Linking accounts is a `Provenance` with activity `claim-identity`, signed with the person's key, naming both `Person` records. Each server accepts it only from the key holder. Records are never merged; a person's story shows both, each with its group's signature.
 - Verifiable Credentials for contributions are issued **to** this key, so the person can show them anywhere without asking any server.
@@ -845,3 +847,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-29 | `Offer.partOf` and `Decision.partOf` (the project they belong to), so permissions resolve from the owning group. Found while building. |
 | 2026-10-29 | `Person.description`: a line about yourself, set only by the person. |
 | 2026-10-29 | Signing on phone hubs built in v0 (it was listed as after v0). Proposed for v0.2: a person-held key (`Person.publicKey[]`, `claim-identity` signed by the person) and host-signed attestations for verification, with published group keys. |
+| 2026-10-30 | A person's own key moved into v0.1: `Person.publicKey[]`, set only by the person; pairing as a Person with keys needs a signed challenge. Built in Core (`generatePersonKey`, `signChallenge`, `verifyChallenge`), the server and the app (Android Keystore through expo-secure-store). |

@@ -1262,6 +1262,42 @@
    "description": {
     "type": "string",
     "maxLength": 4000
+   },
+   "publicKey": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "kid": {
+       "type": "string"
+      },
+      "alg": {
+       "enum": [
+        "Ed25519"
+       ]
+      },
+      "key": {
+       "type": "string",
+       "pattern": "^[0-9a-f]{64}$"
+      },
+      "created": {
+       "type": "string"
+      },
+      "status": {
+       "enum": [
+        "active",
+        "revoked"
+       ]
+      }
+     },
+     "required": [
+      "kid",
+      "alg",
+      "key",
+      "status"
+     ],
+     "additionalProperties": false
+    }
    }
   },
   "required": [
