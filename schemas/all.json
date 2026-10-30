@@ -2487,7 +2487,7 @@
    },
    "Identifier": {
     "type": "object",
-    "description": "A short reference people can say, e.g. LU 2027-24.",
+    "description": "A short reference people can say, e.g. LU-24.",
     "properties": {
      "system": {
       "type": "string"
