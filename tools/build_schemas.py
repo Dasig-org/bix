@@ -3,7 +3,7 @@ Edit RES below, then run: python3 bix/tools/build_schemas.py
 Each resource schema = common Resource elements + its own properties."""
 import json, pathlib
 OUT = pathlib.Path(__file__).resolve().parent.parent / "schemas"
-BASE = "https://bix.bayanihan.dev/v0.1/"
+BASE = "https://bix.dasig.org/v0.1/"
 DT = "datatypes.schema.json#/$defs/"
 def ref(t): return {"$ref": DT + t}
 def arr(x): return {"type": "array", "items": x}

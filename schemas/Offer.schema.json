@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Offer.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Offer.schema.json",
   "title": "BIX v0.1 Offer",
   "x-bix-cae-kind": "Instrument",
   "type": "object",

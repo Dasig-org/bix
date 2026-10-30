@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Bundle.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Bundle.schema.json",
   "title": "BIX v0.1 Bundle",
   "x-bix-cae-kind": "transport",
   "type": "object",

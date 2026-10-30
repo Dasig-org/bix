@@ -1,7 +1,7 @@
 [
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Bundle.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Bundle.schema.json",
   "title": "BIX v0.1 Bundle",
   "x-bix-cae-kind": "transport",
   "type": "object",
@@ -54,7 +54,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Communication.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Communication.schema.json",
   "title": "BIX v0.1 Communication",
   "x-bix-cae-kind": "relationship",
   "type": "object",
@@ -115,7 +115,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Consent.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Consent.schema.json",
   "title": "BIX v0.1 Consent",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -171,7 +171,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Decision.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Decision.schema.json",
   "title": "BIX v0.1 Decision",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -321,7 +321,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Endpoint.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Endpoint.schema.json",
   "title": "BIX v0.1 Endpoint",
   "x-bix-cae-kind": "transport",
   "type": "object",
@@ -376,7 +376,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Follow.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Follow.schema.json",
   "title": "BIX v0.1 Follow",
   "x-bix-cae-kind": "relationship",
   "type": "object",
@@ -423,7 +423,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Goal.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Goal.schema.json",
   "title": "BIX v0.1 Goal",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -515,7 +515,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Group.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Group.schema.json",
   "title": "BIX v0.1 Group",
   "x-bix-cae-kind": "Observable",
   "type": "object",
@@ -573,7 +573,7 @@
    }
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Initiative.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Initiative.schema.json",
   "title": "BIX v0.1 Initiative",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -736,7 +736,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/InitiativeTemplate.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/InitiativeTemplate.schema.json",
   "title": "BIX v0.1 InitiativeTemplate",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -854,7 +854,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Location.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Location.schema.json",
   "title": "BIX v0.1 Location",
   "x-bix-cae-kind": "Site",
   "type": "object",
@@ -908,7 +908,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Need.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Need.schema.json",
   "title": "BIX v0.1 Need",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -985,7 +985,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Offer.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Offer.schema.json",
   "title": "BIX v0.1 Offer",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -1064,7 +1064,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Organization.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Organization.schema.json",
   "title": "BIX v0.1 Organization",
   "x-bix-cae-kind": "Actor",
   "type": "object",
@@ -1185,7 +1185,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Person.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Person.schema.json",
   "title": "BIX v0.1 Person",
   "x-bix-cae-kind": "Actor",
   "type": "object",
@@ -1310,7 +1310,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Position.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Position.schema.json",
   "title": "BIX v0.1 Position",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -1388,7 +1388,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Provenance.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Provenance.schema.json",
   "title": "BIX v0.1 Provenance",
   "x-bix-cae-kind": "attestation",
   "type": "object",
@@ -1507,7 +1507,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Report.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Report.schema.json",
   "title": "BIX v0.1 Report",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -1648,7 +1648,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Role.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Role.schema.json",
   "title": "BIX v0.1 Role",
   "x-bix-cae-kind": "relationship",
   "type": "object",
@@ -1715,7 +1715,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/ShareLink.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/ShareLink.schema.json",
   "title": "BIX v0.1 ShareLink",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -1797,7 +1797,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/SharingPolicy.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/SharingPolicy.schema.json",
   "title": "BIX v0.1 SharingPolicy",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -1854,7 +1854,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Task.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Task.schema.json",
   "title": "BIX v0.1 Task",
   "x-bix-cae-kind": "Event-when-completed",
   "type": "object",
@@ -2103,7 +2103,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/TaskDefinition.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/TaskDefinition.schema.json",
   "title": "BIX v0.1 TaskDefinition",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
@@ -2201,7 +2201,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Team.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Team.schema.json",
   "title": "BIX v0.1 Team",
   "x-bix-cae-kind": "Actor",
   "type": "object",
@@ -2303,7 +2303,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Vote.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Vote.schema.json",
   "title": "BIX v0.1 Vote",
   "x-bix-cae-kind": "Event",
   "type": "object",
@@ -2356,7 +2356,7 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/datatypes.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/datatypes.schema.json",
   "title": "BIX v0.1 data types",
   "description": "Shared data types. Domain in $id is provisional until the BIX site exists.",
   "$defs": {

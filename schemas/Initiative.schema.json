@@ -12,7 +12,7 @@
     }
   ],
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://bix.bayanihan.dev/v0.1/Initiative.schema.json",
+  "$id": "https://bix.dasig.org/v0.1/Initiative.schema.json",
   "title": "BIX v0.1 Initiative",
   "x-bix-cae-kind": "Instrument",
   "type": "object",
