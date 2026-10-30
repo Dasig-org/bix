@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Location.schema.json",
+  "title": "BIX v0.1 Location",
+  "x-bix-cae-kind": "Site",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Location"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "psgc": {
+      "type": "string",
+      "pattern": "^[0-9]{9,10}$"
+    },
+    "position": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        }
+      }
+    },
+    "partOf": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "name"
+  ],
+  "additionalProperties": false
+}

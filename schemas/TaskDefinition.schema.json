@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/TaskDefinition.schema.json",
+  "title": "BIX v0.1 TaskDefinition",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "TaskDefinition"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "title": {
+      "type": "string"
+    },
+    "appliesTo": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "review": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "retired"
+      ]
+    },
+    "author": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "ratifiedBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "step": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "dependsOn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requires": {
+            "type": "array",
+            "items": {
+              "$ref": "datatypes.schema.json#/$defs/Coding"
+            }
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "confirmerRole": {
+            "$ref": "datatypes.schema.json#/$defs/Coding"
+          },
+          "autoConfirm": {
+            "type": "boolean"
+          },
+          "involvesMoney": {
+            "type": "boolean"
+          },
+          "involvesBeneficiaries": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "title",
+    "status"
+  ],
+  "additionalProperties": false
+}

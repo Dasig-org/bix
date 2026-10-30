@@ -1,0 +1,175 @@
+{
+  "oneOf": [
+    {
+      "required": [
+        "organization"
+      ]
+    },
+    {
+      "required": [
+        "person"
+      ]
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Initiative.schema.json",
+  "title": "BIX v0.1 Initiative",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Initiative"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "title": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "plan",
+        "program",
+        "project",
+        "session"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "planned",
+        "active",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "person": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "partOf": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "period": {
+      "$ref": "datatypes.schema.json#/$defs/Period"
+    },
+    "recurrence": {
+      "$ref": "datatypes.schema.json#/$defs/Recurrence"
+    },
+    "category": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "cause": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "location": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "image": {
+      "$ref": "datatypes.schema.json#/$defs/Attachment"
+    },
+    "target": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "datatypes.schema.json#/$defs/Coding"
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "value"
+        ]
+      }
+    },
+    "taskDefinition": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "partner": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "servesGroup": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "contributesTo": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "status": {
+            "enum": [
+              "requested",
+              "accepted",
+              "declined"
+            ]
+          }
+        },
+        "required": [
+          "goal",
+          "status"
+        ]
+      }
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    },
+    "publicSummary": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "title",
+    "kind",
+    "status"
+  ],
+  "additionalProperties": false
+}

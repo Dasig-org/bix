@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Report.schema.json",
+  "title": "BIX v0.1 Report",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Report"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "owedBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "owedTo": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "period": {
+      "$ref": "datatypes.schema.json#/$defs/Period"
+    },
+    "due": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "recurrence": {
+      "$ref": "datatypes.schema.json#/$defs/Recurrence"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "initiative": {
+          "type": "array",
+          "items": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          }
+        },
+        "includeParts": {
+          "type": "boolean"
+        }
+      }
+    },
+    "figures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "datatypes.schema.json#/$defs/Coding"
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "rule": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "params": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "derivedFrom": {
+            "type": "array",
+            "items": {
+              "$ref": "datatypes.schema.json#/$defs/Reference"
+            }
+          },
+          "derivedAt": {
+            "$ref": "datatypes.schema.json#/$defs/dateTime"
+          }
+        },
+        "required": [
+          "code",
+          "rule"
+        ]
+      }
+    },
+    "missingParts": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "narrative": {
+      "type": "string"
+    },
+    "replaces": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "submittedBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "status": {
+      "enum": [
+        "owed",
+        "in-preparation",
+        "submitted",
+        "acknowledged",
+        "returned",
+        "cancelled"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "owedBy",
+    "owedTo",
+    "period",
+    "status"
+  ],
+  "additionalProperties": false
+}

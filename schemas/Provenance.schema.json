@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Provenance.schema.json",
+  "title": "BIX v0.1 Provenance",
+  "x-bix-cae-kind": "attestation",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Provenance"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "target": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "activity": {
+      "enum": [
+        "propose",
+        "create",
+        "update",
+        "claim",
+        "assign",
+        "accept",
+        "decline",
+        "release",
+        "complete",
+        "confirm",
+        "dispute",
+        "cancel",
+        "submit",
+        "return",
+        "acknowledge",
+        "claim-identity",
+        "merge",
+        "vote",
+        "publish",
+        "revoke"
+      ]
+    },
+    "agent": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "author",
+              "performer",
+              "verifier",
+              "model",
+              "rule"
+            ]
+          },
+          "who": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "onBehalfOf": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "model": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "version"
+            ]
+          }
+        },
+        "required": [
+          "type"
+        ]
+      }
+    },
+    "occurredAt": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "recorded": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "offline": {
+      "type": "boolean"
+    },
+    "signature": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Signature"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "target",
+    "activity",
+    "agent",
+    "occurredAt"
+  ],
+  "additionalProperties": false
+}

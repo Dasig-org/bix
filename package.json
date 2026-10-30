@@ -1,0 +1,42 @@
+{
+  "name": "@bayanihan/bix",
+  "version": "0.1.0",
+  "description": "BIX, the Bayanihan Information Exchange: JSON Schemas for everyday civic work.",
+  "type": "module",
+  "files": [
+    "schemas",
+    "spec",
+    "LICENSE",
+    "LICENSE-spec"
+  ],
+  "exports": {
+    "./schemas/*": "./schemas/*",
+    "./validators": {
+      "types": "./schemas/validators.d.ts",
+      "default": "./schemas/validators.js"
+    }
+  },
+  "license": "Apache-2.0 AND CC-BY-4.0",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "author": "Dasig Inc. <hello@dasig.org>",
+  "homepage": "https://github.com/Dasig-org/bix#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dasig-org/bix.git"
+  },
+  "bugs": "https://github.com/Dasig-org/bix/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "bix",
+    "bayanihan",
+    "civic",
+    "volunteers",
+    "json-schema",
+    "fhir"
+  ]
+}

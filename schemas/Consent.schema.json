@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Consent.schema.json",
+  "title": "BIX v0.1 Consent",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Consent"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "person": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "scope": {
+      "enum": [
+        "share-messages-for-bayani",
+        "appear-in-credits",
+        "photo-of-me",
+        "contact-by-group"
+      ]
+    },
+    "status": {
+      "enum": [
+        "active",
+        "withdrawn"
+      ]
+    },
+    "dateTime": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "person",
+    "scope",
+    "status",
+    "dateTime"
+  ],
+  "additionalProperties": false
+}

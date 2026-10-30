@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Organization.schema.json",
+  "title": "BIX v0.1 Organization",
+  "x-bix-cae-kind": "Actor",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Organization"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "name": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "registered-npo",
+        "faith-based",
+        "civic-club",
+        "community",
+        "event-team",
+        "sk-council",
+        "school-org",
+        "school",
+        "university",
+        "cooperative",
+        "informal",
+        "lgu-unit",
+        "national-agency",
+        "foundation"
+      ]
+    },
+    "partOf": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "registration": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+    },
+    "image": {
+      "$ref": "datatypes.schema.json#/$defs/Attachment"
+    },
+    "cause": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "location": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "homeServer": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "vocabulary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "term": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "term",
+          "label"
+        ]
+      }
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    },
+    "publicSummary": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "name"
+  ],
+  "additionalProperties": false
+}

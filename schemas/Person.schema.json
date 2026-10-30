@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Person.schema.json",
+  "title": "BIX v0.1 Person",
+  "x-bix-cae-kind": "Actor",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Person"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "name": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "use": {
+          "enum": [
+            "nickname",
+            "full"
+          ]
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "photo": {
+      "$ref": "datatypes.schema.json#/$defs/Attachment"
+    },
+    "contact": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "system": {
+            "enum": [
+              "phone",
+              "email",
+              "messenger",
+              "other"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "system",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "managedBy": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "credit": {
+      "enum": [
+        "nickname",
+        "full",
+        "anonymous"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "publicKey": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kid": {
+            "type": "string"
+          },
+          "alg": {
+            "enum": [
+              "Ed25519"
+            ]
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "created": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "revoked"
+            ]
+          }
+        },
+        "required": [
+          "kid",
+          "alg",
+          "key",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "name"
+  ],
+  "additionalProperties": false
+}

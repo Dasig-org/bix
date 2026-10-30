@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Task.schema.json",
+  "title": "BIX v0.1 Task",
+  "x-bix-cae-kind": "Event-when-completed",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "Task"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "intent": {
+      "enum": [
+        "proposal",
+        "plan",
+        "order"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "ready",
+        "requested",
+        "accepted",
+        "in-progress",
+        "completed",
+        "cancelled",
+        "failed",
+        "on-hold"
+      ]
+    },
+    "code": {
+      "$ref": "datatypes.schema.json#/$defs/Coding"
+    },
+    "title": {
+      "type": "string"
+    },
+    "focus": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "definition": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "partOf": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "team": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "dependsOn": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "milestone": {
+      "type": "boolean"
+    },
+    "requester": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "owner": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "participant": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "person": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "role": {
+            "enum": [
+              "owner",
+              "helper"
+            ]
+          },
+          "status": {
+            "enum": [
+              "requested",
+              "active",
+              "ended"
+            ]
+          }
+        },
+        "required": [
+          "person",
+          "role",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "suggestedFor": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "reviewer": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "audience": {
+      "enum": [
+        "team",
+        "organization",
+        "open"
+      ]
+    },
+    "goodFirstStep": {
+      "type": "boolean"
+    },
+    "priority": {
+      "enum": [
+        "routine",
+        "urgent"
+      ]
+    },
+    "due": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+    },
+    "restriction": {
+      "type": "object",
+      "properties": {
+        "period": {
+          "$ref": "datatypes.schema.json#/$defs/Period"
+        },
+        "location": {
+          "$ref": "datatypes.schema.json#/$defs/Reference"
+        }
+      }
+    },
+    "requires": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "executionPeriod": {
+      "$ref": "datatypes.schema.json#/$defs/Period"
+    },
+    "checklist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "done": {
+            "type": "boolean"
+          },
+          "doneBy": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          }
+        },
+        "required": [
+          "text",
+          "done"
+        ]
+      }
+    },
+    "output": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "datatypes.schema.json#/$defs/Coding"
+          },
+          "value": {},
+          "unit": {
+            "type": "string"
+          },
+          "attachment": {
+            "type": "array",
+            "items": {
+              "$ref": "datatypes.schema.json#/$defs/Attachment"
+            }
+          }
+        }
+      }
+    },
+    "note": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "author": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
+          "time": {
+            "$ref": "datatypes.schema.json#/$defs/dateTime"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      }
+    },
+    "category": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
+    "verification": {
+      "enum": [
+        "not-required",
+        "pending",
+        "confirmed",
+        "changes-requested",
+        "disputed"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "attachment": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Attachment"
+      }
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "intent",
+    "status"
+  ],
+  "additionalProperties": false
+}
