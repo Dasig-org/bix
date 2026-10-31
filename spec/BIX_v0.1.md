@@ -764,7 +764,7 @@ Only completed, confirmed work exports, as `exchangeStatus: COMPLETED`. Timestam
 
 ## Contribution, governance and modules
 
-**Today.** BIX is a draft maintained by Dasig, shaped by the organizations taking part in co-design. Changes that came from conversations are recorded in the change log, citing how many groups they came from. Groups that shape it are credited as contributors, with their permission. Nothing more formal exists yet, and this section says only what exists.
+**Today.** BIX is a draft developed and maintained by Dasig Inc., shaped by the organizations taking part in co-design. Changes that came from conversations are recorded in the change log, citing how many groups they came from. Groups that shape it are credited as contributors, with their permission. Nothing more formal exists yet, and this section says only what exists.
 
 **Direction.** BIX is open to contribution, and is to be governed together with credible organizations as they join. How decisions are shared is itself something to design with them, not in advance.
 
@@ -848,3 +848,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-29 | `Person.description`: a line about yourself, set only by the person. |
 | 2026-10-29 | Signing on phone hubs built in v0 (it was listed as after v0). Proposed for v0.2: a person-held key (`Person.publicKey[]`, `claim-identity` signed by the person) and host-signed attestations for verification, with published group keys. |
 | 2026-10-30 | A person's own key moved into v0.1: `Person.publicKey[]`, set only by the person; pairing as a Person with keys needs a signed challenge. Built in Core (`generatePersonKey`, `signChallenge`, `verifyChallenge`), the server and the app (Android Keystore through expo-secure-store). |
+| 2026-10-31 | Named the steward: BIX is developed and maintained by Dasig Inc. ("Contribution, governance and modules"). No change to the direction of shared governance. |
