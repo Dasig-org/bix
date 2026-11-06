@@ -40,6 +40,12 @@
         "initiative"
       ]
     },
+    "visibility": {
+      "enum": [
+        "initiative",
+        "team"
+      ]
+    },
     "participant": {
       "type": "array",
       "items": {

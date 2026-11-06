@@ -149,8 +149,8 @@ These aren't for the first conversation. Use them in later conversations, and on
 
 | Value set | Codes in v0.1 |
 |---|---|
-| `bayanihan:permission` | `org.manage` · `member.manage` · `initiative.plan` · `task.assign` · `task.confirm` · `report.submit` |
-| Default permissions by role | officer: all six · core-member: `initiative.plan`, `task.assign`, `task.confirm` · member, volunteer-regular, volunteer-episodic, service-learning: none beyond claiming open work · partner-representative, donor: none |
+| `bayanihan:permission` | `org.manage` · `member.manage` · `initiative.plan` · `task.assign` · `task.confirm` · `report.submit` · `view.organization` (see all of the group's work; see "Seeing other committees' work") |
+| Default permissions by role | officer: all seven · core-member: `initiative.plan`, `task.assign`, `task.confirm`, `view.organization` · member, volunteer-regular, volunteer-episodic, service-learning: none beyond claiming open work · partner-representative, donor: none |
 | `bayanihan:requirement` | `can-drive` · `has-vehicle` · `adult` · `first-aid` · `can-tutor` (organizations add local codes in their own namespace) |
 | `bayanihan:figure-rule` | `count-tasks` {`taskCode`} · `sum-task-hours` {`taskCode`} · `sum-task-output` {`outputCode`} · `sum-received` {`needCategory`} · `sum-part-reports` {`figureCode`} |
 | `bayanihan:report-figure` | `sessions-held` · `volunteer-hours` · `volunteers-active` · `households-served` · `learners-served` · `goods-received` · `waste-collected` |
@@ -437,6 +437,28 @@ Credit follows participation; participation comes first. Everything below applie
 
 **Honouring, in the record:** credit by kind (performed, reviewed, verified, proposed, commented), thanks attached to confirmations, the person's own story across every group, the project's credits, and later, signed credentials they can show anyone.
 
+### Core team and volunteers (decided 2026-11-06)
+
+Everyone in a group may call themselves a volunteer, but organizationally there are two kinds of people, told apart by `Role.code`:
+
+- **Core team:** `officer`, `core-member`, `member`. They run the group.
+- **Outside the core team:** `volunteer-regular`, `volunteer-episodic`, `service-learning`, `partner-representative`, `donor`. They help with parts of it.
+
+On a Team, `participant.role` says what a person does on that team (`lead` · `member` · `volunteer`); `Role.code` says who they are to the group. Apps label the two kinds "Core team" and "Volunteers".
+
+### Seeing other committees' work (decided 2026-11-06)
+
+For records shared at `organization` that belong to a project or a team. Records that don't (the Organization, Roles, Positions) are seen by every member, as before.
+
+| Who | Sees by default | Can be changed by the group to |
+|---|---|---|
+| Officers, core members (`view.organization`) | All of the group's work | — |
+| Members | Every team in the projects they're on, and every project's own record | Not a team that sets `Team.visibility: team` |
+| Volunteers and others outside the core team | Their own teams, the projects those teams belong to, and Tasks with `audience` `organization` or `open` | The whole project (`Team.access: initiative` on their team), or everything (`view.organization` in `Role.permissions[]`) |
+| Anyone | What they're on (`owner`, `participant[]`) | — |
+
+Editing is unchanged: the people on a record, a team's lead for that team, and holders of `task.assign` or `org.manage`. Sharing levels still apply first: `public` stays public and `private` stays private.
+
 ## One person, many groups, and work of your own
 
 - **One `Person`, many `Role`s.** A person can lead one organization and volunteer in others at the same time. Teams and Tasks reference the Person.
@@ -480,7 +502,8 @@ From a study of project tools and a large volunteer-run event. GitHub Projects s
 | **`Task.suggestedFor[]`** | People anyone has suggested for a Task. A suggestion is a proposal; asking (`requested`) still needs `task.assign`. | Propose-then-commit |
 | **`Task.milestone`** and **`Task.owner`** = an outside Organization | A gate many Tasks `dependsOn`, possibly owned by an outside body ("Central approves the venue"). Shown once, not on every blocked Task. | FHIR `Task.owner`; GitHub milestones |
 | **`Task.reviewer`** | A Team or Person whose approval is the `verification`, across Teams. Approval or "changes requested" is recorded as an attestation. | GlotPress; CEP attestations; review before merge |
-| **`Team.access`** | `own-tasks` (default) · `initiative`: read everything in the Initiative, as a Communications team needs | FHIR `CareTeam` |
+| **`Team.access`** | What this team may read. `own-tasks` (default) · `initiative`: read everything in the Initiative, as a Communications team needs | FHIR `CareTeam` |
+| **`Team.visibility`** | Who may read this team's work. `initiative` (default): the core team members on the project · `team`: only the team, its lead, and people with `view.organization` | Added 2026-11-06 |
 | **`Task.checklist[]`** | Small steps without owners: {`text`, `done`, `doneBy`} | Trello and GitHub task lists |
 | **`Task.category[]`** | Optional tags in the group's namespace | GitHub labels |
 | **Credit by kind** | A person's record counts work they **performed, reviewed, verified, proposed** and **commented on**, each separately | WordPress props credit reviewers and reporters |
@@ -849,3 +872,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-29 | Signing on phone hubs built in v0 (it was listed as after v0). Proposed for v0.2: a person-held key (`Person.publicKey[]`, `claim-identity` signed by the person) and host-signed attestations for verification, with published group keys. |
 | 2026-10-30 | A person's own key moved into v0.1: `Person.publicKey[]`, set only by the person; pairing as a Person with keys needs a signed challenge. Built in Core (`generatePersonKey`, `signChallenge`, `verifyChallenge`), the server and the app (Android Keystore through expo-secure-store). |
 | 2026-10-31 | Named the steward: BIX is developed and maintained by Dasig Inc. ("Contribution, governance and modules"). No change to the direction of shared governance. |
+| 2026-11-06 | Core team and volunteers made explicit (`Role.code`). "Seeing other committees' work": members see the projects they're on, volunteers their own teams; `Team.visibility` (`initiative` · `team`) and the `view.organization` permission let a group widen or narrow it. Built in Core (`seesWithinGroup`). |

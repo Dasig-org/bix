@@ -26,7 +26,7 @@ RES = {
            "permissions": arr(C), "qualification": arr(C)}, ["person", "organization", "code", "status"]),
  "Position": ({"organization": R, "title": S, "kind": enum("board", "officer", "committee-chair", "other"), "seats": {"type": "integer", "minimum": 1},
                "term": {"type": "string", "description": "ISO 8601 duration, e.g. P1Y"}, "permissions": arr(C), "requiredBy": S, "status": enum("active", "retired"), **page}, ["organization", "title"]),
- "Team": ({"name": S, "organization": R, "initiative": R, "kind": enum("standing", "initiative"), "access": enum("own-tasks", "initiative"),
+ "Team": ({"name": S, "organization": R, "initiative": R, "kind": enum("standing", "initiative"), "access": enum("own-tasks", "initiative"), "visibility": enum("initiative", "team"),
            "participant": arr({"type": "object", "properties": {"person": R, "role": enum("lead", "member", "volunteer"), "status": enum("requested", "active", "ended"), "period": P}, "required": ["person", "role", "status"], "additionalProperties": False}),
            "status": enum("active", "ended"), **page}, ["name", "organization"]),
  "Location": ({"name": S, "description": S, "psgc": {"type": "string", "pattern": "^[0-9]{9,10}$"}, "position": {"type": "object", "properties": {"lat": {"type": "number"}, "lon": {"type": "number"}}}, "partOf": R}, ["name"]),
