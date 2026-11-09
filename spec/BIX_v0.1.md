@@ -672,6 +672,24 @@ Many people act on the same open work, sometimes offline. BIX follows the patter
 
 **Fewer collisions by design.** Slots for the same session are interchangeable, so "I'm in" claims *any* open slot of that session, not a particular one. When none are left, the person can offer to be a backup, recorded as an `Offer` of time matched to the session's `Need`, so a released slot can go to them first.
 
+## Shifts, showing up and time (decided 2026-11-09)
+
+Event work is mostly shifts: "4 marshals at km 4, 5:00 to 7:30". These elements let one Task stand for a shift, record
+who actually came and for how long, and let a person hand their place to someone else. They come from walking a club's
+fun run end to end (coordinator and volunteer, side by side).
+
+| Element | What it is | Rules |
+|---|---|---|
+| **`Task.slots`** | How many people the work needs. Default 1 (one owner, as before). | With `slots` > 1, "I'm in" adds the person as an active `participant` (`role: helper`) and the Task stays `ready` with the Team as `owner` until active participants equal `slots`; then it becomes `accepted`. Releasing a place reopens it. "I'm in" fills *any* open place, so two people never collide. When full, a person may offer to be a backup (an `Offer` of time matched to the work's `Need`); a released place goes to the backup first. |
+| **`Task.participant.attended`** | `{at, by}`: the person showed up. `by` is the person themselves (self check-in) or anyone with `task.assign` for the Task. | Separate from saying yes. Figures may count attended participants (`volunteers-active`). Never set by a model. |
+| **`Task.participant.period`** | The person's own start and end, when it differs from the Task's `executionPeriod`. | `sum-task-hours` uses each participant's `period` when present, otherwise the Task's. |
+| **`Task.participant.replaces`** | A proposed swap: a new participant with `status: requested` and `replaces` pointing to the person they'd take over from. | The named person accepts (their entry becomes `active`, the replaced one `ended`) or declines (the proposal is removed). Only the replaced person or the Team lead may propose it. |
+| **`Task.restriction.arrival`** | `{at, location, note}`: when and where to arrive, if different from the work itself ("4:30 at gate 2, bring water"). | Shown to participants and in reminders. |
+| **`Person.skill[]`** | Skills the person says they have, as codings (e.g. `first-aid`, `driving`, `writing`). | Set only by the person. Groups record what they've checked in `Role.qualification`; matching against `Task.requires` may use either, and says which. |
+
+Deferred, to be decided with the pilot groups: signed credentials about a person, an emergency contact seen only by
+officers, and guardian consent for volunteers under 18.
+
 ## Open work and credit
 
 BIX is built for contribution the way WordPress contribution works: teams keep lists of open work, and contributors pick up what fits them. Here, an open `Task` is the unit of work, and volunteers matter as much as coordinators.
@@ -873,3 +891,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-30 | A person's own key moved into v0.1: `Person.publicKey[]`, set only by the person; pairing as a Person with keys needs a signed challenge. Built in Core (`generatePersonKey`, `signChallenge`, `verifyChallenge`), the server and the app (Android Keystore through expo-secure-store). |
 | 2026-10-31 | Named the steward: BIX is developed and maintained by Dasig Inc. ("Contribution, governance and modules"). No change to the direction of shared governance. |
 | 2026-11-06 | Core team and volunteers made explicit (`Role.code`). "Seeing other committees' work": members see the projects they're on, volunteers their own teams; `Team.visibility` (`initiative` · `team`) and the `view.organization` permission let a group widen or narrow it. Built in Core (`seesWithinGroup`). |
+| 2026-11-09 | Shifts, showing up and time: `Task.slots` (shift places, fill any open place, backups), `Task.participant.attended` (check-in), `participant.period` (own hours, used by `sum-task-hours`), `participant.replaces` (swap to a named person), `Task.restriction.arrival` (call time and meeting point), `Person.skill[]` (self-declared). Deferred: credentials, emergency contact, guardian consent. |

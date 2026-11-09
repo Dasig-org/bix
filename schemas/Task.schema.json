@@ -92,6 +92,28 @@
               "active",
               "ended"
             ]
+          },
+          "attended": {
+            "type": "object",
+            "properties": {
+              "at": {
+                "$ref": "datatypes.schema.json#/$defs/dateTime"
+              },
+              "by": {
+                "$ref": "datatypes.schema.json#/$defs/Reference"
+              }
+            },
+            "required": [
+              "at",
+              "by"
+            ],
+            "additionalProperties": false
+          },
+          "period": {
+            "$ref": "datatypes.schema.json#/$defs/Period"
+          },
+          "replaces": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
           }
         },
         "required": [
@@ -101,6 +123,10 @@
         ],
         "additionalProperties": false
       }
+    },
+    "slots": {
+      "type": "integer",
+      "minimum": 1
     },
     "suggestedFor": {
       "type": "array",
@@ -138,6 +164,21 @@
         },
         "location": {
           "$ref": "datatypes.schema.json#/$defs/Reference"
+        },
+        "arrival": {
+          "type": "object",
+          "properties": {
+            "at": {
+              "$ref": "datatypes.schema.json#/$defs/dateTime"
+            },
+            "location": {
+              "$ref": "datatypes.schema.json#/$defs/Reference"
+            },
+            "note": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
         }
       }
     },

@@ -16,6 +16,8 @@ RES = {
  "Person": ({"name": {"type": "object", "properties": {"text": S, "use": enum("nickname", "full")}, "required": ["text"], "additionalProperties": False},
              "photo": A, "contact": arr({"type": "object", "properties": {"system": enum("phone", "email", "messenger", "other"), "value": S}, "required": ["system", "value"], "additionalProperties": False}),
              "managedBy": R, "credit": enum("nickname", "full", "anonymous"), "description": txt,
+             # Skills the person says they have (set only by the person). Groups record their own checks in Role.qualification.
+             "skill": arr(C),
              # The person's own keys (one per phone). Only the person may add or revoke them; a server never holds the private key.
              "publicKey": arr({"type": "object", "properties": {"kid": S, "alg": enum("Ed25519"), "key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
                  "created": {"type": "string"}, "status": enum("active", "revoked")}, "required": ["kid", "alg", "key", "status"], "additionalProperties": False})}, ["name"]),
@@ -50,9 +52,14 @@ RES = {
                      "step": arr({"type": "object", "properties": {"code": S, "dependsOn": arr(S), "requires": arr(C), "evidence": S, "confirmerRole": C, "autoConfirm": {"type": "boolean"}, "involvesMoney": {"type": "boolean"}, "involvesBeneficiaries": {"type": "boolean"}}, "required": ["code"]})}, ["title", "status"]),
  "Task": ({"intent": enum("proposal", "plan", "order"), "status": enum("draft", "ready", "requested", "accepted", "in-progress", "completed", "cancelled", "failed", "on-hold"),
            "code": C, "title": S, "focus": R, "definition": R, "partOf": R, "team": R, "dependsOn": arr(R), "milestone": {"type": "boolean"}, "requester": R, "owner": R,
-           "participant": arr({"type": "object", "properties": {"person": R, "role": enum("owner", "helper"), "status": enum("requested", "active", "ended")}, "required": ["person", "role", "status"], "additionalProperties": False}),
+           "participant": arr({"type": "object", "properties": {"person": R, "role": enum("owner", "helper"), "status": enum("requested", "active", "ended"),
+               # v0.1 (2026-11-09): showing up, own time, and a proposed swap to a named person.
+               "attended": {"type": "object", "properties": {"at": T, "by": R}, "required": ["at", "by"], "additionalProperties": False},
+               "period": P, "replaces": R}, "required": ["person", "role", "status"], "additionalProperties": False}),
+           "slots": {"type": "integer", "minimum": 1},
            "suggestedFor": arr(R), "reviewer": R, "audience": enum("team", "organization", "open"), "goodFirstStep": {"type": "boolean"},
-           "priority": enum("routine", "urgent"), "due": T, "restriction": {"type": "object", "properties": {"period": P, "location": R}}, "requires": arr(C), "executionPeriod": P,
+           "priority": enum("routine", "urgent"), "due": T, "restriction": {"type": "object", "properties": {"period": P, "location": R,
+               "arrival": {"type": "object", "properties": {"at": T, "location": R, "note": S}, "additionalProperties": False}}}, "requires": arr(C), "executionPeriod": P,
            "checklist": arr({"type": "object", "properties": {"text": S, "done": {"type": "boolean"}, "doneBy": R}, "required": ["text", "done"]}),
            "output": arr({"type": "object", "properties": {"code": C, "value": {}, "unit": S, "attachment": arr(A)}}),
            "note": arr({"type": "object", "properties": {"author": R, "time": T, "text": S}, "required": ["text"]}), "category": arr(C),

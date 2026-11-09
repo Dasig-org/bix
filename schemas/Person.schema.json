@@ -78,6 +78,12 @@
       "type": "string",
       "maxLength": 4000
     },
+    "skill": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
     "publicKey": {
       "type": "array",
       "items": {
