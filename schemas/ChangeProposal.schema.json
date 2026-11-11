@@ -1,0 +1,105 @@
+{
+  "anyOf": [
+    {
+      "required": [
+        "change"
+      ]
+    },
+    {
+      "required": [
+        "includes"
+      ]
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/ChangeProposal.schema.json",
+  "title": "BIX v0.1 ChangeProposal",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "datatypes.schema.json#/$defs/Resource"
+    }
+  ],
+  "properties": {
+    "resourceType": {
+      "const": "ChangeProposal"
+    },
+    "id": true,
+    "meta": true,
+    "identifier": true,
+    "sharing": true,
+    "language": true,
+    "extension": true,
+    "target": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "basedOn": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "meta.version of the target this proposal was made against"
+    },
+    "organization": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
+    "area": {
+      "$ref": "datatypes.schema.json#/$defs/Coding"
+    },
+    "reason": {
+      "type": "string",
+      "maxLength": 4000
+    },
+    "change": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "enum": [
+              "add",
+              "remove",
+              "replace"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^/[A-Za-z]"
+          },
+          "value": true
+        },
+        "required": [
+          "op",
+          "path"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "includes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "accepted",
+        "declined",
+        "withdrawn",
+        "outdated"
+      ]
+    }
+  },
+  "required": [
+    "resourceType",
+    "id",
+    "meta",
+    "target",
+    "basedOn",
+    "organization",
+    "status"
+  ],
+  "additionalProperties": false
+}

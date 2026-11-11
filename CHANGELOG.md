@@ -3,6 +3,31 @@
 BIX is versioned by its spec (`v0.1`, `v0.2`). While v0.1 is a draft, additions that don't break existing records
 land in v0.1 and are listed here. The full decision log is at the end of `spec/BIX_v0.1.md`.
 
+## v0.1, 2026-11-11: proposed edits and assistance
+
+Added, all optional, so existing records stay valid:
+
+- `ChangeProposal`, a new resource: a proposed edit to a record that already exists. It names the `target` and the
+  version it was made against (`basedOn`), lists the edit as JSON Patch operations (`change[]`: `add`, `remove`,
+  `replace`), and can carry new draft records accepted with it (`includes[]`, e.g. the smaller steps of a split).
+  Lifecycle: `draft → accepted`, or `declined`, `withdrawn`, `outdated` (set by rule when the target changes first).
+- `Organization.assist[]`: the areas where a group turned on assistance, from the new value set
+  `bayanihan:assist-area` (`break-down`, `review-plan`, `who-to-ask`, `newcomers`, `roster`, `slipping`,
+  `report-draft`). Per group; nothing is on until an officer (`org.manage`) turns it on.
+
+Changed rules:
+
+- Rule 3: a model never edits an existing record directly; it makes a `ChangeProposal`.
+- Rule 20: accepting a proposal needs the same permission as making the change directly, and applies it as one change.
+- Rule 21: what no proposal may touch (figures, votes and outcomes, attendance, verification, roles, consent, sharing
+  policy, provenance, `assist`, other people's Person records), and a proposal never makes a Person a Task's owner.
+- Rule 22: a model or an assist rule acts only in an area the group turned on, and every proposal it makes names the
+  `area` and gives a `reason`.
+
+Why: BIX could propose new records but not edits to existing ones, so reviewing a plan ("move this step to
+Logistics", "this has to happen after that") had no home, and every app, or every model, would invent its own. See
+spec section "Proposed edits and assistance".
+
 ## v0.1, 2026-11-09: shifts, showing up and time
 
 Added, all optional, so existing records stay valid:

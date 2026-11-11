@@ -154,6 +154,7 @@ These aren't for the first conversation. Use them in later conversations, and on
 | `bayanihan:requirement` | `can-drive` · `has-vehicle` · `adult` · `first-aid` · `can-tutor` (organizations add local codes in their own namespace) |
 | `bayanihan:figure-rule` | `count-tasks` {`taskCode`} · `sum-task-hours` {`taskCode`} · `sum-task-output` {`outputCode`} · `sum-received` {`needCategory`} · `sum-part-reports` {`figureCode`} |
 | `bayanihan:report-figure` | `sessions-held` · `volunteer-hours` · `volunteers-active` · `households-served` · `learners-served` · `goods-received` · `waste-collected` |
+| `bayanihan:assist-area` | `break-down` (smaller steps for a project, task or step) · `review-plan` (what a plan needs a second look at) · `who-to-ask` (people who could take a step, with the reason) · `newcomers` (good first steps) · `roster` (who's active, new, free, or not yet asked) · `slipping` (unclaimed steps, dates coming up, empty teams) · `report-draft` (a narrative draft; figures stay derived). Modules may add codes in their own namespace. |
 
 Any confirmed Task counts toward a figure only if its `executionPeriod` lies inside the Report's `period`.
 
@@ -162,7 +163,7 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 | Resource | Closest FHIR resource | Purpose | Key elements |
 |---|---|---|---|
 | `Person` | Person / Practitioner | One human, one record across organizations | `name` {`text`, `use`: nickname · full} (a nickname alone is enough), `photo` (Attachment, optional, set only by the person), `contact` (optional), `managedBy` (the Organization that created the record until the person claims it, then the person) |
-| `Organization` | Organization | Any group, registered or informal | `name`, `image` (Attachment: logo or group photo), `kind` (registered-npo · faith-based · civic-club · community · event-team · sk-council · school-org · cooperative · informal · lgu-unit…), `partOf` (e.g. a chapter's national body, a ministry's parish), `registration[]` |
+| `Organization` | Organization | Any group, registered or informal | `name`, `image` (Attachment: logo or group photo), `kind` (registered-npo · faith-based · civic-club · community · event-team · sk-council · school-org · cooperative · informal · lgu-unit…), `partOf` (e.g. a chapter's national body, a ministry's parish), `registration[]`, `assist[]` (areas where the group turned on assistance; see "Proposed edits and assistance") |
 | `Role` | PractitionerRole | A Person's relationship to an Organization | `person`, `organization`, `code` (officer · member · core-member · volunteer-regular · volunteer-episodic · service-learning · partner-representative · donor), `status` (requested · active · ended), `period`, `permissions[]` (codes from `bayanihan:permission`; defaults come from `code`), `qualification[]` (codes from `bayanihan:requirement`, e.g. `can-drive`) |
 | `Location` | Location | A place | `name`, `description` (the landmark text), `psgc` (barangay level or above), `position` (optional lat/lon), `partOf` |
 | `Initiative` | PlanDefinition / CarePlan | Any organized effort. Can be nested: a year's plan holds programs and projects; a recurring program holds one session per occurrence. | `title`, `kind` (plan · program · project · session), `image` (Attachment: the cover; sessions use their program's unless they set one), `status`, `organization`, `partOf`, `period`, `recurrence`, `category[]`, `location[]`, `target[]` {`code`, `value`, `unit`} (same codes as Report figures), `taskDefinition[]`, `partner[]` (co-hosting Organizations; display and credit only in v0.1) |
@@ -173,6 +174,7 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 | `Provenance` | Provenance | Who did what, and who confirmed it | `target[]`, `activity` (propose · create · update · claim · assign · accept · decline · release · complete · confirm · dispute · cancel · submit · return · acknowledge · claim-identity · merge), `agent[]` {`type`: author · performer · verifier · model, `who`, `onBehalfOf`}, `occurredAt` (client time), `recorded`, `offline`, `model` {name, version} |
 | `SharingPolicy` | Consent | One organization's default sharing rules per category | `organization`, `rules[]` {`category`, `sharing`}, `approvedBy` |
 | `Report` | MeasureReport (loosely) | A report one organization owes another (a chapter to its national body, a ministry to its parish, a group to its LGU or a donor), with figures derived from confirmed records | `owedBy` (Organization), `owedTo` (Organization), `period`, `due`, `recurrence`, `scope` {`initiative[]`, `includeParts`}, `figures[]` {`code`, `value`, `unit`, `rule` {`code`, `params`}, `derivedFrom[]`, `derivedAt`}, `missingParts[]`, `narrative`, `attachment[]` (photos and documents chosen from the confirmed Tasks' outputs), `replaces`, `submittedBy`, `status` |
+| `ChangeProposal` | *No FHIR equivalent* (closest: a FHIR Task with `intent: proposal` whose `focus` is the record) | A proposed edit to a record that already exists, waiting for someone allowed to make it | `target`, `basedOn` (the target's `meta.version`), `organization`, `change[]` {`op`: add · remove · replace, `path`, `value`}, `includes[]` (draft records accepted together with it), `area`, `reason`, `status` |
 | `Bundle` | Bundle | The sync and exchange envelope | `type` (sync · transaction), `entry[]` {`fullUrl`: `urn:uuid:…`, `resource`} |
 
 ### Report, in more detail
@@ -230,6 +232,7 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Endpoint` | *Transport, not a kind* | From FHIR Endpoint |
 | `Follow` | *Relationship, not a kind* | |
 | `Decision` | Instrument while open, Event once decided | From Popolo Motion and VoteEvent |
+| `ChangeProposal` | Instrument | A request to change a record; the change itself is recorded by Provenance |
 | `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
 
@@ -245,12 +248,13 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | Role | `requested → active → ended` | An invite creates an `active` Role. A request to join creates a `requested` one, which needs `member.manage` to activate. |
 | TaskDefinition | `draft → active → retired` | A model-authored `draft` becomes `active` only with `ratifiedBy` |
 | Report | `owed → in-preparation → submitted → acknowledged`, plus `returned`, `cancelled` | `owed` is created by rule from `recurrence`, or by hand. `returned` sends it back to `in-preparation` with a reason. A submitted report is never edited; a correction is a new submission that references it. |
+| ChangeProposal | `draft → accepted`, or `draft → declined` · `withdrawn` · `outdated` | `outdated` is set by rule when the target's `meta.version` moves past `basedOn`. An outdated proposal is never applied; a new one may be made against the current version. |
 
 ## Conformance rules (MUST)
 
 1. Every resource carries the common elements above.
 2. Every state change produces exactly one `Provenance` record.
-3. A record created or edited by a model has `intent: proposal` (Task) or `status: draft` (everything else), and a `Provenance` agent of type `model` with the model's name and version.
+3. A record created by a model has `intent: proposal` (Task) or `status: draft` (everything else), and a `Provenance` agent of type `model` with the model's name and version. A model never edits an existing record directly: it proposes the edit as a `ChangeProposal` (rule 20).
 4. Only a Person holding an `active` Role with the right permission, or a declared deterministic rule, may move a record out of `draft` or `proposal`. Planning needs `initiative.plan`, asking someone needs `task.assign`, confirming needs `task.confirm`, submitting a Report needs `report.submit`.
 5. `Task.verification = confirmed` requires a verifier who is not the performer, except where the TaskDefinition sets `autoConfirm` for that step. Steps involving money or beneficiaries may never auto-confirm.
 6. Quantities always have a unit from the BIX unit list (box · pack · sack · kg · L · piece · person · person-hour · PHP), using UCUM codes where one exists.
@@ -267,6 +271,9 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 17. Only a Task's `owner` can move it to `accepted`. Work can be offered to someone; it can't be accepted on their behalf.
 18. A Person can export every record that names them, and an Organization every record it owns, as BIX Bundles, at any time and without asking anyone.
 19. **Public proposals.** Someone without a Role may propose a `Need`, an `Offer` or a `Person` (such as an applicant) through an organization's public link. It is always `draft` and `private` until a member with the right permission confirms it.
+20. **Proposed edits.** A change to an existing record that its author isn't allowed to make directly, and every change a model suggests, is a `ChangeProposal`. Accepting it applies its `change[]` as one change based on `basedOn` (rule 16), and moves its `includes[]` out of draft, together, with one `Provenance` per record. Accepting needs the same permission as making the change directly. Declining or withdrawing it cancels its `includes[]`.
+21. **What a proposal may not touch.** A `ChangeProposal` never targets or changes a `Report` figure, a `Decision` outcome, a `Vote`, `Task.participant.attended`, `Task.verification`, a `Role`, a `Consent`, a `SharingPolicy`, a `Provenance`, `Organization.assist`, or another person's `Person` record. It never sets `Task.owner` to a Person: asking someone stays with `task.assign`, and a proposal may only add to `Task.suggestedFor`.
+22. **Assistance is opt-in per group.** `Organization.assist[]` lists the areas (`bayanihan:assist-area`) where the group turned on assistance; absent or empty means none. A model, or a deterministic assist rule, acts only in an area that is on, and every `ChangeProposal` it makes names that `area` and gives a `reason` a person can read. Changing `assist` needs `org.manage`. Turning an area off withdraws that area's open model proposals, by rule.
 
 ## Everyday scenarios the model must handle
 
@@ -690,6 +697,85 @@ fun run end to end (coordinator and volunteer, side by side).
 Deferred, to be decided with the pilot groups: signed credentials about a person, an emergency contact seen only by
 officers, and guardian consent for volunteers under 18.
 
+## Proposed edits and assistance (decided 2026-11-11)
+
+BIX could already propose *new* things: a Task with `intent: proposal`, a Need or Offer in `draft`. It had no way to
+propose an *edit* to a record that already exists, such as "move this step to Logistics" or "this has to happen after
+that". Without one, an app would either let a model edit records directly, which breaks propose-then-commit, or invent
+its own suggestion store that no other app can read. Bayani, the small model in development, needs this for reviewing a
+plan; so does a member who spots a mistake but can't fix it themselves.
+
+**Lessons.** GitHub's suggested changes in a review and GlotPress's suggestions (an edit waits beside the original until
+someone with the right to approve it does) are the model for the workflow. JSON Patch (RFC 6902) is the model for the
+change itself: a short list of `add`, `remove` and `replace` operations on paths, which any implementation can apply
+and show as a before-and-after. FHIR has no separate resource for this; its nearest pattern is a Task with
+`intent: proposal` whose `focus` is the record, but in BIX a Task is a claimable step, so a separate resource keeps the
+two from being confused.
+
+| Element | What it is | Rules |
+|---|---|---|
+| **`ChangeProposal`** (new resource; CAE kind: Instrument) | One proposed edit to one existing record (`target`), made against a known version (`basedOn`, the target's `meta.version`) | Starts `draft`. Someone allowed to make the change directly accepts or declines it (rule 20). If the target changes first, it becomes `outdated` by rule and is never applied, so a stale suggestion can't overwrite newer work. |
+| **`change[]`** | JSON Patch operations: `op` (`add` · `remove` · `replace`), `path` (an element of the target, e.g. `/owner`, `/dependsOn/-`, `/goodFirstStep`), `value` | The result must still be a valid record and a valid lifecycle transition, checked by Core exactly as if it were made directly. Some elements are off limits to any proposal (rule 21). |
+| **`includes[]`** | New draft records that belong to the same suggestion, e.g. the smaller steps of a split | Accepted or cancelled together with the proposal, in one change. A proposal needs `change[]`, `includes[]`, or both. |
+| **`area`** | The assistance area it came from (`bayanihan:assist-area`) | Required for proposals from a model or an assist rule (rule 22). Lets a group see, and switch off, one kind of help. |
+| **`reason`** | Plain words a lead reads before deciding: "Projects like this put water stations under Logistics" | Required for proposals from a model or an assist rule. Never a score, and never a ranking of people. |
+| **`Organization.assist[]`** | The areas where this group turned on assistance, from `bayanihan:assist-area` | Per group. Absent or empty means none: nothing is on until an officer turns it on. Changing it needs `org.manage`. Applies to model and rule-based assistance alike, so a group chooses the help it wants, not the technology behind it. |
+
+**Who can propose.** Any person with an active Role in the organization may make a `ChangeProposal` for a record they
+can see, the same way any team participant may propose Tasks (see "Volunteers belong to the structure"). A model makes one
+only on behalf of a person, in an area that is on. Proposals from someone without a Role go through public proposals
+(rule 19), which cover only new Needs, Offers and Persons.
+
+**Common suggestions, written as proposals.**
+
+| Suggestion | `target` | `change[]` | `includes[]` |
+|---|---|---|---|
+| Split a step into smaller ones | The step | none | New Tasks with `intent: proposal` and `partOf` the step |
+| Add a step projects like this usually include | The Initiative | none | One new Task with `intent: proposal` |
+| Move a step to another team | The step | `replace /owner` with the Team | none |
+| This must happen after that | The later step | `add /dependsOn/-` | none |
+| Mark a good first step | The step | `replace /goodFirstStep` with `true` | none |
+| These two are duplicates | The duplicate | `replace /status` with `cancelled`, `add /note/-` naming the other | none |
+| Someone who could take this step | The step | `add /suggestedFor/-` with the Person | none |
+
+**Example.** Bayani, reviewing a fun run plan for the person who asked it to, suggests moving the water stations step to
+Logistics. A lead taps yes; the Task's `owner` changes, the proposal becomes `accepted`, and both changes carry
+Provenance naming the model and the lead.
+
+```json
+{
+  "resourceType": "ChangeProposal",
+  "id": "7c1e2f4a-3b5d-4e8f-9a01-2b3c4d5e6f70",
+  "meta": { "version": 1 },
+  "target": { "reference": "Task/water-stations" },
+  "basedOn": 4,
+  "organization": { "reference": "Organization/runners-club" },
+  "area": { "system": "bayanihan:assist-area", "code": "review-plan" },
+  "reason": "Projects like this put water stations under Logistics, and Logistics already has the table and coolers.",
+  "change": [ { "op": "replace", "path": "/owner", "value": { "reference": "Team/logistics" } } ],
+  "status": "draft"
+}
+```
+
+```json
+{
+  "resourceType": "Provenance",
+  "id": "0d9b8a7c-6e5f-4a3b-8c2d-1e0f9a8b7c6d",
+  "meta": { "version": 1 },
+  "target": [ { "reference": "ChangeProposal/7c1e2f4a-3b5d-4e8f-9a01-2b3c4d5e6f70" } ],
+  "activity": "propose",
+  "agent": [
+    { "type": "model", "model": { "name": "Bayani-1-1B", "version": "<version>" } },
+    { "type": "author", "who": { "reference": "Person/ana" } }
+  ],
+  "occurredAt": "2026-11-20T21:14:00+08:00"
+}
+```
+
+**Not in v0.1.** Proposals that change several existing records at once (make one per record, and accept them side by
+side), proposals from outside the organization other than rule 19, and per-team or per-person assistance settings
+(per group only, to keep it simple).
+
 ## Open work and credit
 
 BIX is built for contribution the way WordPress contribution works: teams keep lists of open work, and contributors pick up what fits them. Here, an open `Task` is the unit of work, and volunteers matter as much as coordinators.
@@ -892,3 +978,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-10-31 | Named the steward: BIX is developed and maintained by Dasig Inc. ("Contribution, governance and modules"). No change to the direction of shared governance. |
 | 2026-11-06 | Core team and volunteers made explicit (`Role.code`). "Seeing other committees' work": members see the projects they're on, volunteers their own teams; `Team.visibility` (`initiative` · `team`) and the `view.organization` permission let a group widen or narrow it. Built in Core (`seesWithinGroup`). |
 | 2026-11-09 | Shifts, showing up and time: `Task.slots` (shift places, fill any open place, backups), `Task.participant.attended` (check-in), `participant.period` (own hours, used by `sum-task-hours`), `participant.replaces` (swap to a named person), `Task.restriction.arrival` (call time and meeting point), `Person.skill[]` (self-declared). Deferred: credentials, emergency contact, guardian consent. |
+| 2026-11-11 | Proposed edits and assistance: new `ChangeProposal` resource (an edit to an existing record, as JSON Patch operations against a known `meta.version`, with `includes[]` for drafts accepted together, `area` and `reason`; becomes `outdated` if the target changes first), `Organization.assist[]` (per-group opt-in areas from the new `bayanihan:assist-area` value set, for model and rule-based assistance alike). Rule 3 now says a model never edits an existing record directly; new rules 20–22. |

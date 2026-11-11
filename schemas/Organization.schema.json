@@ -96,6 +96,12 @@
         ]
       }
     },
+    "assist": {
+      "type": "array",
+      "items": {
+        "$ref": "datatypes.schema.json#/$defs/Coding"
+      }
+    },
     "description": {
       "type": "string",
       "maxLength": 4000

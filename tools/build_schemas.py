@@ -23,7 +23,9 @@ RES = {
                  "created": {"type": "string"}, "status": enum("active", "revoked")}, "required": ["kid", "alg", "key", "status"], "additionalProperties": False})}, ["name"]),
  "Organization": ({"name": S, "kind": enum("registered-npo", "faith-based", "civic-club", "community", "event-team", "sk-council", "school-org", "school", "university", "cooperative", "informal", "lgu-unit", "national-agency", "foundation"),
                    "partOf": R, "registration": arr({"type": "object", "properties": {"system": S, "value": S}, "required": ["value"]}), "image": A,
-                   "cause": arr(C), "location": arr(R), "homeServer": R, "vocabulary": arr({"type": "object", "properties": {"term": S, "label": S}, "required": ["term", "label"]}), **page, **summary}, ["name"]),
+                   "cause": arr(C), "location": arr(R), "homeServer": R, "vocabulary": arr({"type": "object", "properties": {"term": S, "label": S}, "required": ["term", "label"]}),
+                   # Areas where the group has turned on assistance (codes from bayanihan:assist-area). Absent or empty: none. Changing it needs org.manage.
+                   "assist": arr(C), **page, **summary}, ["name"]),
  "Role": ({"person": R, "organization": R, "code": C, "status": enum("requested", "active", "ended"), "position": R, "period": P,
            "permissions": arr(C), "qualification": arr(C)}, ["person", "organization", "code", "status"]),
  "Position": ({"organization": R, "title": S, "kind": enum("board", "officer", "committee-chair", "other"), "seats": {"type": "integer", "minimum": 1},
@@ -75,6 +77,14 @@ RES = {
                "voters": R, "eligible": arr(R), "opens": T, "closes": T, "quorum": {"type": "integer", "minimum": 0}, "threshold": enum("majority", "two-thirds", "unanimous", "no-objection"),
                "showResults": enum("after-voting", "after-close"), "status": enum("draft", "open", "closed", "decided", "no-quorum", "cancelled"),
                "outcome": {"type": "object", "properties": {"option": arr(S), "tally": {"type": "object"}, "decidedAt": T}}, "statement": S, **page}, ["question", "method", "status"]),
+ # A proposed edit to a record that already exists. Accepting it applies `change` (JSON Patch subset) and any `includes` drafts together.
+ "ChangeProposal": ({"target": R, "basedOn": {"type": "integer", "minimum": 1, "description": "meta.version of the target this proposal was made against"},
+                     "organization": R, "area": C, "reason": txt,
+                     "change": {"type": "array", "minItems": 1, "items": {"type": "object", "properties": {"op": enum("add", "remove", "replace"),
+                         "path": {"type": "string", "pattern": "^/[A-Za-z]"}, "value": True}, "required": ["op", "path"], "additionalProperties": False}},
+                     "includes": {"type": "array", "minItems": 1, "items": R},
+                     "status": enum("draft", "accepted", "declined", "withdrawn", "outdated")},
+                    ["target", "basedOn", "organization", "status"]),
  "Vote": ({"decision": R, "voter": R, "choice": arr(S), "objection": {"type": "boolean"}, "reason": S, "cast": T}, ["decision", "voter", "cast"]),
  "Report": ({"owedBy": R, "owedTo": R, "period": P, "due": T, "recurrence": ref("Recurrence"), "scope": {"type": "object", "properties": {"initiative": arr(R), "includeParts": {"type": "boolean"}}},
              "figures": arr({"type": "object", "properties": {"code": C, "value": {"type": "number"}, "unit": S, "rule": {"type": "object", "properties": {"code": S, "params": {"type": "object"}}, "required": ["code"]}, "derivedFrom": arr(R), "derivedAt": T}, "required": ["code", "rule"]}),
@@ -87,11 +97,13 @@ RES = {
 }
 CAE = {"Person": "Actor", "Organization": "Actor", "Team": "Actor", "Location": "Site", "Initiative": "Instrument", "InitiativeTemplate": "Instrument", "TaskDefinition": "Instrument",
        "SharingPolicy": "Instrument", "Need": "Instrument", "Offer": "Instrument", "Report": "Instrument", "Position": "Instrument", "Goal": "Instrument", "Consent": "Instrument",
-       "ShareLink": "Instrument", "Decision": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
+       "ShareLink": "Instrument", "Decision": "Instrument", "ChangeProposal": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
        "Role": "relationship", "Communication": "relationship", "Follow": "relationship", "Provenance": "attestation", "Endpoint": "transport"}
 ONE_OF = {"Initiative": [{"required": ["organization"]}, {"required": ["person"]}]}
+ANY_OF = {"ChangeProposal": [{"required": ["change"]}, {"required": ["includes"]}]}
 def build(name, props, req):
     extra = {"oneOf": ONE_OF[name]} if name in ONE_OF else {}
+    if name in ANY_OF: extra["anyOf"] = ANY_OF[name]
     return {**extra, "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": f"{BASE}{name}.schema.json", "title": f"BIX v0.1 {name}",
             "x-bix-cae-kind": CAE[name], "type": "object",
             "allOf": [{"$ref": DT + "Resource"}],
