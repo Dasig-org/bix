@@ -28,6 +28,11 @@ Why: BIX could propose new records but not edits to existing ones, so reviewing 
 Logistics", "this has to happen after that") had no home, and every app, or every model, would invent its own. See
 spec section "Proposed edits and assistance".
 
+## v0.1, 2026-11-11: report figures
+
+- Figure rule `count-participants` {taskCode, attended}: distinct people on done work.
+- Report figure `people-served`: a count recorded as a Task output, never names.
+
 ## v0.1, 2026-11-09: shifts, showing up and time
 
 Added, all optional, so existing records stay valid:
