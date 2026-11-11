@@ -79,6 +79,32 @@
           },
           "involvesBeneficiaries": {
             "type": "boolean"
+          },
+          "estimate": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "unit": {
+                "enum": [
+                  "min",
+                  "h"
+                ]
+              },
+              "per": {
+                "enum": [
+                  "person",
+                  "task"
+                ]
+              }
+            },
+            "required": [
+              "value",
+              "unit"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [

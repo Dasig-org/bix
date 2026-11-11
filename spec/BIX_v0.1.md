@@ -152,7 +152,7 @@ These aren't for the first conversation. Use them in later conversations, and on
 | `bayanihan:permission` | `org.manage` · `member.manage` · `initiative.plan` · `task.assign` · `task.confirm` · `report.submit` · `view.organization` (see all of the group's work; see "Seeing other committees' work") |
 | Default permissions by role | officer: all seven · core-member: `initiative.plan`, `task.assign`, `task.confirm`, `view.organization` · member, volunteer-regular, volunteer-episodic, service-learning: none beyond claiming open work · partner-representative, donor: none |
 | `bayanihan:requirement` | `can-drive` · `has-vehicle` · `adult` · `first-aid` · `can-tutor` (organizations add local codes in their own namespace) |
-| `bayanihan:figure-rule` | `count-tasks` {`taskCode`} · `count-participants` {`taskCode`, `attended`} (distinct people active on done work; with `attended`, only those checked in) · `sum-task-hours` {`taskCode`} · `sum-task-output` {`outputCode`} · `sum-received` {`needCategory`} · `sum-part-reports` {`figureCode`} |
+| `bayanihan:figure-rule` | `sum-task-hours` counts as in "Planned and given time" · `count-tasks` {`taskCode`} · `count-participants` {`taskCode`, `attended`} (distinct people active on done work; with `attended`, only those checked in) · `sum-task-hours` {`taskCode`} · `sum-task-output` {`outputCode`} · `sum-received` {`needCategory`} · `sum-part-reports` {`figureCode`} |
 | `bayanihan:report-figure` | `sessions-held` · `volunteer-hours` · `volunteers-active` · `households-served` · `learners-served` · `goods-received` · `waste-collected` · `people-served` (a count recorded as a Task output, never names) |
 | `bayanihan:assist-area` | `break-down` (smaller steps for a project, task or step) · `review-plan` (what a plan needs a second look at) · `who-to-ask` (people who could take a step, with the reason) · `newcomers` (good first steps) · `roster` (who's active, new, free, or not yet asked) · `slipping` (unclaimed steps, dates coming up, empty teams) · `report-draft` (a narrative draft; figures stay derived). Modules may add codes in their own namespace. |
 
@@ -694,6 +694,30 @@ fun run end to end (coordinator and volunteer, side by side).
 | **`Task.restriction.arrival`** | `{at, location, note}`: when and where to arrive, if different from the work itself ("4:30 at gate 2, bring water"). | Shown to participants and in reminders. |
 | **`Person.skill[]`** | Skills the person says they have, as codings (e.g. `first-aid`, `driving`, `writing`). | Set only by the person. Groups record what they've checked in `Role.qualification`; matching against `Task.requires` may use either, and says which. |
 
+### Planned and given time (decided 2026-11-11)
+
+Volunteer hours are what schools, employers and funders ask for, so they must be honest. A coordinator plans how long
+work should take; each person confirms or changes it; the group's signature stands behind the result. (After ClickUp
+and Monday.com time estimates, without their timers: volunteers don't run stopwatches at a cleanup.)
+
+| Element | What it is | Rules |
+|---|---|---|
+| **`Task.estimate`** | `{value, unit, per}`: how long the work should take, e.g. `{2.5, "h", "person"}`. `per` is `person` (default) or `task` (shared by everyone on it). | Set by whoever plans the work. Shown to volunteers before they say yes ("about 2.5 h"). |
+| **`TaskDefinition.step.estimate`** | The same, on a saved way of working, so every event made from it starts with durations. | |
+| **`Task.participant.hours`** | `{value, source}`: the time one person gave, when there's no exact start and end. `source` is `planned` (accepted from the estimate), `stated` (the person said so), or `measured` (from a check-in or the shift's period). | Set by the person, or by a lead with `task.assign`. Never by a model. A `stated` value is the person's claim until the Task is confirmed or signed; reports may show confirmed and stated hours separately. |
+
+**How hours are counted** (`sum-task-hours`, and anywhere an app shows a person's hours), per active participant on
+completed work, first match wins:
+
+1. `participant.period` (their own start and end);
+2. `participant.hours.value`;
+3. `restriction.period`, the shift's window, when the work was a shift;
+4. `estimate` (divided among participants when `per` is `task`);
+5. nothing: 0 hours.
+
+`executionPeriod` (when the work was taken and when it was marked done) is **not** time given, and is never counted
+as hours: a task taken on Monday and finished on Saturday is not 120 hours.
+
 Deferred, to be decided with the pilot groups: signed credentials about a person, an emergency contact seen only by
 officers, and guardian consent for volunteers under 18.
 
@@ -980,3 +1004,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-09 | Shifts, showing up and time: `Task.slots` (shift places, fill any open place, backups), `Task.participant.attended` (check-in), `participant.period` (own hours, used by `sum-task-hours`), `participant.replaces` (swap to a named person), `Task.restriction.arrival` (call time and meeting point), `Person.skill[]` (self-declared). Deferred: credentials, emergency contact, guardian consent. |
 | 2026-11-11 | Proposed edits and assistance: new `ChangeProposal` resource (an edit to an existing record, as JSON Patch operations against a known `meta.version`, with `includes[]` for drafts accepted together, `area` and `reason`; becomes `outdated` if the target changes first), `Organization.assist[]` (per-group opt-in areas from the new `bayanihan:assist-area` value set, for model and rule-based assistance alike). Rule 3 now says a model never edits an existing record directly; new rules 20–22. |
 | 2026-11-11 | Value sets: figure rule `count-participants` (distinct people on done work, optionally only those checked in) and report figure `people-served` (a count, recorded on the work). For the event report. |
+| 2026-11-11 | Planned and given time: `Task.estimate` and `TaskDefinition.step.estimate` (planned, per person or per task), `Task.participant.hours` {value, source: planned · stated · measured}; `sum-task-hours` counts period, then hours, then the shift window, then the estimate, and never `executionPeriod`. |

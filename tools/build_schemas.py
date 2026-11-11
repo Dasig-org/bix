@@ -8,7 +8,9 @@ DT = "datatypes.schema.json#/$defs/"
 def ref(t): return {"$ref": DT + t}
 def arr(x): return {"type": "array", "items": x}
 def enum(*v): return {"enum": list(v)}
-S = {"type": "string"}; T = ref("dateTime"); R = ref("Reference"); C = ref("Coding"); Q = ref("Quantity"); P = ref("Period"); A = ref("Attachment")
+S = {"type": "string"}; T = ref("dateTime");
+# Planned time for a piece of work (2026-11-11): how long it should take, per person by default.
+EST = {"type": "object", "properties": {"value": {"type": "number", "exclusiveMinimum": 0}, "unit": {"enum": ["min", "h"]}, "per": {"enum": ["person", "task"]}}, "required": ["value", "unit"], "additionalProperties": False}; R = ref("Reference"); C = ref("Coding"); Q = ref("Quantity"); P = ref("Period"); A = ref("Attachment")
 txt = {"type": "string", "maxLength": 4000}
 page = {"description": txt, "attachment": arr(A)}           # content every page has
 summary = {"publicSummary": {"type": "boolean", "default": True}}
@@ -51,13 +53,17 @@ RES = {
  "Offer": ({"offeredBy": R, "partOf": R, "category": C, "quantity": Q, "location": R, "availableFrom": T, "availableUntil": T, "recurrence": ref("Recurrence"), "matchedTo": R,
             "status": enum("draft", "available", "matched", "fulfilled", "expired", "withdrawn"), **page}, ["offeredBy", "category", "status"]),
  "TaskDefinition": ({"title": S, "appliesTo": arr(C), "review": {"type": "boolean", "default": False}, "status": enum("draft", "active", "retired"), "author": R, "ratifiedBy": R,
-                     "step": arr({"type": "object", "properties": {"code": S, "dependsOn": arr(S), "requires": arr(C), "evidence": S, "confirmerRole": C, "autoConfirm": {"type": "boolean"}, "involvesMoney": {"type": "boolean"}, "involvesBeneficiaries": {"type": "boolean"}}, "required": ["code"]})}, ["title", "status"]),
+                     "step": arr({"type": "object", "properties": {"code": S, "dependsOn": arr(S), "requires": arr(C), "evidence": S, "confirmerRole": C, "autoConfirm": {"type": "boolean"}, "involvesMoney": {"type": "boolean"}, "involvesBeneficiaries": {"type": "boolean"}, "estimate": EST}, "required": ["code"]})}, ["title", "status"]),
  "Task": ({"intent": enum("proposal", "plan", "order"), "status": enum("draft", "ready", "requested", "accepted", "in-progress", "completed", "cancelled", "failed", "on-hold"),
            "code": C, "title": S, "focus": R, "definition": R, "partOf": R, "team": R, "dependsOn": arr(R), "milestone": {"type": "boolean"}, "requester": R, "owner": R,
            "participant": arr({"type": "object", "properties": {"person": R, "role": enum("owner", "helper"), "status": enum("requested", "active", "ended"),
                # v0.1 (2026-11-09): showing up, own time, and a proposed swap to a named person.
                "attended": {"type": "object", "properties": {"at": T, "by": R}, "required": ["at", "by"], "additionalProperties": False},
-               "period": P, "replaces": R}, "required": ["person", "role", "status"], "additionalProperties": False}),
+               "period": P, "replaces": R,
+               # Time given, when there's no exact start and end: planned (from the estimate), stated by the person, or measured.
+               "hours": {"type": "object", "properties": {"value": {"type": "number", "minimum": 0}, "source": {"enum": ["planned", "stated", "measured"]}}, "required": ["value", "source"], "additionalProperties": False}},
+               "required": ["person", "role", "status"], "additionalProperties": False}),
+           "estimate": EST,
            "slots": {"type": "integer", "minimum": 1},
            "suggestedFor": arr(R), "reviewer": R, "audience": enum("team", "organization", "open"), "goodFirstStep": {"type": "boolean"},
            "priority": enum("routine", "urgent"), "due": T, "restriction": {"type": "object", "properties": {"period": P, "location": R,

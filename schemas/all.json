@@ -2085,6 +2085,27 @@
       },
       "replaces": {
        "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "hours": {
+       "type": "object",
+       "properties": {
+        "value": {
+         "type": "number",
+         "minimum": 0
+        },
+        "source": {
+         "enum": [
+          "planned",
+          "stated",
+          "measured"
+         ]
+        }
+       },
+       "required": [
+        "value",
+        "source"
+       ],
+       "additionalProperties": false
       }
      },
      "required": [
@@ -2094,6 +2115,32 @@
      ],
      "additionalProperties": false
     }
+   },
+   "estimate": {
+    "type": "object",
+    "properties": {
+     "value": {
+      "type": "number",
+      "exclusiveMinimum": 0
+     },
+     "unit": {
+      "enum": [
+       "min",
+       "h"
+      ]
+     },
+     "per": {
+      "enum": [
+       "person",
+       "task"
+      ]
+     }
+    },
+    "required": [
+     "value",
+     "unit"
+    ],
+    "additionalProperties": false
    },
    "slots": {
     "type": "integer",
@@ -2340,6 +2387,32 @@
       },
       "involvesBeneficiaries": {
        "type": "boolean"
+      },
+      "estimate": {
+       "type": "object",
+       "properties": {
+        "value": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "unit": {
+         "enum": [
+          "min",
+          "h"
+         ]
+        },
+        "per": {
+         "enum": [
+          "person",
+          "task"
+         ]
+        }
+       },
+       "required": [
+        "value",
+        "unit"
+       ],
+       "additionalProperties": false
       }
      },
      "required": [

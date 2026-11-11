@@ -28,6 +28,17 @@ Why: BIX could propose new records but not edits to existing ones, so reviewing 
 Logistics", "this has to happen after that") had no home, and every app, or every model, would invent its own. See
 spec section "Proposed edits and assistance".
 
+## v0.1, 2026-11-11: planned and given time
+
+- `Task.estimate {value, unit: min|h, per: person|task}` and `TaskDefinition.step.estimate`: how long work should take.
+- `Task.participant.hours {value, source: planned|stated|measured}`: time one person gave, without exact clock times.
+- `sum-task-hours` now counts, per person: their `period`, else their `hours`, else the shift's `restriction.period`,
+  else the `estimate`. **Changed:** it no longer uses `executionPeriod` (taken → marked done), which overstated hours
+  for work done over days and undercounted shifts.
+
+Why: hours are what schools, employers and funders ask for. A coordinator plans them, each person confirms or
+changes theirs, and the group's signature stands behind them. See spec section "Planned and given time".
+
 ## v0.1, 2026-11-11: report figures
 
 - Figure rule `count-participants` {taskCode, attended}: distinct people on done work.
