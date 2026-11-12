@@ -36,6 +36,7 @@
         "decline",
         "release",
         "complete",
+        "reopen",
         "confirm",
         "dispute",
         "cancel",
