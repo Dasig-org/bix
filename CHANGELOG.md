@@ -59,3 +59,8 @@ Why: walking a volunteer-run event end to end showed that shift sign-ups, check-
 home in the format, so every app would invent its own. See spec section "Shifts, showing up and time".
 
 Deferred: signed credentials about a person, an officer-only emergency contact, guardian consent for minors.
+
+- **2026-11-12 · Reopening a Task.** `completed`, `failed` and `cancelled` were final. Real work gets reopened (a
+  website marked done too early, a cancelled shift brought back), so they may now go to `ready`, or `in-progress`
+  when people stay on it. Reopening needs `task.assign`. Earlier versions, signatures and proofs are unchanged and
+  still verify; hours and credit count only while the Task is `completed`.
