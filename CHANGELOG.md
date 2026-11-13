@@ -60,6 +60,11 @@ home in the format, so every app would invent its own. See spec section "Shifts,
 
 Deferred: signed credentials about a person, an officer-only emergency contact, guardian consent for minors.
 
+- **2026-11-13 · Joining teams.** Volunteers now see the other Teams in the projects they're on (the Team record only:
+  name, lead, who's on it; never the team's Tasks), so they can ask to join one. Anyone in the group may add only
+  themselves to `Team.participant` as `requested`, cancel that, or leave (`ended`); the team's lead accepts, or the
+  core team when there's no lead. A `requested` or `ended` participant no longer counts as being on a record for
+  editing. A Team with `visibility: team` stays hidden.
 - **2026-11-12 · Reopening a Task.** `completed`, `failed` and `cancelled` were final. Real work gets reopened (a
   website marked done too early, a cancelled shift brought back), so they may now go to `ready`, or `in-progress`
   when people stay on it. Reopening needs `task.assign`. Earlier versions, signatures and proofs are unchanged and

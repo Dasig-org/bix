@@ -461,7 +461,7 @@ For records shared at `organization` that belong to a project or a team. Records
 |---|---|---|
 | Officers, core members (`view.organization`) | All of the group's work | — |
 | Members | Every team in the projects they're on, and every project's own record | Not a team that sets `Team.visibility: team` |
-| Volunteers and others outside the core team | Their own teams, the projects those teams belong to, and Tasks with `audience` `organization` or `open` | The whole project (`Team.access: initiative` on their team), or everything (`view.organization` in `Role.permissions[]`) |
+| Volunteers and others outside the core team | Their own teams, the projects those teams belong to, the other Teams in those projects (the Team record only: name, lead, who is on it; added 2026-11-12, so they can ask to join), and Tasks with `audience` `organization` or `open` | The whole project (`Team.access: initiative` on their team), or everything (`view.organization` in `Role.permissions[]`) |
 | Anyone | What they're on (`owner`, `participant[]`) | — |
 
 Editing is unchanged: the people on a record, a team's lead for that team, and holders of `task.assign` or `org.manage`. Sharing levels still apply first: `public` stays public and `private` stays private.
@@ -1006,3 +1006,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-11 | Value sets: figure rule `count-participants` (distinct people on done work, optionally only those checked in) and report figure `people-served` (a count, recorded on the work). For the event report. |
 | 2026-11-11 | Planned and given time: `Task.estimate` and `TaskDefinition.step.estimate` (planned, per person or per task), `Task.participant.hours` {value, source: planned · stated · measured}; `sum-task-hours` counts period, then hours, then the shift window, then the estimate, and never `executionPeriod`. |
 | 2026-11-12 | Lifecycles: a `completed`, `failed` or `cancelled` Task may be reopened to `ready` or `in-progress`, with `task.assign`, recorded as Provenance activity `reopen`. Earlier versions, signatures and proofs stay as they were; hours and credit count only while `completed`. |
+| 2026-11-13 | Seeing other committees' work: volunteers also see the other Teams in the projects they're on (the Team record only, not its Tasks), so they can ask to join one; a Team with `visibility: team` stays hidden. Joining a Team: anyone in the group may add only themselves to `Team.participant` as `requested`, cancel it, or leave (`ended`); a lead, or with no lead the core team, accepts. Only `active` participants count as being on a record for editing. |
