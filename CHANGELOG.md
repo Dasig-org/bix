@@ -60,6 +60,13 @@ home in the format, so every app would invent its own. See spec section "Shifts,
 
 Deferred: signed credentials about a person, an officer-only emergency contact, guardian consent for minors.
 
+- **2026-11-13 · Usernames and invitations.** `Person.handle` (optional username, unique on the server holding the
+  Person, found only by exact match), a new `Invitation` resource (one invitation to one person, to a group, team,
+  project or task; `sent → accepted · declined · expired · withdrawn`; only the invitee accepts; can block future
+  ones), `Task.taking` (`anyone` by default, or `ask`: people ask and a lead chooses), and
+  `Organization.invitePolicy` (`core-team` by default, or `members`). Provenance activity `invite`. Privacy rules:
+  email addresses never appear in a record, inviting by email reveals nothing about whether an account exists, and
+  invitation messages carry no detail. Schemas rebuilt from `tools/build_schemas.py` (`reopen` now lives there too).
 - **2026-11-13 · Joining teams.** Volunteers now see the other Teams in the projects they're on (the Team record only:
   name, lead, who's on it; never the team's Tasks), so they can ask to join one. Anyone in the group may add only
   themselves to `Team.participant` as `requested`, cancel that, or leave (`ended`); the team's lead accepts, or the

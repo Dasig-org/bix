@@ -171,7 +171,7 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 | `Offer` | *No FHIR equivalent* · Schema.org `Offer` | What someone has and will give: goods, time, a skill, a vehicle, a venue | `offeredBy` (a Person or an Organization), `category`, `quantity`, `location`, `availableFrom`, `availableUntil`, `recurrence`, `matchedTo` (a Need), `status` |
 | `TaskDefinition` | ActivityDefinition | The reusable template for a kind of work. Examples: `session-staffing` (serve, check in, close), `goods-transfer` (collect, deliver, confirm receipt), `expense-claim` (buy, file receipt, approve), `report-owed` (gather, draft, submit). | `appliesTo` (Initiative, Offer or Need categories), `steps[]` {`code`, `dependsOn`, `requires[]`, `evidence`, `confirmerRole`, `autoConfirm`}, `status`, `author`, `ratifiedBy` |
 | `Task` | Task | One claimable step | `intent` (proposal · plan · order), `status`, `code`, `focus` (any resource: an Offer, a Need, or a module's type such as an Animal), `priority` (routine · urgent), `definition`, `requester` (an Organization), `owner` (the Person who claimed it or was asked), `restriction` {`period`, `location`}, `requires[]` (codes from `bayanihan:requirement`), `executionPeriod` {`start`, `end`} (when the work actually happened), `output[]` {`code`, `value`, `unit`, `attachment[]`}, `note[]` {`author`, `time`, `text`} (including thanks), `verification` |
-| `Provenance` | Provenance | Who did what, and who confirmed it | `target[]`, `activity` (propose · create · update · claim · assign · accept · decline · release · complete · reopen · confirm · dispute · cancel · submit · return · acknowledge · claim-identity · merge), `agent[]` {`type`: author · performer · verifier · model, `who`, `onBehalfOf`}, `occurredAt` (client time), `recorded`, `offline`, `model` {name, version} |
+| `Provenance` | Provenance | Who did what, and who confirmed it | `target[]`, `activity` (propose · create · update · claim · assign · accept · decline · release · complete · reopen · confirm · invite · dispute · cancel · submit · return · acknowledge · claim-identity · merge), `agent[]` {`type`: author · performer · verifier · model, `who`, `onBehalfOf`}, `occurredAt` (client time), `recorded`, `offline`, `model` {name, version} |
 | `SharingPolicy` | Consent | One organization's default sharing rules per category | `organization`, `rules[]` {`category`, `sharing`}, `approvedBy` |
 | `Report` | MeasureReport (loosely) | A report one organization owes another (a chapter to its national body, a ministry to its parish, a group to its LGU or a donor), with figures derived from confirmed records | `owedBy` (Organization), `owedTo` (Organization), `period`, `due`, `recurrence`, `scope` {`initiative[]`, `includeParts`}, `figures[]` {`code`, `value`, `unit`, `rule` {`code`, `params`}, `derivedFrom[]`, `derivedAt`}, `missingParts[]`, `narrative`, `attachment[]` (photos and documents chosen from the confirmed Tasks' outputs), `replaces`, `submittedBy`, `status` |
 | `ChangeProposal` | *No FHIR equivalent* (closest: a FHIR Task with `intent: proposal` whose `focus` is the record) | A proposed edit to a record that already exists, waiting for someone allowed to make it | `target`, `basedOn` (the target's `meta.version`), `organization`, `change[]` {`op`: add · remove · replace, `path`, `value`}, `includes[]` (draft records accepted together with it), `area`, `reason`, `status` |
@@ -236,6 +236,26 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
 
+### Usernames and invitations (decided 2026-11-13)
+
+People can be invited to a group, team, project or task by username or by email, besides by link.
+
+| Element | Meaning |
+|---|---|
+| **`Person.handle`** | `{value, findable}`. Optional. 3–20 characters: lowercase ASCII letters, digits, `.` and `_`; starts with a letter; no leading, trailing or repeated `.`; compared without case. Unique on the server that holds the Person (a network rule, like references); a self-hosted network has its own. A person on one phone or a hub has none until they're on a server. `findable: false` turns off invites by username. Servers also refuse handles that are all digits, emails, phone numbers or reserved words, allow a change at most every 30 days, and hold a released handle for 30 days for its previous owner. |
+| **`Invitation`** | One invitation to one person: `target` (Organization, Team, Initiative or Task), `invitedBy`, `invitee` (the Person, when known), `role` (what accepting gives: `volunteer` or `member` of a group, `team-member`, `helper` on a task), `status`, `expires`, `message` (280 characters), `via` (`username` · `email` · `in-app`), `blockFuture` (set by the invitee on declining: no more invitations from that group). |
+| **`Task.taking`** | `anyone` (default): anyone the Task is shared with may say "I'm in". `ask`: they ask, by adding themselves to `participant[]` as `requested`, and someone with `task.assign` (or the team's lead) chooses. |
+| **`Organization.invitePolicy`** | Who may invite by username or email: `core-team` (default) or `members` (everyone in the group). Links keep their own rules. |
+
+**Privacy rules (MUST):**
+
+1. **An email address is never part of a BIX record.** A server keeps the address an invitation went to only as a salted hash, to deliver it when that address later signs in; it never appears in a record, an export or a response.
+2. **Inviting by email reveals nothing**: the inviter gets the same answer, in the same time, whether or not the address belongs to anyone.
+3. **A handle is found only by exact match**, never by browsing or partial search, and the lookup returns only the nickname and photo, never groups, teams or work.
+4. **Invitation emails and notifications carry no detail** beyond the group's name and who invited; the rest shows after signing in.
+5. **Every invitation can be declined, and blocked for the future**; servers limit invitations per inviter and per invitee.
+6. **An Invitation is not a ShareLink.** A ShareLink is used by whoever holds it; an Invitation is addressed to one person and only they can accept it.
+
 ## Lifecycles
 
 | Resource | States | Notes |
@@ -248,6 +268,7 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | Role | `requested → active → ended` | An invite creates an `active` Role. A request to join creates a `requested` one, which needs `member.manage` to activate. |
 | TaskDefinition | `draft → active → retired` | A model-authored `draft` becomes `active` only with `ratifiedBy` |
 | Report | `owed → in-preparation → submitted → acknowledged`, plus `returned`, `cancelled` | `owed` is created by rule from `recurrence`, or by hand. `returned` sends it back to `in-preparation` with a reason. A submitted report is never edited; a correction is a new submission that references it. |
+| Invitation | `sent → accepted`, or `sent → declined` · `expired` · `withdrawn` | Accepting is done only by the invitee; it creates the Role, Team participant or Task participant the invitation names, through the usual permission rules. `expired` is set by rule after `expires`. See "Usernames and invitations". |
 | ChangeProposal | `draft → accepted`, or `draft → declined` · `withdrawn` · `outdated` | `outdated` is set by rule when the target's `meta.version` moves past `basedOn`. An outdated proposal is never applied; a new one may be made against the current version. |
 
 ## Conformance rules (MUST)
@@ -1007,3 +1028,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-11 | Planned and given time: `Task.estimate` and `TaskDefinition.step.estimate` (planned, per person or per task), `Task.participant.hours` {value, source: planned · stated · measured}; `sum-task-hours` counts period, then hours, then the shift window, then the estimate, and never `executionPeriod`. |
 | 2026-11-12 | Lifecycles: a `completed`, `failed` or `cancelled` Task may be reopened to `ready` or `in-progress`, with `task.assign`, recorded as Provenance activity `reopen`. Earlier versions, signatures and proofs stay as they were; hours and credit count only while `completed`. |
 | 2026-11-13 | Seeing other committees' work: volunteers also see the other Teams in the projects they're on (the Team record only, not its Tasks), so they can ask to join one; a Team with `visibility: team` stays hidden. Joining a Team: anyone in the group may add only themselves to `Team.participant` as `requested`, cancel it, or leave (`ended`); a lead, or with no lead the core team, accepts. Only `active` participants count as being on a record for editing. |
+| 2026-11-13 | Usernames and invitations: `Person.handle` (optional, unique per server), the `Invitation` resource and lifecycle (one invitation to one person, accepted only by them; email never in a record), `Task.taking` (`anyone` · `ask`), `Organization.invitePolicy` (`core-team` · `members`), Provenance activity `invite`, and six privacy rules. |

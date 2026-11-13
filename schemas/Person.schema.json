@@ -119,6 +119,25 @@
         ],
         "additionalProperties": false
       }
+    },
+    "handle": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$",
+          "minLength": 3,
+          "maxLength": 20
+        },
+        "findable": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [

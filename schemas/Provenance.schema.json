@@ -47,7 +47,8 @@
         "merge",
         "vote",
         "publish",
-        "revoke"
+        "revoke",
+        "invite"
       ]
     },
     "agent": {

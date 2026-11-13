@@ -171,6 +171,12 @@
       ],
       "additionalProperties": false
     },
+    "taking": {
+      "enum": [
+        "anyone",
+        "ask"
+      ]
+    },
     "slots": {
       "type": "integer",
       "minimum": 1

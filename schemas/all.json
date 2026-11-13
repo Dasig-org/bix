@@ -959,6 +959,83 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Invitation.schema.json",
+  "title": "BIX v0.1 Invitation",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Invitation"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "target": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "invitedBy": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "invitee": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "role": {
+    "enum": [
+     "volunteer",
+     "member",
+     "team-member",
+     "helper"
+    ]
+   },
+   "status": {
+    "enum": [
+     "sent",
+     "accepted",
+     "declined",
+     "expired",
+     "withdrawn"
+    ]
+   },
+   "expires": {
+    "$ref": "datatypes.schema.json#/$defs/dateTime"
+   },
+   "message": {
+    "type": "string",
+    "maxLength": 280
+   },
+   "via": {
+    "enum": [
+     "username",
+     "email",
+     "in-app"
+    ]
+   },
+   "blockFuture": {
+    "type": "boolean"
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "target",
+   "invitedBy",
+   "role",
+   "status",
+   "via"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bix.dasig.org/v0.1/Location.schema.json",
   "title": "BIX v0.1 Location",
   "x-bix-cae-kind": "Site",
@@ -1271,6 +1348,12 @@
      "$ref": "datatypes.schema.json#/$defs/Coding"
     }
    },
+   "invitePolicy": {
+    "enum": [
+     "core-team",
+     "members"
+    ]
+   },
    "description": {
     "type": "string",
     "maxLength": 4000
@@ -1415,6 +1498,25 @@
      ],
      "additionalProperties": false
     }
+   },
+   "handle": {
+    "type": "object",
+    "properties": {
+     "value": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$",
+      "minLength": 3,
+      "maxLength": 20
+     },
+     "findable": {
+      "type": "boolean",
+      "default": true
+     }
+    },
+    "required": [
+     "value"
+    ],
+    "additionalProperties": false
    }
   },
   "required": [
@@ -1541,6 +1643,7 @@
      "decline",
      "release",
      "complete",
+     "reopen",
      "confirm",
      "dispute",
      "cancel",
@@ -1551,7 +1654,8 @@
      "merge",
      "vote",
      "publish",
-     "revoke"
+     "revoke",
+     "invite"
     ]
    },
    "agent": {
@@ -2141,6 +2245,12 @@
      "unit"
     ],
     "additionalProperties": false
+   },
+   "taking": {
+    "enum": [
+     "anyone",
+     "ask"
+    ]
    },
    "slots": {
     "type": "integer",

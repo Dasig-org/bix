@@ -102,6 +102,12 @@
         "$ref": "datatypes.schema.json#/$defs/Coding"
       }
     },
+    "invitePolicy": {
+      "enum": [
+        "core-team",
+        "members"
+      ]
+    },
     "description": {
       "type": "string",
       "maxLength": 4000

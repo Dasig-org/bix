@@ -22,12 +22,18 @@ RES = {
              "skill": arr(C),
              # The person's own keys (one per phone). Only the person may add or revoke them; a server never holds the private key.
              "publicKey": arr({"type": "object", "properties": {"kid": S, "alg": enum("Ed25519"), "key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-                 "created": {"type": "string"}, "status": enum("active", "revoked")}, "required": ["kid", "alg", "key", "status"], "additionalProperties": False})}, ["name"]),
+                 "created": {"type": "string"}, "status": enum("active", "revoked")}, "required": ["kid", "alg", "key", "status"], "additionalProperties": False}),
+             # A username (2026-11-13): optional, unique on the server that holds it, for being invited by name. findable
+             # false turns off invites by username. Rules: see the spec, "Usernames and invitations".
+             "handle": {"type": "object", "properties": {"value": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(\\.[a-z0-9_]+)*$", "minLength": 3, "maxLength": 20},
+                 "findable": {"type": "boolean", "default": True}}, "required": ["value"], "additionalProperties": False}}, ["name"]),
  "Organization": ({"name": S, "kind": enum("registered-npo", "faith-based", "civic-club", "community", "event-team", "sk-council", "school-org", "school", "university", "cooperative", "informal", "lgu-unit", "national-agency", "foundation"),
                    "partOf": R, "registration": arr({"type": "object", "properties": {"system": S, "value": S}, "required": ["value"]}), "image": A,
                    "cause": arr(C), "location": arr(R), "homeServer": R, "vocabulary": arr({"type": "object", "properties": {"term": S, "label": S}, "required": ["term", "label"]}),
                    # Areas where the group has turned on assistance (codes from bayanihan:assist-area). Absent or empty: none. Changing it needs org.manage.
-                   "assist": arr(C), **page, **summary}, ["name"]),
+                   "assist": arr(C),
+                   # Who may invite people by username or email (2026-11-13). Default core-team.
+                   "invitePolicy": enum("core-team", "members"), **page, **summary}, ["name"]),
  "Role": ({"person": R, "organization": R, "code": C, "status": enum("requested", "active", "ended"), "position": R, "period": P,
            "permissions": arr(C), "qualification": arr(C)}, ["person", "organization", "code", "status"]),
  "Position": ({"organization": R, "title": S, "kind": enum("board", "officer", "committee-chair", "other"), "seats": {"type": "integer", "minimum": 1},
@@ -64,6 +70,8 @@ RES = {
                "hours": {"type": "object", "properties": {"value": {"type": "number", "minimum": 0}, "source": {"enum": ["planned", "stated", "measured"]}}, "required": ["value", "source"], "additionalProperties": False}},
                "required": ["person", "role", "status"], "additionalProperties": False}),
            "estimate": EST,
+           # Who can take it (2026-11-13): anyone it's shared with may say "I'm in" (default), or they ask and a lead chooses.
+           "taking": enum("anyone", "ask"),
            "slots": {"type": "integer", "minimum": 1},
            "suggestedFor": arr(R), "reviewer": R, "audience": enum("team", "organization", "open"), "goodFirstStep": {"type": "boolean"},
            "priority": enum("routine", "urgent"), "due": T, "restriction": {"type": "object", "properties": {"period": P, "location": R,
@@ -72,12 +80,17 @@ RES = {
            "output": arr({"type": "object", "properties": {"code": C, "value": {}, "unit": S, "attachment": arr(A)}}),
            "note": arr({"type": "object", "properties": {"author": R, "time": T, "text": S}, "required": ["text"]}), "category": arr(C),
            "verification": enum("not-required", "pending", "confirmed", "changes-requested", "disputed"), **page}, ["intent", "status"]),
- "Provenance": ({"target": arr(R), "activity": enum("propose", "create", "update", "claim", "assign", "accept", "decline", "release", "complete", "confirm", "dispute", "cancel", "submit", "return", "acknowledge", "claim-identity", "merge", "vote", "publish", "revoke"),
+ "Provenance": ({"target": arr(R), "activity": enum("propose", "create", "update", "claim", "assign", "accept", "decline", "release", "complete", "reopen", "confirm", "dispute", "cancel", "submit", "return", "acknowledge", "claim-identity", "merge", "vote", "publish", "revoke", "invite"),
                  "agent": arr({"type": "object", "properties": {"type": enum("author", "performer", "verifier", "model", "rule"), "who": R, "onBehalfOf": R, "model": {"type": "object", "properties": {"name": S, "version": S}, "required": ["name", "version"]}}, "required": ["type"]}),
                  "occurredAt": T, "recorded": T, "offline": {"type": "boolean"}, "signature": arr(ref("Signature"))}, ["target", "activity", "agent", "occurredAt"]),
  "Communication": ({"about": R, "sender": R, "recipient": arr(R), "payload": {"type": "object", "properties": {"text": S, "attachment": arr(A)}}, "sent": T}, ["about", "sender", "sent"]),
  "ShareLink": ({"target": R, "grants": arr(enum("view", "claim", "join-team", "join-org", "propose", "comment")), "audience": enum("anyone-with-link", "signed-in", "members"),
                 "preview": enum("full", "title-only", "generic"), "expires": T, "createdBy": R, "status": enum("active", "revoked"), "blocked": arr(R)}, ["target", "grants", "audience", "createdBy", "status"]),
+ # One invitation to one person (2026-11-13): to a group, team, project or task. Different from a ShareLink, which
+ # anyone holding the link can use. The email it was sent to is never part of the record.
+ "Invitation": ({"target": R, "invitedBy": R, "invitee": R, "role": enum("volunteer", "member", "team-member", "helper"),
+                 "status": enum("sent", "accepted", "declined", "expired", "withdrawn"), "expires": T, "message": {"type": "string", "maxLength": 280},
+                 "via": enum("username", "email", "in-app"), "blockFuture": {"type": "boolean"}}, ["target", "invitedBy", "role", "status", "via"]),
  "Decision": ({"about": R, "partOf": R, "question": S, "method": enum("approve", "choose-one", "choose-many", "ranked", "consent"),
                "option": arr({"type": "object", "properties": {"id": S, "label": S, "description": S, "attachment": arr(A)}, "required": ["id", "label"]}),
                "voters": R, "eligible": arr(R), "opens": T, "closes": T, "quorum": {"type": "integer", "minimum": 0}, "threshold": enum("majority", "two-thirds", "unanimous", "no-objection"),
@@ -103,7 +116,7 @@ RES = {
 }
 CAE = {"Person": "Actor", "Organization": "Actor", "Team": "Actor", "Location": "Site", "Initiative": "Instrument", "InitiativeTemplate": "Instrument", "TaskDefinition": "Instrument",
        "SharingPolicy": "Instrument", "Need": "Instrument", "Offer": "Instrument", "Report": "Instrument", "Position": "Instrument", "Goal": "Instrument", "Consent": "Instrument",
-       "ShareLink": "Instrument", "Decision": "Instrument", "ChangeProposal": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
+       "ShareLink": "Instrument", "Invitation": "Instrument", "Decision": "Instrument", "ChangeProposal": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
        "Role": "relationship", "Communication": "relationship", "Follow": "relationship", "Provenance": "attestation", "Endpoint": "transport"}
 ONE_OF = {"Initiative": [{"required": ["organization"]}, {"required": ["person"]}]}
 ANY_OF = {"ChangeProposal": [{"required": ["change"]}, {"required": ["includes"]}]}
