@@ -67,6 +67,9 @@
           "taskDefinition": {
             "$ref": "datatypes.schema.json#/$defs/Reference"
           },
+          "practice": {
+            "$ref": "datatypes.schema.json#/$defs/Reference"
+          },
           "audience": {
             "enum": [
               "team",

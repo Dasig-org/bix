@@ -3,6 +3,32 @@
 BIX is versioned by its spec (`v0.1`, `v0.2`). While v0.1 is a draft, additions that don't break existing records
 land in v0.1 and are listed here. The full decision log is at the end of `spec/BIX_v0.1.md`.
 
+## v0.1, 2026-11-13: project memory (Practices)
+
+Added, all optional, so existing records stay valid:
+
+- `Practice`, a new resource: one kind of step as a group does it ("Get the barangay permit"), with `appliesTo[]` (kinds
+  of project, as `Initiative.category` codes), the usual `team`, `partOf`, `after[]` (what usually comes before it),
+  `source` (`own`, `starter`, `adopted`), `lesson[]` written by people, and `observed` figures calculated by rule from
+  the group's completed projects: how many had the step, how many added it late, and the day it was usually done.
+  Lifecycle `draft → active → retired`.
+- `Task.practice`: the Practice a step is an instance of. `InitiativeTemplate.action[].practice`: the same for a saved
+  step, so projects started from a template are linked from the start.
+- The `memory` assistance area, and the value set `bayanihan:practice-source`.
+
+Changed rules:
+
+- Rule 21: no proposal may change a Practice's `observed` figures.
+- Rule 23: `observed` is calculated by rule, recalculated when a project completes; no person or model sets it.
+- Rule 24: `practice` links stay inside the organization; a model only proposes them.
+- Rule 25: a Practice names no one but its lesson authors, and shared outside the group it carries neither those nor
+  the projects counted.
+
+Why: copying last year's plan carries the steps but not how they went. Practices give a group a memory of each kind
+of step that builds up with every finished project, so a coordinator can see what a project usually needs, what is
+usually done by now and what usually comes first. Rules do the counting; a small model only matches steps and
+judges what applies. See spec section "Project memory: Practices".
+
 ## v0.1, 2026-11-11: proposed edits and assistance
 
 Added, all optional, so existing records stay valid:

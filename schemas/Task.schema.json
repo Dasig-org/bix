@@ -51,6 +51,9 @@
     "definition": {
       "$ref": "datatypes.schema.json#/$defs/Reference"
     },
+    "practice": {
+      "$ref": "datatypes.schema.json#/$defs/Reference"
+    },
     "partOf": {
       "$ref": "datatypes.schema.json#/$defs/Reference"
     },

@@ -154,7 +154,8 @@ These aren't for the first conversation. Use them in later conversations, and on
 | `bayanihan:requirement` | `can-drive` · `has-vehicle` · `adult` · `first-aid` · `can-tutor` (organizations add local codes in their own namespace) |
 | `bayanihan:figure-rule` | `sum-task-hours` counts as in "Planned and given time" · `count-tasks` {`taskCode`} · `count-participants` {`taskCode`, `attended`} (distinct people active on done work; with `attended`, only those checked in) · `sum-task-hours` {`taskCode`} · `sum-task-output` {`outputCode`} · `sum-received` {`needCategory`} · `sum-part-reports` {`figureCode`} |
 | `bayanihan:report-figure` | `sessions-held` · `volunteer-hours` · `volunteers-active` · `households-served` · `learners-served` · `goods-received` · `waste-collected` · `people-served` (a count recorded as a Task output, never names) |
-| `bayanihan:assist-area` | `break-down` (smaller steps for a project, task or step) · `review-plan` (what a plan needs a second look at) · `who-to-ask` (people who could take a step, with the reason) · `newcomers` (good first steps) · `roster` (who's active, new, free, or not yet asked) · `slipping` (unclaimed steps, dates coming up, empty teams) · `report-draft` (a narrative draft; figures stay derived). Modules may add codes in their own namespace. |
+| `bayanihan:assist-area` | `break-down` (smaller steps for a project, task or step) · `review-plan` (what a plan needs a second look at) · `who-to-ask` (people who could take a step, with the reason) · `newcomers` (good first steps) · `roster` (who's active, new, free, or not yet asked) · `slipping` (unclaimed steps, dates coming up, empty teams) · `report-draft` (a narrative draft; figures stay derived) · `memory` (compare a project with the group's Practices: match steps, filter usual steps, suggest lessons; see "Project memory: Practices"). Modules may add codes in their own namespace. |
+| `bayanihan:practice-source` | `own` (learned from the group's projects) · `starter` (published by Dasig, a federation or a module) · `adopted` (a copy of a starter or shared Practice, now the group's own) |
 
 Any confirmed Task counts toward a figure only if its `executionPeriod` lies inside the Report's `period`.
 
@@ -170,10 +171,11 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 | `Need` | SupplyRequest (generalized) · Schema.org `Demand` | What an initiative is short of: people, goods, money, skills, transport or a venue. Can recur with the initiative. | `initiative`, `category`, `quantity` {value, unit}, `received`, `neededBy`, `recurrence`, `location`, `priority` (routine · urgent), `status` |
 | `Offer` | *No FHIR equivalent* · Schema.org `Offer` | What someone has and will give: goods, time, a skill, a vehicle, a venue | `offeredBy` (a Person or an Organization), `category`, `quantity`, `location`, `availableFrom`, `availableUntil`, `recurrence`, `matchedTo` (a Need), `status` |
 | `TaskDefinition` | ActivityDefinition | The reusable template for a kind of work. Examples: `session-staffing` (serve, check in, close), `goods-transfer` (collect, deliver, confirm receipt), `expense-claim` (buy, file receipt, approve), `report-owed` (gather, draft, submit). | `appliesTo` (Initiative, Offer or Need categories), `steps[]` {`code`, `dependsOn`, `requires[]`, `evidence`, `confirmerRole`, `autoConfirm`}, `status`, `author`, `ratifiedBy` |
-| `Task` | Task | One claimable step | `intent` (proposal · plan · order), `status`, `code`, `focus` (any resource: an Offer, a Need, or a module's type such as an Animal), `priority` (routine · urgent), `definition`, `requester` (an Organization), `owner` (the Person who claimed it or was asked), `restriction` {`period`, `location`}, `requires[]` (codes from `bayanihan:requirement`), `executionPeriod` {`start`, `end`} (when the work actually happened), `output[]` {`code`, `value`, `unit`, `attachment[]`}, `note[]` {`author`, `time`, `text`} (including thanks), `verification` |
+| `Task` | Task | One claimable step | `intent` (proposal · plan · order), `status`, `code`, `focus` (any resource: an Offer, a Need, or a module's type such as an Animal), `practice` (the kind of step it is; see "Project memory: Practices"), `priority` (routine · urgent), `definition`, `requester` (an Organization), `owner` (the Person who claimed it or was asked), `restriction` {`period`, `location`}, `requires[]` (codes from `bayanihan:requirement`), `executionPeriod` {`start`, `end`} (when the work actually happened), `output[]` {`code`, `value`, `unit`, `attachment[]`}, `note[]` {`author`, `time`, `text`} (including thanks), `verification` |
 | `Provenance` | Provenance | Who did what, and who confirmed it | `target[]`, `activity` (propose · create · update · claim · assign · accept · decline · release · complete · reopen · confirm · invite · dispute · cancel · submit · return · acknowledge · claim-identity · merge), `agent[]` {`type`: author · performer · verifier · model, `who`, `onBehalfOf`}, `occurredAt` (client time), `recorded`, `offline`, `model` {name, version} |
 | `SharingPolicy` | Consent | One organization's default sharing rules per category | `organization`, `rules[]` {`category`, `sharing`}, `approvedBy` |
 | `Report` | MeasureReport (loosely) | A report one organization owes another (a chapter to its national body, a ministry to its parish, a group to its LGU or a donor), with figures derived from confirmed records | `owedBy` (Organization), `owedTo` (Organization), `period`, `due`, `recurrence`, `scope` {`initiative[]`, `includeParts`}, `figures[]` {`code`, `value`, `unit`, `rule` {`code`, `params`}, `derivedFrom[]`, `derivedAt`}, `missingParts[]`, `narrative`, `attachment[]` (photos and documents chosen from the confirmed Tasks' outputs), `replaces`, `submittedBy`, `status` |
+| `Practice` | *No FHIR equivalent* (its figures follow FHIR Observation: measured values kept apart from what they measure) | One kind of step as this group does it, and how it has gone across its finished projects: the group's project memory | `title`, `organization`, `appliesTo[]`, `team`, `partOf`, `after[]`, `source`, `lesson[]`, `observed` (calculated by rule), `status` |
 | `ChangeProposal` | *No FHIR equivalent* (closest: a FHIR Task with `intent: proposal` whose `focus` is the record) | A proposed edit to a record that already exists, waiting for someone allowed to make it | `target`, `basedOn` (the target's `meta.version`), `organization`, `change[]` {`op`: add · remove · replace, `path`, `value`}, `includes[]` (draft records accepted together with it), `area`, `reason`, `status` |
 | `Bundle` | Bundle | The sync and exchange envelope | `type` (sync · transaction), `entry[]` {`fullUrl`: `urn:uuid:…`, `resource`} |
 
@@ -233,6 +235,7 @@ Every resource type is one of CAE's six kinds. The kind is fixed by the type.
 | `Follow` | *Relationship, not a kind* | |
 | `Decision` | Instrument while open, Event once decided | From Popolo Motion and VoteEvent |
 | `ChangeProposal` | Instrument | A request to change a record; the change itself is recorded by Provenance |
+| `Practice` | Instrument | How a group does one kind of step; its `observed` figures are derived, like a Report's |
 | `Vote` | Event | From Popolo Vote |
 | `Bundle` | *Transport, not a kind* | Like CEP's record envelope |
 
@@ -270,6 +273,7 @@ People can be invited to a group, team, project or task by username or by email,
 | Report | `owed → in-preparation → submitted → acknowledged`, plus `returned`, `cancelled` | `owed` is created by rule from `recurrence`, or by hand. `returned` sends it back to `in-preparation` with a reason. A submitted report is never edited; a correction is a new submission that references it. |
 | Invitation | `sent → accepted`, or `sent → declined` · `expired` · `withdrawn` | Accepting is done only by the invitee; it creates the Role, Team participant or Task participant the invitation names, through the usual permission rules. `expired` is set by rule after `expires`. See "Usernames and invitations". |
 | ChangeProposal | `draft → accepted`, or `draft → declined` · `withdrawn` · `outdated` | `outdated` is set by rule when the target's `meta.version` moves past `basedOn`. An outdated proposal is never applied; a new one may be made against the current version. |
+| Practice | `draft → active → retired` | A `draft` (from a model, or kept at close-out) becomes `active` only with a person holding `initiative.plan`. `observed` is recalculated by rule and never changes the lifecycle. |
 
 ## Conformance rules (MUST)
 
@@ -293,8 +297,11 @@ People can be invited to a group, team, project or task by username or by email,
 18. A Person can export every record that names them, and an Organization every record it owns, as BIX Bundles, at any time and without asking anyone.
 19. **Public proposals.** Someone without a Role may propose a `Need`, an `Offer` or a `Person` (such as an applicant) through an organization's public link. It is always `draft` and `private` until a member with the right permission confirms it.
 20. **Proposed edits.** A change to an existing record that its author isn't allowed to make directly, and every change a model suggests, is a `ChangeProposal`. Accepting it applies its `change[]` as one change based on `basedOn` (rule 16), and moves its `includes[]` out of draft, together, with one `Provenance` per record. Accepting needs the same permission as making the change directly. Declining or withdrawing it cancels its `includes[]`.
-21. **What a proposal may not touch.** A `ChangeProposal` never targets or changes a `Report` figure, a `Decision` outcome, a `Vote`, `Task.participant.attended`, `Task.verification`, a `Role`, a `Consent`, a `SharingPolicy`, a `Provenance`, `Organization.assist`, or another person's `Person` record. It never sets `Task.owner` to a Person: asking someone stays with `task.assign`, and a proposal may only add to `Task.suggestedFor`.
+21. **What a proposal may not touch.** A `ChangeProposal` never targets or changes a `Report` figure, a `Practice`'s `observed` figures, a `Decision` outcome, a `Vote`, `Task.participant.attended`, `Task.verification`, a `Role`, a `Consent`, a `SharingPolicy`, a `Provenance`, `Organization.assist`, or another person's `Person` record. It never sets `Task.owner` to a Person: asking someone stays with `task.assign`, and a proposal may only add to `Task.suggestedFor`.
 22. **Assistance is opt-in per group.** `Organization.assist[]` lists the areas (`bayanihan:assist-area`) where the group turned on assistance; absent or empty means none. A model, or a deterministic assist rule, acts only in an area that is on, and every `ChangeProposal` it makes names that `area` and gives a `reason` a person can read. Changing `assist` needs `org.manage`. Turning an area off withdraws that area's open model proposals, by rule.
+23. **Practice figures are calculated.** `Practice.observed` is calculated by rule from the organization's completed Initiatives, as set out in "Project memory: Practices", and recalculated when one of them completes or a `Task.practice` on one changes. No person and no model sets it.
+24. **Step identity.** `Task.practice` and `InitiativeTemplate.action[].practice` may point only to a Practice of the same organization. A model never sets them directly; it proposes them as a `ChangeProposal` in the `memory` area.
+25. **Memory stays with the group.** A Practice names no one except the authors of its lessons. Shared outside its organization, it carries no `basis` and no lesson authors, and an adopted copy starts with no `observed` figures.
 
 ## Everyday scenarios the model must handle
 
@@ -405,7 +412,7 @@ The same structure handles the disaster-response profile. In the Catmon example,
 | **`Task.audience`** | How far down the funnel it reaches: `team` · `organization` · `open` (to outside volunteers). Only `open` Tasks appear in shared links and public lists. `goodFirstStep: true` marks work suited to newcomers, as WordPress marks "good first issue". |
 | **Co-host participants** | A Team participant may hold their Role in an Organization listed in the Initiative's `partner[]`. They see only that Team's Tasks and the Initiative. |
 | **Team-scoped permissions** | A Team lead holds `task.assign` and `task.confirm` for Tasks owned by their Team, without being an officer of the whole Organization. Money and beneficiary steps still need a confirmer who is not the performer. |
-| **`InitiativeTemplate`** (new resource, from FHIR PlanDefinition; CAE kind: Instrument) | A group's saved way of running a kind of initiative: its Teams and their usual tasks. **Never shown as a noun in the app**, which says "Save these teams for next time" and "Start from last year's teams". `title` ("Our fun run", "Medical mission"), `organization` (or a federation or a module that publishes it), `team[]` (committee names and their default lead role), `action[]` {`title`, `team`, `taskDefinition`, `audience`, `offset` (e.g. 42 days before the start), `partOf`}, `need[]`, `report[]`, `version`, `status`. |
+| **`InitiativeTemplate`** (new resource, from FHIR PlanDefinition; CAE kind: Instrument) | A group's saved way of running a kind of initiative: its Teams and their usual tasks. **Never shown as a noun in the app**, which says "Save these teams for next time" and "Start from last year's teams". `title` ("Our fun run", "Medical mission"), `organization` (or a federation or a module that publishes it), `team[]` (committee names and their default lead role), `action[]` {`title`, `team`, `taskDefinition`, `practice`, `audience`, `offset` (e.g. 42 days before the start), `partOf`}, `need[]`, `report[]`, `version`, `status`. |
 
 ### What is programmable, and what is not
 
@@ -427,6 +434,7 @@ The same structure handles the disaster-response profile. In the Catmon example,
 3. **Changing one event never silently changes the saved teams.** Saving back is a choice, recorded with Provenance, and templates are versioned.
 4. **Saved teams travel.** A national body or district can publish a set of teams its chapters adopt; a module can ship them for a sector. An adopted set is copied and then belongs to the group.
 5. **Starting points, not rules.** Dasig ships a few sets of teams (club project, event, recurring program) so a new group isn't facing a blank page.
+6. **How each step went is remembered too.** A template keeps the plan; a `Practice` keeps how each kind of step has gone across the group's projects: how often it was needed, when it was done, what came before it, how often it was forgotten, and the lessons. See "Project memory: Practices".
 
 ## Volunteers belong to the structure
 
@@ -821,6 +829,125 @@ Provenance naming the model and the lead.
 side), proposals from outside the organization other than rule 19, and per-team or per-person assistance settings
 (per group only, to keep it simple).
 
+## Project memory: Practices (decided 2026-11-13)
+
+A coordinator running a project has to remember everything it needs, and most of that knowledge sits with whoever ran
+it last time. Officers change every year, committee leads are often doing it for the first time, and what went wrong
+lives in group chats. Copying last year's plan carries the steps over but not how they went: which step was forgotten
+and added in the last week, which one always slips, which was a one-off.
+
+A **`Practice`** is one kind of step as this group does it ("Get the barangay permit", "Confirm marshals"), with how it
+has gone across the group's finished projects. Each step in a project can say which Practice it is (`Task.practice`).
+From those two things, rules can count and compare, and a small model only has to make the judgments rules can't:
+whether a step is the same as a known Practice, whether a Practice applies here, whether a step was a one-off. That
+split is deliberate. The structured record and the rules are the memory; the model reads it.
+
+**Lessons.** FHIR's `PlanDefinition` is a reusable plan (BIX's `InitiativeTemplate`) and FHIR keeps measured values
+separate from the things they measure (`Observation`); a Practice's `observed` figures follow that, and BIX rule 12's
+"derived, not typed in". Project retrospectives ("what would we do differently?") are where groups already write
+lessons. GitHub Projects, which many volunteer conference teams use, shows the gap: copying a project copies its items and
+fields, not what was learned running it. FHIR `Task.basedOn` means "the request this task fulfils", so BIX names the
+link `Task.practice` to avoid a different meaning under a familiar name.
+
+| Element | What it is | Rules |
+|---|---|---|
+| **`Practice`** (new resource; CAE kind: Instrument) | One kind of step as this organization does it: `title` (general, e.g. "Book the venue", not "Book Mactan Expo"), `organization`, `appliesTo[]` (the kinds of project it belongs to, as `Initiative.category` codes), `team` (the team name that usually owns it), `partOf` (a broader Practice it is a step of), `after[]` (Practices that usually come before it), `taskDefinition` (optional: the detailed way of doing it), `source` (`own` · `starter` · `adopted`), `adoptedFrom`, `description`, `lesson[]`, `observed`, `status` | `draft → active → retired`. A Practice proposed by a model, or made at close-out, starts `draft`; a person with `initiative.plan` makes it `active` (rule 4). |
+| **`Practice.observed`** | Figures about how it has gone, calculated by rule (rule 23): `ofProjects` (the group's completed projects of these kinds), `included` (how many of them had this step), `addedLate` (how many added it in the last 7 days before the start, or after), `dayFromStart` {`median`, `earliest`, `latest`} (the day it was done, relative to the project's start; negative is before), `lastSeen`, `basis[]` (the projects counted), `calculated` | Never set by a person or a model, and no `ChangeProposal` may change it (rule 21). |
+| **`Practice.lesson[]`** | `{text, author, time, initiative}`: what someone learned ("Ask the barangay a month ahead; it took three weeks last time") | Written by a person, or drafted by a model as a proposal that a person accepts. Inside the group every lesson names its `author`; a copy shared outside drops `author` and `initiative` (rule 25). |
+| **`Task.practice`** | The Practice this step is an instance of | Set like any change to the Task (`task.assign` or `initiative.plan`). A model proposes it as a `ChangeProposal` (rule 24). |
+| **`InitiativeTemplate.action[].practice`** | The Practice a saved step stands for | A project started from the template gets `Task.practice` on each step, so matching is needed only for new steps. |
+
+**How the figures are calculated** (rule 23), for one Practice:
+
+1. `ofProjects`: the organization's Initiatives with `status: completed` whose `category` shares a code with
+   `appliesTo`. `basis[]` lists them.
+2. `included`: how many of those have at least one Task, not `cancelled`, with `practice` set to this Practice.
+3. `addedLate`: how many of the included projects first recorded that Task (its earliest `Provenance.occurredAt`) less
+   than 7 days before the Initiative's `period.start`, or later.
+4. `dayFromStart`: for each included project, the day the step was done (`executionPeriod.end`, else
+   `executionPeriod.start`) minus the Initiative's `period.start`, in whole days. `median`, `earliest` and `latest`
+   over the projects that have one.
+5. `lastSeen`: the latest `period.start` among the included projects.
+
+**What rules do, and what the model does.**
+
+| Question | Who answers | How |
+|---|---|---|
+| What does this project usually need that it doesn't have yet? | Rule | Active Practices that apply to its categories, `included` in at least half of `ofProjects` (or `starter` Practices with no figures yet), with no Task pointing to them |
+| Is anything usually done by now? | Rule | Practices whose `dayFromStart.median` has passed, with a Task that isn't `completed` |
+| Is anything out of order? | Rule | A Task whose Practice lists another in `after[]`, where that Practice's Task exists and isn't in `dependsOn` |
+| Is this step the same as a known Practice? | Model | A proposal to set `Task.practice` |
+| Does this usual step apply to this project? | Model | Filters the rule's list before it is shown |
+| Was this step a one-off? | Model | At close-out: keep it as a new Practice, or not |
+| What did we learn? | Model drafts, a person writes | A proposed `lesson` |
+
+All of these appear to the coordinator as suggestions with their evidence ("in 2 of your 3 fun runs"), never as
+requirements. A group turns the model's part on with the `memory` assistance area (`bayanihan:assist-area`).
+
+**Closing a project.** When an Initiative becomes `completed`:
+
+1. By rule, the `observed` figures of the organization's Practices that apply to it are recalculated.
+2. Steps with no `practice` are offered for review: match each to an existing Practice, keep it as a new Practice
+   (`draft`, then a lead confirms), or leave it as a one-off. The model may propose all three.
+3. A lead may add lessons. Saving the project's steps back into its `InitiativeTemplate` stays a separate choice
+   ("How a group's way of working is remembered", point 3).
+
+**Starting points and sharing.** Dasig, a federation or a module may publish `starter` Practices for common kinds of
+project, so a new group's first project has something to compare against. Adopting one copies it into the group as
+`adopted`, with `adoptedFrom` and empty figures; from then on it is the group's own. A Practice shared outside its
+organization carries no `basis` and no lesson authors (rule 25), so a group can share how it works without sharing
+who did it.
+
+**Example.** A running club's permit step, after three fun runs, and the step in this year's plan that points to it.
+
+```json
+{
+  "resourceType": "Practice",
+  "id": "5b6c7d8e-9f0a-4b1c-8d2e-3f4a5b6c7d8e",
+  "meta": { "version": 3 },
+  "title": "Get the barangay permit",
+  "organization": { "reference": "Organization/2a3b4c5d-6e7f-4a8b-9c0d-1e2f3a4b5c6d" },
+  "status": "active",
+  "appliesTo": [ { "system": "bayanihan:initiative-category", "code": "fun-run" } ],
+  "team": "Logistics",
+  "after": [ { "reference": "Practice/9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c6b" } ],
+  "source": "own",
+  "lesson": [ { "text": "Ask the barangay a month ahead. It took three weeks last time.", "author": { "reference": "Person/4f5e6d7c-8b9a-4c0d-9e1f-2a3b4c5d6e7f" }, "time": "2026-03-10T20:00:00+08:00" } ],
+  "observed": {
+    "included": 3, "ofProjects": 3, "addedLate": 1,
+    "dayFromStart": { "median": -21, "earliest": -30, "latest": -4 },
+    "lastSeen": "2026-03-07T05:00:00+08:00",
+    "basis": [
+      { "reference": "Initiative/0a1b2c3d-4e5f-4a6b-8c7d-8e9f0a1b2c3d" },
+      { "reference": "Initiative/1b2c3d4e-5f6a-4b7c-9d8e-9f0a1b2c3d4e" },
+      { "reference": "Initiative/2c3d4e5f-6a7b-4c8d-8e9f-0a1b2c3d4e5f" }
+    ],
+    "calculated": "2026-03-10T20:00:00+08:00"
+  }
+}
+```
+
+```json
+{
+  "resourceType": "Task",
+  "id": "6c7d8e9f-0a1b-4c2d-9e3f-4a5b6c7d8e9f",
+  "meta": { "version": 2 },
+  "intent": "plan",
+  "status": "ready",
+  "title": "Barangay permit for the 2027 run",
+  "practice": { "reference": "Practice/5b6c7d8e-9f0a-4b1c-8d2e-3f4a5b6c7d8e" },
+  "partOf": { "reference": "Initiative/3d4e5f6a-7b8c-4d9e-8f0a-1b2c3d4e5f6a" },
+  "team": { "reference": "Team/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f0a" },
+  "owner": { "reference": "Team/7d8e9f0a-1b2c-4d3e-8f4a-5b6c7d8e9f0a" }
+}
+```
+
+With the run 30 days away and this Task still `ready`, the rule says it is usually done by now (median 21 days
+before), and the app shows the lesson beside it.
+
+**Not in v0.1.** The organization-wide view built from all of a group's Practices (it follows from these records and
+needs no new resource), loose ends inside a live project's notes, and comparing Practices across groups.
+
 ## Open work and credit
 
 BIX is built for contribution the way WordPress contribution works: teams keep lists of open work, and contributors pick up what fits them. Here, an open `Task` is the unit of work, and volunteers matter as much as coordinators.
@@ -1029,3 +1156,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-12 | Lifecycles: a `completed`, `failed` or `cancelled` Task may be reopened to `ready` or `in-progress`, with `task.assign`, recorded as Provenance activity `reopen`. Earlier versions, signatures and proofs stay as they were; hours and credit count only while `completed`. |
 | 2026-11-13 | Seeing other committees' work: volunteers also see the other Teams in the projects they're on (the Team record only, not its Tasks), so they can ask to join one; a Team with `visibility: team` stays hidden. Joining a Team: anyone in the group may add only themselves to `Team.participant` as `requested`, cancel it, or leave (`ended`); a lead, or with no lead the core team, accepts. Only `active` participants count as being on a record for editing. |
 | 2026-11-13 | Usernames and invitations: `Person.handle` (optional, unique per server), the `Invitation` resource and lifecycle (one invitation to one person, accepted only by them; email never in a record), `Task.taking` (`anyone` · `ask`), `Organization.invitePolicy` (`core-team` · `members`), Provenance activity `invite`, and six privacy rules. |
+| 2026-11-13 | Project memory: new `Practice` resource (one kind of step as the group does it, with `observed` figures calculated by rule from completed projects, `after[]`, `lesson[]`, `source`), `Task.practice` and `InitiativeTemplate.action[].practice` for step identity, the `memory` assistance area, `bayanihan:practice-source`, closing a project. New rules 23–25; rule 21 now covers Practice figures. |

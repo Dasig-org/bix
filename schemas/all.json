@@ -908,6 +908,9 @@
       "taskDefinition": {
        "$ref": "datatypes.schema.json#/$defs/Reference"
       },
+      "practice": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
       "audience": {
        "enum": [
         "team",
@@ -1607,6 +1610,162 @@
  },
  {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bix.dasig.org/v0.1/Practice.schema.json",
+  "title": "BIX v0.1 Practice",
+  "x-bix-cae-kind": "Instrument",
+  "type": "object",
+  "allOf": [
+   {
+    "$ref": "datatypes.schema.json#/$defs/Resource"
+   }
+  ],
+  "properties": {
+   "resourceType": {
+    "const": "Practice"
+   },
+   "id": true,
+   "meta": true,
+   "identifier": true,
+   "sharing": true,
+   "language": true,
+   "extension": true,
+   "title": {
+    "type": "string"
+   },
+   "organization": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "status": {
+    "enum": [
+     "draft",
+     "active",
+     "retired"
+    ]
+   },
+   "appliesTo": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Coding"
+    }
+   },
+   "team": {
+    "type": "string"
+   },
+   "partOf": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "after": {
+    "type": "array",
+    "items": {
+     "$ref": "datatypes.schema.json#/$defs/Reference"
+    }
+   },
+   "taskDefinition": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "source": {
+    "enum": [
+     "own",
+     "starter",
+     "adopted"
+    ]
+   },
+   "adoptedFrom": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "description": {
+    "type": "string",
+    "maxLength": 4000
+   },
+   "lesson": {
+    "type": "array",
+    "items": {
+     "type": "object",
+     "properties": {
+      "text": {
+       "type": "string",
+       "maxLength": 4000
+      },
+      "author": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      },
+      "time": {
+       "$ref": "datatypes.schema.json#/$defs/dateTime"
+      },
+      "initiative": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+     },
+     "required": [
+      "text",
+      "time"
+     ],
+     "additionalProperties": false
+    }
+   },
+   "observed": {
+    "type": "object",
+    "properties": {
+     "included": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "ofProjects": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "addedLate": {
+      "type": "integer",
+      "minimum": 0
+     },
+     "dayFromStart": {
+      "type": "object",
+      "properties": {
+       "median": {
+        "type": "number"
+       },
+       "earliest": {
+        "type": "number"
+       },
+       "latest": {
+        "type": "number"
+       }
+      },
+      "additionalProperties": false
+     },
+     "lastSeen": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+     },
+     "basis": {
+      "type": "array",
+      "items": {
+       "$ref": "datatypes.schema.json#/$defs/Reference"
+      }
+     },
+     "calculated": {
+      "$ref": "datatypes.schema.json#/$defs/dateTime"
+     }
+    },
+    "required": [
+     "included",
+     "ofProjects",
+     "calculated"
+    ],
+    "additionalProperties": false
+   }
+  },
+  "required": [
+   "resourceType",
+   "id",
+   "meta",
+   "title",
+   "organization",
+   "status"
+  ],
+  "additionalProperties": false
+ },
+ {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://bix.dasig.org/v0.1/Provenance.schema.json",
   "title": "BIX v0.1 Provenance",
   "x-bix-cae-kind": "attestation",
@@ -2124,6 +2283,9 @@
     "$ref": "datatypes.schema.json#/$defs/Reference"
    },
    "definition": {
+    "$ref": "datatypes.schema.json#/$defs/Reference"
+   },
+   "practice": {
     "$ref": "datatypes.schema.json#/$defs/Reference"
    },
    "partOf": {

@@ -49,7 +49,7 @@ RES = {
                  "contributesTo": arr({"type": "object", "properties": {"goal": R, "status": enum("requested", "accepted", "declined")}, "required": ["goal", "status"]}), **page, **summary}, ["title", "kind", "status"]),
  "InitiativeTemplate": ({"title": S, "organization": R, "version": {"type": "integer", "minimum": 1}, "status": enum("draft", "active", "retired"),
                          "team": arr({"type": "object", "properties": {"name": S, "leadRole": S}, "required": ["name"]}),
-                         "action": arr({"type": "object", "properties": {"title": S, "team": S, "taskDefinition": R, "audience": enum("team", "organization", "open"), "offset": S, "partOf": S, "dependsOn": arr(S)}, "required": ["title"]}),
+                         "action": arr({"type": "object", "properties": {"title": S, "team": S, "taskDefinition": R, "practice": R, "audience": enum("team", "organization", "open"), "offset": S, "partOf": S, "dependsOn": arr(S)}, "required": ["title"]}),
                          "need": arr(Q), "report": arr(C)}, ["title", "organization", "version", "status"]),
  "Group": ({"characteristic": arr(C), "location": R, "quantity": {"type": "integer", "minimum": 0}, "description": S}, ["characteristic"]),
  "Goal": ({"title": S, "owner": R, "cause": arr(C), "servesGroup": arr(R), "location": R, "status": enum("draft", "active", "achieved", "cancelled"),
@@ -61,7 +61,7 @@ RES = {
  "TaskDefinition": ({"title": S, "appliesTo": arr(C), "review": {"type": "boolean", "default": False}, "status": enum("draft", "active", "retired"), "author": R, "ratifiedBy": R,
                      "step": arr({"type": "object", "properties": {"code": S, "dependsOn": arr(S), "requires": arr(C), "evidence": S, "confirmerRole": C, "autoConfirm": {"type": "boolean"}, "involvesMoney": {"type": "boolean"}, "involvesBeneficiaries": {"type": "boolean"}, "estimate": EST}, "required": ["code"]})}, ["title", "status"]),
  "Task": ({"intent": enum("proposal", "plan", "order"), "status": enum("draft", "ready", "requested", "accepted", "in-progress", "completed", "cancelled", "failed", "on-hold"),
-           "code": C, "title": S, "focus": R, "definition": R, "partOf": R, "team": R, "dependsOn": arr(R), "milestone": {"type": "boolean"}, "requester": R, "owner": R,
+           "code": C, "title": S, "focus": R, "definition": R, "practice": R, "partOf": R, "team": R, "dependsOn": arr(R), "milestone": {"type": "boolean"}, "requester": R, "owner": R,
            "participant": arr({"type": "object", "properties": {"person": R, "role": enum("owner", "helper"), "status": enum("requested", "active", "ended"),
                # v0.1 (2026-11-09): showing up, own time, and a proposed swap to a named person.
                "attended": {"type": "object", "properties": {"at": T, "by": R}, "required": ["at", "by"], "additionalProperties": False},
@@ -104,6 +104,16 @@ RES = {
                      "includes": {"type": "array", "minItems": 1, "items": R},
                      "status": enum("draft", "accepted", "declined", "withdrawn", "outdated")},
                     ["target", "basedOn", "organization", "status"]),
+ # Project memory (2026-11-13): one kind of step as this group does it, and how it has gone. `observed` is calculated by rule only.
+ "Practice": ({"title": S, "organization": R, "status": enum("draft", "active", "retired"), "appliesTo": arr(C), "team": S, "partOf": R, "after": arr(R),
+               "taskDefinition": R, "source": enum("own", "starter", "adopted"), "adoptedFrom": R, "description": txt,
+               "lesson": arr({"type": "object", "properties": {"text": txt, "author": R, "time": T, "initiative": R}, "required": ["text", "time"], "additionalProperties": False}),
+               "observed": {"type": "object", "properties": {
+                   "included": {"type": "integer", "minimum": 0}, "ofProjects": {"type": "integer", "minimum": 0}, "addedLate": {"type": "integer", "minimum": 0},
+                   "dayFromStart": {"type": "object", "properties": {"median": {"type": "number"}, "earliest": {"type": "number"}, "latest": {"type": "number"}}, "additionalProperties": False},
+                   "lastSeen": T, "basis": arr(R), "calculated": T},
+                   "required": ["included", "ofProjects", "calculated"], "additionalProperties": False}},
+              ["title", "organization", "status"]),
  "Vote": ({"decision": R, "voter": R, "choice": arr(S), "objection": {"type": "boolean"}, "reason": S, "cast": T}, ["decision", "voter", "cast"]),
  "Report": ({"owedBy": R, "owedTo": R, "period": P, "due": T, "recurrence": ref("Recurrence"), "scope": {"type": "object", "properties": {"initiative": arr(R), "includeParts": {"type": "boolean"}}},
              "figures": arr({"type": "object", "properties": {"code": C, "value": {"type": "number"}, "unit": S, "rule": {"type": "object", "properties": {"code": S, "params": {"type": "object"}}, "required": ["code"]}, "derivedFrom": arr(R), "derivedAt": T}, "required": ["code", "rule"]}),
@@ -116,7 +126,7 @@ RES = {
 }
 CAE = {"Person": "Actor", "Organization": "Actor", "Team": "Actor", "Location": "Site", "Initiative": "Instrument", "InitiativeTemplate": "Instrument", "TaskDefinition": "Instrument",
        "SharingPolicy": "Instrument", "Need": "Instrument", "Offer": "Instrument", "Report": "Instrument", "Position": "Instrument", "Goal": "Instrument", "Consent": "Instrument",
-       "ShareLink": "Instrument", "Invitation": "Instrument", "Decision": "Instrument", "ChangeProposal": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
+       "ShareLink": "Instrument", "Invitation": "Instrument", "Decision": "Instrument", "ChangeProposal": "Instrument", "Practice": "Instrument", "Vote": "Event", "Task": "Event-when-completed", "Group": "Observable",
        "Role": "relationship", "Communication": "relationship", "Follow": "relationship", "Provenance": "attestation", "Endpoint": "transport"}
 ONE_OF = {"Initiative": [{"required": ["organization"]}, {"required": ["person"]}]}
 ANY_OF = {"ChangeProposal": [{"required": ["change"]}, {"required": ["includes"]}]}
