@@ -299,9 +299,10 @@ People can be invited to a group, team, project or task by username or by email,
 20. **Proposed edits.** A change to an existing record that its author isn't allowed to make directly, and every change a model suggests, is a `ChangeProposal`. Accepting it applies its `change[]` as one change based on `basedOn` (rule 16), and moves its `includes[]` out of draft, together, with one `Provenance` per record. Accepting needs the same permission as making the change directly. Declining or withdrawing it cancels its `includes[]`.
 21. **What a proposal may not touch.** A `ChangeProposal` never targets or changes a `Report` figure, a `Practice`'s `observed` figures, a `Decision` outcome, a `Vote`, `Task.participant.attended`, `Task.verification`, a `Role`, a `Consent`, a `SharingPolicy`, a `Provenance`, `Organization.assist`, or another person's `Person` record. It never sets `Task.owner` to a Person: asking someone stays with `task.assign`, and a proposal may only add to `Task.suggestedFor`.
 22. **Assistance is opt-in per group.** `Organization.assist[]` lists the areas (`bayanihan:assist-area`) where the group turned on assistance; absent or empty means none. A model, or a deterministic assist rule, acts only in an area that is on, and every `ChangeProposal` it makes names that `area` and gives a `reason` a person can read. Changing `assist` needs `org.manage`. Turning an area off withdraws that area's open model proposals, by rule.
-23. **Practice figures are calculated.** `Practice.observed` is calculated by rule from the organization's completed Initiatives, as set out in "Project memory: Practices", and recalculated when one of them completes or a `Task.practice` on one changes. No person and no model sets it.
+23. **Practice figures are calculated.** `Practice.observed` is calculated by rule from the organization's completed Initiatives, as set out in "Project memory: Practices", and recalculated when one of them completes or a `Task.practice` on one changes. Only the group's home server, or its hub phone when it runs without one, calculates it; other devices receive it. No person and no model sets it.
 24. **Step identity.** `Task.practice` and `InitiativeTemplate.action[].practice` may point only to a Practice of the same organization. A model never sets them directly; it proposes them as a `ChangeProposal` in the `memory` area.
 25. **Memory stays with the group.** A Practice names no one except the authors of its lessons. Shared outside its organization, it carries no `basis` and no lesson authors, and an adopted copy starts with no `observed` figures.
+26. **Who sees a group's memory.** Inside its organization, a `Practice` is seen by the core team and anyone with `view.organization`, and by anyone else only through a Task they can see whose `practice` points to it. A model reads only what its person can see.
 
 ## Everyday scenarios the model must handle
 
@@ -892,6 +893,22 @@ requirements. A group turns the model's part on with the `memory` assistance are
 3. A lead may add lessons. Saving the project's steps back into its `InitiativeTemplate` stays a separate choice
    ("How a group's way of working is remembered", point 3).
 
+**One memory for the whole group (decided 2026-11-14).** Bayani runs separately on each member's phone, but the memory
+is not in the model: it is the group's `Practice` records, which sync like any other record. Every phone runs the same
+model and reads the same records, so every member's Bayani works from the same memory. Two rules keep it that way:
+
+1. **Figures are calculated in one place.** A volunteer's phone holds only the work they can see, so figures
+   calculated there would disagree with an officer's. `observed` is calculated only by the group's home Bayanihan
+   Server, or by the hub phone when the group runs without one, where all of the group's records are (rule 23). Other
+   devices receive the figures and never recalculate them. The suggestions built from them (what a project usually
+   needs, what is usually done by now, what comes first) may be worked out on any phone, from the figures it holds.
+2. **Bayani sees what its person sees.** There is no separate access for the model: what Bayani reads on a phone is
+   built from the records that person may see, so its suggestions and evidence never reveal more than they could
+   open themselves. Inside the group (rule 26), the core team and anyone with `view.organization` see all of the
+   group's Practices, with their lessons. A volunteer sees a Practice, and its lessons, only when a step they can see
+   points to it, so "Ask a month ahead" appears on the permit step for whoever is on it. Changing a Practice still
+   needs `initiative.plan`.
+
 **Starting points and sharing.** Dasig, a federation or a module may publish `starter` Practices for common kinds of
 project, so a new group's first project has something to compare against. Adopting one copies it into the group as
 `adopted`, with `adoptedFrom` and empty figures; from then on it is the group's own. A Practice shared outside its
@@ -1157,3 +1174,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-13 | Seeing other committees' work: volunteers also see the other Teams in the projects they're on (the Team record only, not its Tasks), so they can ask to join one; a Team with `visibility: team` stays hidden. Joining a Team: anyone in the group may add only themselves to `Team.participant` as `requested`, cancel it, or leave (`ended`); a lead, or with no lead the core team, accepts. Only `active` participants count as being on a record for editing. |
 | 2026-11-13 | Usernames and invitations: `Person.handle` (optional, unique per server), the `Invitation` resource and lifecycle (one invitation to one person, accepted only by them; email never in a record), `Task.taking` (`anyone` · `ask`), `Organization.invitePolicy` (`core-team` · `members`), Provenance activity `invite`, and six privacy rules. |
 | 2026-11-13 | Project memory: new `Practice` resource (one kind of step as the group does it, with `observed` figures calculated by rule from completed projects, `after[]`, `lesson[]`, `source`), `Task.practice` and `InitiativeTemplate.action[].practice` for step identity, the `memory` assistance area, `bayanihan:practice-source`, closing a project. New rules 23–25; rule 21 now covers Practice figures. |
+| 2026-11-14 | One memory for the whole group: Practice figures are calculated only by the group's home server or hub (rule 23); who sees Practices inside a group (rule 26: core team and `view.organization`, others through steps they can see); a model reads only what its person can see. |

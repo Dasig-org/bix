@@ -3,6 +3,21 @@
 BIX is versioned by its spec (`v0.1`, `v0.2`). While v0.1 is a draft, additions that don't break existing records
 land in v0.1 and are listed here. The full decision log is at the end of `spec/BIX_v0.1.md`.
 
+## v0.1, 2026-11-14: one memory for the whole group
+
+Changed rules, no new elements:
+
+- Rule 23: a Practice's `observed` figures are calculated only by the group's home Bayanihan Server, or its hub phone
+  when it runs without one, so a phone holding part of the group's work never produces different figures. Other
+  devices receive them.
+- Rule 26 (new): inside a group, the core team and anyone with `view.organization` see all Practices and their
+  lessons; anyone else sees a Practice only through a step they can see that points to it. A model reads only what its
+  person can see.
+
+Why: Bayani runs on each member's phone, but the memory is the group's records. These two rules make every member's
+Bayani work from the same memory without showing anyone more than they could open themselves. See spec section
+"Project memory: Practices", "One memory for the whole group".
+
 ## v0.1, 2026-11-13: project memory (Practices)
 
 Added, all optional, so existing records stay valid:
