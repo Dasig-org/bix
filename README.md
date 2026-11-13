@@ -11,7 +11,7 @@
 >
 > Then `npm install` inside `bayanihan/`, and inside `dasig-app/app/`. Please don't share the code outside the preview yet.
 
-An open format for the everyday work of volunteer groups and civic organizations: people and their roles, the projects they run, the teams that run them, the steps anyone can take, what a project needs and what others offer, decisions made together, and a signed record of who did the work.
+An open format for the everyday work of volunteer groups and civic organizations: people and their roles, the projects they run, the teams that run them, the steps anyone can take, what a project needs and what others offer, decisions made together, how each kind of step has gone across a group's projects (its memory), and a signed record of who did the work.
 
 Inspired by HL7® FHIR®. FHIR® is the registered trademark of HL7 and is used with the permission of HL7. BIX is not affiliated with or endorsed by HL7.
 
@@ -37,6 +37,10 @@ if (!Task(record)) console.log(Task.errors);
 ```
 
 The reference engine and server are [Bayanihan Core and Bayanihan Server](https://github.com/Dasig-org/bayanihan). The first app built on BIX is [Dasig](https://github.com/Dasig-org/dasig-app).
+
+## Built for a small model
+
+BIX keeps the structure and the rules, so the AI working with it can be small enough for a phone. A model only proposes: new records as drafts, and edits to existing ones as a `ChangeProposal`, which a person accepts. A group's memory is structured too: each kind of step is a `Practice`, whose figures (how often it was needed, when it was done, how often it was forgotten) are calculated by rule from finished projects. The model's part is the judgment rules can't make, such as whether two steps are the same. Spec sections: "Proposed edits and assistance" and "Project memory: Practices".
 
 ## Status
 
