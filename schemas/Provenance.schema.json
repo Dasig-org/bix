@@ -79,12 +79,35 @@
               },
               "version": {
                 "type": "string"
+              },
+              "question": {
+                "enum": [
+                  "applies",
+                  "which-practice",
+                  "which-team",
+                  "one-off",
+                  "general-title",
+                  "usually-needed",
+                  "done-by-now",
+                  "out-of-order"
+                ]
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "edited": {
+                "type": "boolean"
               }
             },
             "required": [
               "name",
               "version"
             ]
+          },
+          "rule": {
+            "type": "string"
           }
         },
         "required": [

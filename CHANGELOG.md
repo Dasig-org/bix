@@ -101,6 +101,10 @@ home in the format, so every app would invent its own. See spec section "Shifts,
 
 Deferred: signed credentials about a person, an officer-only emergency contact, guardian consent for minors.
 
+- **2026-11-14 · Suggestions and their answers.** Provenance `agent.model` gains `question`, `confidence` (0–1) and
+  `edited`; rule agents gain `rule`. A suggestion is a record only once a person answers: accepting records the person
+  and the model or rule that suggested it; "Not this time" is a `ChangeProposal` in `declined`, so it isn't suggested
+  again. Starter Practices are published read-only and adopted on use.
 - **2026-11-13 · Usernames and invitations.** `Person.handle` (optional username, unique on the server holding the
   Person, found only by exact match), a new `Invitation` resource (one invitation to one person, to a group, team,
   project or task; `sent → accepted · declined · expired · withdrawn`; only the invitee accepts; can block future

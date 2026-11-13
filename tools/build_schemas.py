@@ -81,7 +81,11 @@ RES = {
            "note": arr({"type": "object", "properties": {"author": R, "time": T, "text": S}, "required": ["text"]}), "category": arr(C),
            "verification": enum("not-required", "pending", "confirmed", "changes-requested", "disputed"), **page}, ["intent", "status"]),
  "Provenance": ({"target": arr(R), "activity": enum("propose", "create", "update", "claim", "assign", "accept", "decline", "release", "complete", "reopen", "confirm", "dispute", "cancel", "submit", "return", "acknowledge", "claim-identity", "merge", "vote", "publish", "revoke", "invite"),
-                 "agent": arr({"type": "object", "properties": {"type": enum("author", "performer", "verifier", "model", "rule"), "who": R, "onBehalfOf": R, "model": {"type": "object", "properties": {"name": S, "version": S}, "required": ["name", "version"]}}, "required": ["type"]}),
+                 "agent": arr({"type": "object", "properties": {"type": enum("author", "performer", "verifier", "model", "rule"), "who": R, "onBehalfOf": R, "model": {"type": "object", "properties": {"name": S, "version": S,
+                   # Suggestions and their answers (2026-11-14): which question, the answer's probability, edited before accepting.
+                   "question": enum("applies", "which-practice", "which-team", "one-off", "general-title", "usually-needed", "done-by-now", "out-of-order"),
+                   "confidence": {"type": "number", "minimum": 0, "maximum": 1}, "edited": {"type": "boolean"}}, "required": ["name", "version"]},
+                 "rule": S}, "required": ["type"]}),
                  "occurredAt": T, "recorded": T, "offline": {"type": "boolean"}, "signature": arr(ref("Signature"))}, ["target", "activity", "agent", "occurredAt"]),
  "Communication": ({"about": R, "sender": R, "recipient": arr(R), "payload": {"type": "object", "properties": {"text": S, "attachment": arr(A)}}, "sent": T}, ["about", "sender", "sent"]),
  "ShareLink": ({"target": R, "grants": arr(enum("view", "claim", "join-team", "join-org", "propose", "comment")), "audience": enum("anyone-with-link", "signed-in", "members"),

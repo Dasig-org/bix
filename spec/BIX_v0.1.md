@@ -259,6 +259,21 @@ People can be invited to a group, team, project or task by username or by email,
 5. **Every invitation can be declined, and blocked for the future**; servers limit invitations per inviter and per invitee.
 6. **An Invitation is not a ShareLink.** A ShareLink is used by whoever holds it; an Invitation is addressed to one person and only they can accept it.
 
+### Suggestions and their answers (decided 2026-11-14)
+
+A suggestion (from Bayani or from a rule, for the `memory` area) worked out on a device is **not a record** until a
+person answers it. Then:
+
+| Answer | What is committed |
+|---|---|
+| **Accept** | The change itself, with Provenance agents: the person (`author`) and what suggested it: `model` (`name`, `version`, `question`, `confidence`, `onBehalfOf` the person) or `rule` (its name). Edited first: `model.edited: true` |
+| **Not this time** | A `ChangeProposal` in `declined`, area `memory`, target the project or step, with `includes` (the record it would have added) or `change` (the edit it would have made), and the same Provenance agents |
+
+- **Not again:** a suggestion matching a declined ChangeProposal for the same target, area and Practice is not shown again for that target.
+- **Thresholds** (how confident an answer must be to show) are the app's, not BIX's.
+- **The measure** (accepted unchanged, edited, declined, per question) is read from these records; nothing else is collected.
+- **Starter Practices** (`source: starter`) are published by a network as read-only records without figures; a group using one adopts it (`source: adopted`, `adoptedFrom`).
+
 ## Lifecycles
 
 | Resource | States | Notes |
@@ -1175,3 +1190,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-13 | Usernames and invitations: `Person.handle` (optional, unique per server), the `Invitation` resource and lifecycle (one invitation to one person, accepted only by them; email never in a record), `Task.taking` (`anyone` · `ask`), `Organization.invitePolicy` (`core-team` · `members`), Provenance activity `invite`, and six privacy rules. |
 | 2026-11-13 | Project memory: new `Practice` resource (one kind of step as the group does it, with `observed` figures calculated by rule from completed projects, `after[]`, `lesson[]`, `source`), `Task.practice` and `InitiativeTemplate.action[].practice` for step identity, the `memory` assistance area, `bayanihan:practice-source`, closing a project. New rules 23–25; rule 21 now covers Practice figures. |
 | 2026-11-14 | One memory for the whole group: Practice figures are calculated only by the group's home server or hub (rule 23); who sees Practices inside a group (rule 26: core team and `view.organization`, others through steps they can see); a model reads only what its person can see. |
+| 2026-11-14 | Suggestions and their answers: Provenance `agent.model` gains `question`, `confidence` and `edited`, and rule agents a `rule` name; accept records the person and the suggester; "Not this time" is a declined ChangeProposal; not suggesting again; starter Practices published read-only. |
