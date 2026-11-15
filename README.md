@@ -1,15 +1,6 @@
 # BIX · Bayanihan Information Exchange
 
-> **Private preview.** The three repos aren't on npm yet, so they're used side by side. Clone all three into one folder:
->
-> ```sh
-> mkdir dasig && cd dasig
-> git clone https://github.com/Dasig-org/bix.git
-> git clone https://github.com/Dasig-org/bayanihan.git
-> git clone https://github.com/Dasig-org/dasig-app.git
-> ```
->
-> Then `npm install` inside `bayanihan/`, and inside `dasig-app/app/`. Please don't share the code outside the preview yet.
+> **Early and open.** BIX v0.1 is a draft, shaped with the volunteer groups in the Dasig pilot. Comments on the spec are welcome as issues.
 
 An open format for the everyday work of volunteer groups and civic organizations: people and their roles, the projects they run, the teams that run them, the steps anyone can take, what a project needs and what others offer, decisions made together, how each kind of step has gone across a group's projects (its memory), and a signed record of who did the work.
 
@@ -27,6 +18,8 @@ Inspired by HL7® FHIR®. FHIR® is the registered trademark of HL7 and is used 
 Schemas are published at `https://bix.dasig.org/v0.1/`.
 
 ## Use it
+
+It isn't on npm yet. Until then, clone this repository and point to it from your project (`"@bayanihan/bix": "file:../bix"`); once published it will be:
 
 ```sh
 npm install @bayanihan/bix
