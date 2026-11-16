@@ -13,6 +13,9 @@ S = {"type": "string"}; T = ref("dateTime");
 EST = {"type": "object", "properties": {"value": {"type": "number", "exclusiveMinimum": 0}, "unit": {"enum": ["min", "h"]}, "per": {"enum": ["person", "task"]}}, "required": ["value", "unit"], "additionalProperties": False}; R = ref("Reference"); C = ref("Coding"); Q = ref("Quantity"); P = ref("Period"); A = ref("Attachment")
 txt = {"type": "string", "maxLength": 4000}
 page = {"description": txt, "attachment": arr(A)}           # content every page has
+# An update left on a record: a few words on how it's going, by whom and when. On Task, Initiative and Team. Append-only.
+NOTE = {"type": "array", "description": "Updates left on this record, oldest first: a few words on how it is going, with who wrote them and when. Append-only: a note is added, never changed or removed by someone else's edit. Anyone who may edit the record may add one. For a message addressed to people, with replies or attachments, use Communication.",
+        "items": {"type": "object", "properties": {"author": {**R, "description": "The Person who wrote it."}, "time": {**T, "description": "When it was written."}, "text": {"type": "string", "description": "The update, in plain text."}}, "required": ["text"]}}
 summary = {"publicSummary": {"type": "boolean", "default": True}}
 RES = {
  "Person": ({"name": {"type": "object", "properties": {"text": S, "use": enum("nickname", "full")}, "required": ["text"], "additionalProperties": False},
@@ -40,12 +43,13 @@ RES = {
                "term": {"type": "string", "description": "ISO 8601 duration, e.g. P1Y"}, "permissions": arr(C), "requiredBy": S, "status": enum("active", "retired"), **page}, ["organization", "title"]),
  "Team": ({"name": S, "organization": R, "initiative": R, "kind": enum("standing", "initiative"), "access": enum("own-tasks", "initiative"), "visibility": enum("initiative", "team"),
            "participant": arr({"type": "object", "properties": {"person": R, "role": enum("lead", "member", "volunteer"), "status": enum("requested", "active", "ended"), "period": P}, "required": ["person", "role", "status"], "additionalProperties": False}),
-           "status": enum("active", "ended"), **page}, ["name", "organization"]),
+           "status": enum("active", "ended"), "note": NOTE, **page}, ["name", "organization"]),
  "Location": ({"name": S, "description": S, "psgc": {"type": "string", "pattern": "^[0-9]{9,10}$"}, "position": {"type": "object", "properties": {"lat": {"type": "number"}, "lon": {"type": "number"}}}, "partOf": R}, ["name"]),
  "Initiative": ({"title": S, "kind": enum("plan", "program", "project", "session"), "status": enum("draft", "planned", "active", "completed", "cancelled"),
                  "organization": R, "person": R, "partOf": R, "period": P, "recurrence": ref("Recurrence"), "category": arr(C), "cause": arr(C), "location": arr(R), "image": A,
                  "target": arr({"type": "object", "properties": {"code": C, "value": {"type": "number"}, "unit": S}, "required": ["code", "value"]}),
                  "taskDefinition": arr(R), "partner": arr(R), "servesGroup": arr(R),
+                 "note": NOTE,
                  "contributesTo": arr({"type": "object", "properties": {"goal": R, "status": enum("requested", "accepted", "declined")}, "required": ["goal", "status"]}), **page, **summary}, ["title", "kind", "status"]),
  "InitiativeTemplate": ({"title": S, "organization": R, "version": {"type": "integer", "minimum": 1}, "status": enum("draft", "active", "retired"),
                          "team": arr({"type": "object", "properties": {"name": S, "leadRole": S}, "required": ["name"]}),
@@ -78,7 +82,7 @@ RES = {
                "arrival": {"type": "object", "properties": {"at": T, "location": R, "note": S}, "additionalProperties": False}}}, "requires": arr(C), "executionPeriod": P,
            "checklist": arr({"type": "object", "properties": {"text": S, "done": {"type": "boolean"}, "doneBy": R}, "required": ["text", "done"]}),
            "output": arr({"type": "object", "properties": {"code": C, "value": {}, "unit": S, "attachment": arr(A)}}),
-           "note": arr({"type": "object", "properties": {"author": R, "time": T, "text": S}, "required": ["text"]}), "category": arr(C),
+           "note": NOTE, "category": arr(C),
            "verification": enum("not-required", "pending", "confirmed", "changes-requested", "disputed"), **page}, ["intent", "status"]),
  "Provenance": ({"target": arr(R), "activity": enum("propose", "create", "update", "claim", "assign", "accept", "decline", "release", "complete", "reopen", "confirm", "dispute", "cancel", "submit", "return", "acknowledge", "claim-identity", "merge", "vote", "publish", "revoke", "invite"),
                  "agent": arr({"type": "object", "properties": {"type": enum("author", "performer", "verifier", "model", "rule"), "who": R, "onBehalfOf": R, "model": {"type": "object", "properties": {"name": S, "version": S,

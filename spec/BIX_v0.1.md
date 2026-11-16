@@ -167,7 +167,7 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 | `Organization` | Organization | Any group, registered or informal | `name`, `image` (Attachment: logo or group photo), `kind` (registered-npo · faith-based · civic-club · community · event-team · sk-council · school-org · cooperative · informal · lgu-unit…), `partOf` (e.g. a chapter's national body, a ministry's parish), `registration[]`, `assist[]` (areas where the group turned on assistance; see "Proposed edits and assistance") |
 | `Role` | PractitionerRole | A Person's relationship to an Organization | `person`, `organization`, `code` (officer · member · core-member · volunteer-regular · volunteer-episodic · service-learning · partner-representative · donor), `status` (requested · active · ended), `period`, `permissions[]` (codes from `bayanihan:permission`; defaults come from `code`), `qualification[]` (codes from `bayanihan:requirement`, e.g. `can-drive`) |
 | `Location` | Location | A place | `name`, `description` (the landmark text), `psgc` (barangay level or above), `position` (optional lat/lon), `partOf` |
-| `Initiative` | PlanDefinition / CarePlan | Any organized effort. Can be nested: a year's plan holds programs and projects; a recurring program holds one session per occurrence. | `title`, `kind` (plan · program · project · session), `image` (Attachment: the cover; sessions use their program's unless they set one), `status`, `organization`, `partOf`, `period`, `recurrence`, `category[]`, `location[]`, `target[]` {`code`, `value`, `unit`} (same codes as Report figures), `taskDefinition[]`, `partner[]` (co-hosting Organizations; display and credit only in v0.1) |
+| `Initiative` | PlanDefinition / CarePlan | Any organized effort. Can be nested: a year's plan holds programs and projects; a recurring program holds one session per occurrence. | `title`, `kind` (plan · program · project · session), `image` (Attachment: the cover; sessions use their program's unless they set one), `status`, `organization`, `partOf`, `period`, `recurrence`, `category[]`, `location[]`, `target[]` {`code`, `value`, `unit`} (same codes as Report figures), `taskDefinition[]`, `partner[]` (co-hosting Organizations; display and credit only in v0.1), `note[]` {`author`, `time`, `text`} (updates on the project, newest last, as on a Task) |
 | `Need` | SupplyRequest (generalized) · Schema.org `Demand` | What an initiative is short of: people, goods, money, skills, transport or a venue. Can recur with the initiative. | `initiative`, `category`, `quantity` {value, unit}, `received`, `neededBy`, `recurrence`, `location`, `priority` (routine · urgent), `status` |
 | `Offer` | *No FHIR equivalent* · Schema.org `Offer` | What someone has and will give: goods, time, a skill, a vehicle, a venue | `offeredBy` (a Person or an Organization), `category`, `quantity`, `location`, `availableFrom`, `availableUntil`, `recurrence`, `matchedTo` (a Need), `status` |
 | `TaskDefinition` | ActivityDefinition | The reusable template for a kind of work. Examples: `session-staffing` (serve, check in, close), `goods-transfer` (collect, deliver, confirm receipt), `expense-claim` (buy, file receipt, approve), `report-owed` (gather, draft, submit). | `appliesTo` (Initiative, Offer or Need categories), `steps[]` {`code`, `dependsOn`, `requires[]`, `evidence`, `confirmerRole`, `autoConfirm`}, `status`, `author`, `ratifiedBy` |
@@ -201,10 +201,39 @@ Anything people open as a page carries the same content elements, so people alwa
 |---|---|
 | `description` | Plain text, a few lines. Links and @mentions allowed. |
 | `attachment[]` | **Reference material**: what to read or look at (a brief, last year's call, a deck, a moodboard). Stored by the group's own server, or an outside link labelled as such. |
+| `note[]` {`author`, `time`, `text`} | **Updates**: a few words on how it's going, left on the record itself, with who wrote each and when. On `Task`, `Initiative` and `Team` (2026-11-16). Oldest first, append-only. See "Updates on a record" below. |
 | *Outputs stay separate* | On a Task, `output[].attachment[]` is **what the work produced**. A page shows "Files" (reference) and "What came out of it" (outputs) as two groups. |
 | `Decision.option[].attachment[]` | Each option may carry several files (the concept, its PDF, mockups), and the `Decision` itself has `description` and `attachment[]` for the context of the vote. |
 
 Comments (`Communication`) and History (Provenance) attach to any page already.
+
+### Updates on a record (`note[]`)
+
+A group's words about its work should stay with the work, not in a chat somewhere else. `Task`, `Initiative` and `Team`
+each carry `note[]`: short updates such as "Permit approved, route cleared from 5 to 8 AM" or "Supplier can only
+deliver Friday".
+
+| | |
+|---|---|
+| **Shape** | `author` (a Person), `time`, `text` (plain text; required). The same on all three, and the same as FHIR's `Annotation`, which FHIR puts on `Task`, `CarePlan` and `CareTeam`. |
+| **Who may add one** | Whoever may edit that record under the group's rules: on a Task, the people on it and its leads; on a Team, its active participants and its lead; on an Initiative, its leads and the group's core team. No new permission. |
+| **Who sees it** | Whoever can see the record. A note is part of it, so it follows the record's `sharing` and never appears in a public summary. |
+| **Order and conflicts** | Oldest first. Append-only, like `output[]` and attachments ("Concurrency and conflicts"): two people adding at once both succeed. A correction is a new note. |
+| **History** | Adding a note is a new version of the record, so Provenance says who added it and when, like any change. |
+| **In an export** | Notes travel inside the record, in a group's export and in a person's own. |
+
+**`note[]` or `Communication`?** A note is an update *on* a record, read by whoever opens it. A `Communication` is a
+message *to* people *about* a record: it has a sender and recipients (@mentions), can carry attachments, and can be
+answered. Use `note[]` for "how it's going"; use `Communication` for a conversation or a notice. An app may show both
+on the same page.
+
+**For apps.** Show a record's notes with their author and time, newest first, and let people who may edit the record
+add one. Don't put anything a rule depends on in a note: figures, confirmations and attendance have their own elements.
+Photos and files go in `attachment[]` (and, on a Task, what the work produced in `output[].attachment[]`), not in notes.
+
+**Servers on an earlier v0.1.** Resources refuse elements they don't know, so a server that hasn't taken this addition
+refuses an Initiative or Team that carries `note[]`. A client should say the update didn't save and keep the text, not
+drop it. `GET /metadata` says which version a server speaks.
 
 ## CAE kinds
 
@@ -420,7 +449,7 @@ The same structure handles the disaster-response profile. In the Catmon example,
 
 | Element | What it is |
 |---|---|
-| **`Team`** (new resource, from FHIR CareTeam; CAE kind: Actor, a collective participant) | A committee, called a **team** in the app. `name` in the group's own words, `organization`, `initiative` (set for an event's committee, empty for a standing one), `kind` (standing · initiative), `participant[]` {`person`, `role` (lead · member), `status` (requested · active · ended), `period`}, `status`. A person may be in any number of Teams; being asked to lead or join is `requested` until they accept. |
+| **`Team`** (new resource, from FHIR CareTeam; CAE kind: Actor, a collective participant) | A committee, called a **team** in the app. `name` in the group's own words, `organization`, `initiative` (set for an event's committee, empty for a standing one), `kind` (standing · initiative), `participant[]` {`person`, `role` (lead · member), `status` (requested · active · ended), `period`}, `status`. Also `description`, `attachment[]` (the team's files) and `note[]` (updates inside the team, 2026-11-16), as every page has. A person may be in any number of Teams; being asked to lead or join is `requested` until they accept. |
 | **`Task.team`** | The Team the work belongs to. Stays set when `owner` moves from the Team to a person who claimed or was asked, so the Team's lead keeps their permissions and the Task stays on the Team's page. |
 | **`Task.owner`** may be a Team | Work lands with a committee first; its lead assigns it to a member or opens it up. |
 | **`Task.dependsOn[]`** | Tasks that must be `completed` first, across Teams ("print shirts" waits on "confirm sponsor logos"). A Task can't move past `ready` until they are. |
@@ -1191,3 +1220,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-13 | Project memory: new `Practice` resource (one kind of step as the group does it, with `observed` figures calculated by rule from completed projects, `after[]`, `lesson[]`, `source`), `Task.practice` and `InitiativeTemplate.action[].practice` for step identity, the `memory` assistance area, `bayanihan:practice-source`, closing a project. New rules 23–25; rule 21 now covers Practice figures. |
 | 2026-11-14 | One memory for the whole group: Practice figures are calculated only by the group's home server or hub (rule 23); who sees Practices inside a group (rule 26: core team and `view.organization`, others through steps they can see); a model reads only what its person can see. |
 | 2026-11-14 | Suggestions and their answers: Provenance `agent.model` gains `question`, `confidence` and `edited`, and rule agents a `rule` name; accept records the person and the suggester; "Not this time" is a declined ChangeProposal; not suggesting again; starter Practices published read-only. |
+| 2026-11-16 | `Initiative.note[]` and `Team.note[]` (author, time, text): updates on a project and on a team (committee), the same shape as `Task.note[]`, so people can say how it's going where the work is. Additive |

@@ -37,7 +37,9 @@ BIX keeps the structure and the rules, so the AI working with it can be small en
 
 ## Status
 
-**v0.1 is a draft**, shaped with the groups taking part in the pilot. Expect changes; the change log at the end of the spec records them.
+**v0.1 is a draft**, shaped with the groups taking part in the pilot. Expect changes: [`CHANGELOG.md`](CHANGELOG.md) says what changed, why, and what implementers need to do, newest first; the full decision log is at the end of the spec.
+
+**Latest (2026-11-16):** updates on a project and a team (`Initiative.note[]`, `Team.note[]`), the same shape as `Task.note[]`. No new resource types.
 
 **Name:** always write "Bayanihan Information Exchange" before "BIX" on first use. "BIX" is also IATA's Baggage Information eXchange, so `bix` is never used as a code value or namespace inside records; use `bayanihan:` or a full URL.
 

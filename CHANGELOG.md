@@ -3,6 +3,38 @@
 BIX is versioned by its spec (`v0.1`, `v0.2`). While v0.1 is a draft, additions that don't break existing records
 land in v0.1 and are listed here. The full decision log is at the end of `spec/BIX_v0.1.md`.
 
+## v0.1, 2026-11-16: updates on a project and a team
+
+No new resource types. Two new elements on existing ones, nothing changed or removed:
+
+| Element | On | What it is |
+|---|---|---|
+| `note[]` {`author`, `time`, `text`} | `Initiative` | Updates on a project: how it's going, said where the work is |
+| `note[]` {`author`, `time`, `text`} | `Team` | Updates inside a team (committee) |
+
+`Task.note[]` has had this shape since 2026-10-27; the three are now defined once in the schemas, with descriptions.
+
+How it behaves (spec, "Content every page has" → "Updates on a record"):
+
+- **Who may add one:** whoever may edit the record. No new permission.
+- **Who sees it:** whoever can see the record. Never in a public summary.
+- **Append-only**, oldest first, so two people adding at once both succeed. A correction is a new note.
+- **Not a message.** `Communication` is still how you write *to* people about a record, with recipients and replies.
+  A note is an update *on* the record.
+
+Why: a group's photos, files and words about a project should live with the project, not in a chat somewhere else.
+Tasks had notes; projects and teams had files (`attachment[]`) and a description, but nowhere to say how it's going.
+The project report in the Dasig app now quotes the latest updates, and a team's page shows them.
+
+For implementers:
+
+- Schemas changed: `Initiative.schema.json`, `Team.schema.json` (new property), `Task.schema.json` (descriptions
+  only), `all.json`, `validators.js`. Regenerate with `python3 tools/build_schemas.py`.
+- Compatibility: additive. Records without `note[]` are unchanged. A server still on the earlier schemas refuses an
+  Initiative or Team that carries `note[]` (resources don't accept unknown elements), so update servers before
+  clients start writing it; a client should tell the person the update didn't save rather than drop it.
+- FHIR: the same idea as `Annotation` on `Task`, `CarePlan` and `CareTeam`.
+
 ## v0.1, 2026-11-14: one memory for the whole group
 
 Changed rules, no new elements:

@@ -792,6 +792,30 @@
      "$ref": "datatypes.schema.json#/$defs/Reference"
     }
    },
+   "note": {
+    "type": "array",
+    "description": "Updates left on this record, oldest first: a few words on how it is going, with who wrote them and when. Append-only: a note is added, never changed or removed by someone else's edit. Anyone who may edit the record may add one. For a message addressed to people, with replies or attachments, use Communication.",
+    "items": {
+     "type": "object",
+     "properties": {
+      "author": {
+       "$ref": "datatypes.schema.json#/$defs/Reference",
+       "description": "The Person who wrote it."
+      },
+      "time": {
+       "$ref": "datatypes.schema.json#/$defs/dateTime",
+       "description": "When it was written."
+      },
+      "text": {
+       "type": "string",
+       "description": "The update, in plain text."
+      }
+     },
+     "required": [
+      "text"
+     ]
+    }
+   },
    "contributesTo": {
     "type": "array",
     "items": {
@@ -2548,17 +2572,21 @@
    },
    "note": {
     "type": "array",
+    "description": "Updates left on this record, oldest first: a few words on how it is going, with who wrote them and when. Append-only: a note is added, never changed or removed by someone else's edit. Anyone who may edit the record may add one. For a message addressed to people, with replies or attachments, use Communication.",
     "items": {
      "type": "object",
      "properties": {
       "author": {
-       "$ref": "datatypes.schema.json#/$defs/Reference"
+       "$ref": "datatypes.schema.json#/$defs/Reference",
+       "description": "The Person who wrote it."
       },
       "time": {
-       "$ref": "datatypes.schema.json#/$defs/dateTime"
+       "$ref": "datatypes.schema.json#/$defs/dateTime",
+       "description": "When it was written."
       },
       "text": {
-       "type": "string"
+       "type": "string",
+       "description": "The update, in plain text."
       }
      },
      "required": [
@@ -2812,6 +2840,30 @@
      "active",
      "ended"
     ]
+   },
+   "note": {
+    "type": "array",
+    "description": "Updates left on this record, oldest first: a few words on how it is going, with who wrote them and when. Append-only: a note is added, never changed or removed by someone else's edit. Anyone who may edit the record may add one. For a message addressed to people, with replies or attachments, use Communication.",
+    "items": {
+     "type": "object",
+     "properties": {
+      "author": {
+       "$ref": "datatypes.schema.json#/$defs/Reference",
+       "description": "The Person who wrote it."
+      },
+      "time": {
+       "$ref": "datatypes.schema.json#/$defs/dateTime",
+       "description": "When it was written."
+      },
+      "text": {
+       "type": "string",
+       "description": "The update, in plain text."
+      }
+     },
+     "required": [
+      "text"
+     ]
+    }
    },
    "description": {
     "type": "string",
