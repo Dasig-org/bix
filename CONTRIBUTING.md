@@ -80,6 +80,10 @@ Commit the regenerated `schemas/` with your change. A format change also needs:
 By contributing you agree that your contribution is licensed under this repository's licences: spec text under
 **CC BY 4.0** ([`LICENSE-spec`](LICENSE-spec)), everything else under **Apache-2.0** ([`LICENSE`](LICENSE)).
 
+Sign off each commit (`git commit -s`), which adds a `Signed-off-by:` line. It certifies the
+[Developer Certificate of Origin](https://developercertificate.org/): that you wrote the change, or otherwise have the
+right to submit it under these licences.
+
 ## Questions
 
 [Dasig-org Discussions](https://github.com/orgs/Dasig-org/discussions), or hello@dasig.org. Security and privacy
