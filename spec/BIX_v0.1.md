@@ -299,6 +299,11 @@ person answers it. Then:
 | **Not this time** | A `ChangeProposal` in `declined`, area `memory`, target the project or step, with `includes` (the record it would have added) or `change` (the edit it would have made), and the same Provenance agents |
 
 - **Not again:** a suggestion matching a declined ChangeProposal for the same target, area and Practice is not shown again for that target.
+- **Questions** (`model.question`): `applies` (does this usual step belong in this project), `same-practice` (is this
+  step already in the plan under another name), `which-practice` (which usual step is this), `which-team`, `one-off`,
+  `general-title` (a general name to keep a step for next time), `step-ideas` (a step the model thought of itself, for
+  this project, with no usual step behind it; added 2026-11-21); and, for rules, `usually-needed`, `done-by-now`,
+  `out-of-order`. A `step-ideas` suggestion has no `confidence`: it is an idea for a person to judge, not an answer.
 - **Thresholds** (how confident an answer must be to show) are the app's, not BIX's.
 - **The measure** (accepted unchanged, edited, declined, per question) is read from these records; nothing else is collected.
 - **Starter Practices** (`source: starter`) are published by a network as read-only records without figures; a group using one adopts it (`source: adopted`, `adoptedFrom`).
@@ -1221,3 +1226,4 @@ HL7 FHIR R4 (Task, Provenance, Consent, ActivityDefinition, the RESTful API, Cap
 | 2026-11-14 | One memory for the whole group: Practice figures are calculated only by the group's home server or hub (rule 23); who sees Practices inside a group (rule 26: core team and `view.organization`, others through steps they can see); a model reads only what its person can see. |
 | 2026-11-14 | Suggestions and their answers: Provenance `agent.model` gains `question`, `confidence` and `edited`, and rule agents a `rule` name; accept records the person and the suggester; "Not this time" is a declined ChangeProposal; not suggesting again; starter Practices published read-only. |
 | 2026-11-16 | `Initiative.note[]` and `Team.note[]` (author, time, text): updates on a project and on a team (committee), the same shape as `Task.note[]`, so people can say how it's going where the work is. Additive |
+| 2026-11-21 | Provenance `agent.model.question` gains `same-practice` (already used by apps, now listed) and `step-ideas` (a model's own idea for a step, for a person to add or not; no confidence). Additive |

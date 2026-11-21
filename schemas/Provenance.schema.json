@@ -83,13 +83,15 @@
               "question": {
                 "enum": [
                   "applies",
+                  "same-practice",
                   "which-practice",
                   "which-team",
                   "one-off",
                   "general-title",
                   "usually-needed",
                   "done-by-now",
-                  "out-of-order"
+                  "out-of-order",
+                  "step-ideas"
                 ]
               },
               "confidence": {

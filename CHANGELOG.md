@@ -3,6 +3,23 @@
 BIX is versioned by its spec (`v0.1`, `v0.2`). While v0.1 is a draft, additions that don't break existing records
 land in v0.1 and are listed here. The full decision log is at the end of `spec/BIX_v0.1.md`.
 
+## v0.1, 2026-11-21: two more suggestion questions
+
+No new resource types or elements. `Provenance.agent.model.question` (spec, "Suggestions and their answers") accepts
+two more values, nothing changed or removed:
+
+| Value | What the model was asked |
+|---|---|
+| `same-practice` | Is this step already in the plan under another name? (Apps already asked it; it wasn't listed.) |
+| `step-ideas` | What steps might this project still need? The model's own idea, not one of the group's usual steps |
+
+A `step-ideas` suggestion carries no `confidence`: it's an idea for a person to judge, and a person always commits it.
+Why: a new group has no past projects for project memory to learn from, so Bayani suggests steps from the project's
+own details, and the group's measure of suggestions (accepted, edited, declined, per question) should count these
+separately.
+
+For implementers: regenerate from `tools/build_schemas.py`; a server that keeps only known questions should add both.
+
 ## v0.1, 2026-11-16: updates on a project and a team
 
 No new resource types. Two new elements on existing ones, nothing changed or removed:

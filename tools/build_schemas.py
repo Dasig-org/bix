@@ -87,7 +87,8 @@ RES = {
  "Provenance": ({"target": arr(R), "activity": enum("propose", "create", "update", "claim", "assign", "accept", "decline", "release", "complete", "reopen", "confirm", "dispute", "cancel", "submit", "return", "acknowledge", "claim-identity", "merge", "vote", "publish", "revoke", "invite"),
                  "agent": arr({"type": "object", "properties": {"type": enum("author", "performer", "verifier", "model", "rule"), "who": R, "onBehalfOf": R, "model": {"type": "object", "properties": {"name": S, "version": S,
                    # Suggestions and their answers (2026-11-14): which question, the answer's probability, edited before accepting.
-                   "question": enum("applies", "which-practice", "which-team", "one-off", "general-title", "usually-needed", "done-by-now", "out-of-order"),
+                   # 2026-11-21: same-practice (already in the plan under another name), step-ideas (a model's own idea for a step).
+                   "question": enum("applies", "same-practice", "which-practice", "which-team", "one-off", "general-title", "usually-needed", "done-by-now", "out-of-order", "step-ideas"),
                    "confidence": {"type": "number", "minimum": 0, "maximum": 1}, "edited": {"type": "boolean"}}, "required": ["name", "version"]},
                  "rule": S}, "required": ["type"]}),
                  "occurredAt": T, "recorded": T, "offline": {"type": "boolean"}, "signature": arr(ref("Signature"))}, ["target", "activity", "agent", "occurredAt"]),
