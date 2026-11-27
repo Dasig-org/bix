@@ -76,16 +76,8 @@ Schemas are published at `https://bix.dasig.org/v0.1/`.
 
 ## Use it
 
-It isn't on npm yet. Until then, clone this repository beside your project and point to it:
-
 ```sh
-git clone https://github.com/Dasig-org/bix.git
-cd bix && npm install
-```
-
-```jsonc
-// your package.json
-"dependencies": { "@bayanihan/bix": "file:../bix" }
+npm install @bayanihan/bix
 ```
 
 ```js
@@ -93,8 +85,7 @@ import { Task } from "@bayanihan/bix/validators";
 if (!Task(record)) console.log(Task.errors);
 ```
 
-Once published, it will be `npm install @bayanihan/bix`. Any language with a JSON Schema 2020-12 validator can use
-the schemas directly.
+Any language with a JSON Schema 2020-12 validator can use the schemas directly.
 
 **Building something on BIX?** You don't have to start from zero:
 [Bayanihan Core and Server](https://github.com/Dasig-org/bayanihan) implement the rules and the API, and the
