@@ -91,7 +91,9 @@ RES = {
                    "question": enum("applies", "same-practice", "which-practice", "which-team", "one-off", "general-title", "usually-needed", "done-by-now", "out-of-order", "step-ideas"),
                    "confidence": {"type": "number", "minimum": 0, "maximum": 1}, "edited": {"type": "boolean"}}, "required": ["name", "version"]},
                  "rule": S}, "required": ["type"]}),
-                 "occurredAt": T, "recorded": T, "offline": {"type": "boolean"}, "signature": arr(ref("Signature"))}, ["target", "activity", "agent", "occurredAt"]),
+                 "occurredAt": T, "recorded": T, "offline": {"type": "boolean"}, "signature": arr(ref("Signature")),
+                 # 2026-11-28: how the change travelled to the home server: sent directly, through a hub (its Endpoint), or replayed later from a phone's queue.
+                 "via": {"type": "object", "properties": {"kind": enum("direct", "hub", "replayed"), "endpoint": R}, "required": ["kind"], "additionalProperties": False}}, ["target", "activity", "agent", "occurredAt"]),
  "Communication": ({"about": R, "sender": R, "recipient": arr(R), "payload": {"type": "object", "properties": {"text": S, "attachment": arr(A)}}, "sent": T}, ["about", "sender", "sent"]),
  "ShareLink": ({"target": R, "grants": arr(enum("view", "claim", "join-team", "join-org", "propose", "comment")), "audience": enum("anyone-with-link", "signed-in", "members"),
                 "preview": enum("full", "title-only", "generic"), "expires": T, "createdBy": R, "status": enum("active", "revoked"), "blocked": arr(R)}, ["target", "grants", "audience", "createdBy", "status"]),

@@ -172,7 +172,7 @@ Any confirmed Task counts toward a figure only if its `executionPeriod` lies ins
 | `Offer` | *No FHIR equivalent* · Schema.org `Offer` | What someone has and will give: goods, time, a skill, a vehicle, a venue | `offeredBy` (a Person or an Organization), `category`, `quantity`, `location`, `availableFrom`, `availableUntil`, `recurrence`, `matchedTo` (a Need), `status` |
 | `TaskDefinition` | ActivityDefinition | The reusable template for a kind of work. Examples: `session-staffing` (serve, check in, close), `goods-transfer` (collect, deliver, confirm receipt), `expense-claim` (buy, file receipt, approve), `report-owed` (gather, draft, submit). | `appliesTo` (Initiative, Offer or Need categories), `steps[]` {`code`, `dependsOn`, `requires[]`, `evidence`, `confirmerRole`, `autoConfirm`}, `status`, `author`, `ratifiedBy` |
 | `Task` | Task | One claimable step | `intent` (proposal · plan · order), `status`, `code`, `focus` (any resource: an Offer, a Need, or a module's type such as an Animal), `practice` (the kind of step it is; see "Project memory: Practices"), `priority` (routine · urgent), `definition`, `requester` (an Organization), `owner` (the Person who claimed it or was asked), `restriction` {`period`, `location`}, `requires[]` (codes from `bayanihan:requirement`), `executionPeriod` {`start`, `end`} (when the work actually happened), `output[]` {`code`, `value`, `unit`, `attachment[]`}, `note[]` {`author`, `time`, `text`} (including thanks), `verification` |
-| `Provenance` | Provenance | Who did what, and who confirmed it | `target[]`, `activity` (propose · create · update · claim · assign · accept · decline · release · complete · reopen · confirm · invite · dispute · cancel · submit · return · acknowledge · claim-identity · merge), `agent[]` {`type`: author · performer · verifier · model, `who`, `onBehalfOf`}, `occurredAt` (client time), `recorded`, `offline`, `model` {name, version} |
+| `Provenance` | Provenance | Who did what, and who confirmed it | `target[]`, `activity` (propose · create · update · claim · assign · accept · decline · release · complete · reopen · confirm · invite · dispute · cancel · submit · return · acknowledge · claim-identity · merge), `agent[]` {`type`: author · performer · verifier · model, `who`, `onBehalfOf`}, `occurredAt` (client time), `recorded`, `offline`, `via` {`kind`: direct · hub · replayed, `endpoint`}, `model` {name, version} |
 | `SharingPolicy` | Consent | One organization's default sharing rules per category | `organization`, `rules[]` {`category`, `sharing`}, `approvedBy` |
 | `Report` | MeasureReport (loosely) | A report one organization owes another (a chapter to its national body, a ministry to its parish, a group to its LGU or a donor), with figures derived from confirmed records | `owedBy` (Organization), `owedTo` (Organization), `period`, `due`, `recurrence`, `scope` {`initiative[]`, `includeParts`}, `figures[]` {`code`, `value`, `unit`, `rule` {`code`, `params`}, `derivedFrom[]`, `derivedAt`}, `missingParts[]`, `narrative`, `attachment[]` (photos and documents chosen from the confirmed Tasks' outputs), `replaces`, `submittedBy`, `status` |
 | `Practice` | *No FHIR equivalent* (its figures follow FHIR Observation: measured values kept apart from what they measure) | One kind of step as this group does it, and how it has gone across its finished projects: the group's project memory | `title`, `organization`, `appliesTo[]`, `team`, `partOf`, `after[]`, `source`, `lesson[]`, `observed` (calculated by rule), `status` |
@@ -704,6 +704,32 @@ Groups add their own words in their namespace; a module (e.g. animal welfare) ad
 | Losing the hub | Its storage is encrypted, and it backs up to the cloud whenever it can |
 | Web users | Use the cloud server. Browsers can't reliably install an app that talks to a local device. |
 | Standalone | A single phone with no hub and no cloud runs Bayanihan Server inside the app, on its own storage. Same API and rules. (v0, 2026-10-29) |
+
+**Taking a group to a hub and back (decided 2026-11-28).** For a group that usually works online and goes somewhere
+without signal: an event venue, a barangay, an evacuation center.
+
+1. **Hand over.** While there is still signal, someone with `org.manage` makes a phone the group's hub. The cloud
+   server records an `Endpoint` (`kind: hub`, the hub's `publicKey`) and points `Organization.homeServer` to it, as one
+   recorded change. The hub then copies the group's records as they are, versions and signatures included.
+2. **Away.** The hub is home: it decides exclusive changes and signs completed work. Members pair with it and work
+   there. The cloud copy is read-only for the group's records; a change sent to it is refused with "your group is
+   working on its hub", and the phone keeps it to send again later.
+3. **Hand back.** When the hub has signal again, it sends every record that changed while it was home, with their
+   Provenance, as one `Bundle` (`type: sync`, from the hub's Endpoint). The cloud server accepts them as they are,
+   because nothing changed there while the hub was home, marks their Provenance `via: {kind: hub, endpoint}`, and
+   points `homeServer` back to itself. Then phones send what they kept (step 2) and it is replayed as usual.
+4. **Only the hub that is home** may hand back, and only once. A hub that never comes back can be released by someone
+   with `org.manage`; its records are lost unless it returns, so the app warns before releasing.
+
+**Your own facts win (decided 2026-11-28).** A change that arrives stale (rule 16) is refused, except when everything it
+changes is the person's own: their own entry in `Task.participant` (releasing their place, their check-in, their
+hours, their period) or their own `Person` record. Then the server re-applies those fields on top of the current
+version and checks the result like any change. Exclusive changes (claiming a place, asking, confirming, voting) stay
+first come, first served at the home server. Additions never conflict.
+
+**How a change travelled.** `Provenance.via` says how a change reached the home server: `direct`, through a `hub`
+(with its `endpoint`), or `replayed` from a phone's queue after being offline. Reports and History may show it
+("recorded at the venue hub, synced 6:40 PM").
 
 **Not in v0:** phone-to-phone mesh without a hub (store-and-forward like Briar), which needs signed Bundles first.
 
