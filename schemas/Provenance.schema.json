@@ -131,6 +131,25 @@
       "items": {
         "$ref": "datatypes.schema.json#/$defs/Signature"
       }
+    },
+    "via": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "direct",
+            "hub",
+            "replayed"
+          ]
+        },
+        "endpoint": {
+          "$ref": "datatypes.schema.json#/$defs/Reference"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
     }
   },
   "required": [

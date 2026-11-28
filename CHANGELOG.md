@@ -3,6 +3,15 @@
 BIX is versioned by its spec (`v0.1`, `v0.2`). While v0.1 is a draft, additions that don't break existing records
 land in v0.1 and are listed here. The full decision log is at the end of `spec/BIX_v0.1.md`.
 
+## v0.1, 2026-11-28: hubs that hand a group back
+
+One new element, nothing changed or removed:
+
+- **`Provenance.via`** {`kind`: `direct` · `hub` · `replayed`, `endpoint`}: how a change reached the home server.
+
+New rules in "Files, home servers and hubs": taking a group to a hub and back (the cloud copy is read-only while a hub
+is home), and **your own facts win** on a stale change.
+
 ## v0.1, 2026-11-21: two more suggestion questions
 
 No new resource types or elements. `Provenance.agent.model.question` (spec, "Suggestions and their answers") accepts
